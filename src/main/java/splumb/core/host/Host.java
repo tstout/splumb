@@ -1,14 +1,27 @@
 package splumb.core.host;
 
+import com.google.inject.*;
+import splumb.core.cli.AbstractOptAction;
+import splumb.core.cli.OptBuilder;
+import splumb.core.cli.OptCollection;
+import splumb.core.db.DBDevModule;
+import splumb.core.db.DBService;
+import splumb.core.logging.DevLoggingModule;
+import splumb.core.logging.LogBus;
+import splumb.core.logging.LogPublisher;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class Host {
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         new Host(args);
     }
 
-    Host(String[] args)
-    {
+    Host(String[] args) {
         OptCollection opts = new OptCollection();
 
         opts.add(new PortOpt(),
@@ -26,9 +39,10 @@ public class Host {
         logger.info(" host Initialization Complete");
 
         new ShutdownActions()
-                .add(new Runnable()
-                {
-                    public void run() { db.stop(); }
+                .add(new Runnable() {
+                    public void run() {
+                        db.stop();
+                    }
                 },
                         "H2")
                 .install()
@@ -39,8 +53,7 @@ public class Host {
     private LogPublisher logger;
 
     private List<AbstractModule> injectModules =
-            new ArrayList<AbstractModule>()
-            {
+            new ArrayList<AbstractModule>() {
                 {
                     add(new DevLoggingModule());
                     add(new DBDevModule());
@@ -50,12 +63,10 @@ public class Host {
 
     //private Map<>
 
-    class PortOpt extends AbstractOptAction
-    {
+    class PortOpt extends AbstractOptAction {
         public static final String OPT = "port";
 
-        public PortOpt()
-        {
+        public PortOpt() {
             setOption(new OptBuilder()
                     .withArgName(OPT).hasArg()
                     .withDescription("controller socket port")
@@ -63,18 +74,15 @@ public class Host {
         }
 
         @Override
-        public void Run(String arg, OptCollection registry)
-        {
+        public void Run(String arg, OptCollection registry) {
             //new ParentConn(Integer.parseInt(arg)).start();
         }
     }
 
-    class ProcIDOpt extends AbstractOptAction
-    {
+    class ProcIDOpt extends AbstractOptAction {
         public static final String OPT = "ID";
 
-        public ProcIDOpt()
-        {
+        public ProcIDOpt() {
             setOption(new OptBuilder()
                     .withArgName(OPT).hasArg()
                     .withDescription("Unique process ID")
@@ -82,23 +90,19 @@ public class Host {
         }
 
         @Override
-        public void Run(String arg, OptCollection registry)
-        {
+        public void Run(String arg, OptCollection registry) {
         }
     }
 
-    class HelpOpt extends AbstractOptAction
-    {
-        public HelpOpt()
-        {
+    class HelpOpt extends AbstractOptAction {
+        public HelpOpt() {
             setOption(new OptBuilder()
                     .withDescription("Show Help")
                     .create("h"));
         }
 
         @Override
-        public void Run(String arg, OptCollection registry)
-        {
+        public void Run(String arg, OptCollection registry) {
             registry.showDescr("sphost");
         }
     }

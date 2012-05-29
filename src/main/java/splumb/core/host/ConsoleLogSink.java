@@ -1,6 +1,12 @@
 package splumb.core.host;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import com.google.common.eventbus.Subscribe;
+import splumb.core.logging.DebugLogEvent;
+import splumb.core.logging.ErrorLogEvent;
+import splumb.core.logging.InfoLogEvent;
+import splumb.core.logging.LogEvent;
 
 public class ConsoleLogSink {
     @Subscribe()
