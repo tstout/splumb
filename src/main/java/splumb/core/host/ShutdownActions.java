@@ -5,25 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-class ShutdownActions implements Runnable
-{
-    public ShutdownActions add(Runnable r, String name)
-    {
+class ShutdownActions implements Runnable {
+    public ShutdownActions add(Runnable r, String name) {
         actions.add(new Action(r, name));
         return this;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         Console con = System.console();
 
-        for (Action r : actions)
-        {
+        for (Action r : actions) {
             r.action.run();
 
-            if (con != null)
-            {
+            if (con != null) {
                 con.printf("Shutdown of %s complete\n", r.name);
             }
         }
@@ -31,8 +26,7 @@ class ShutdownActions implements Runnable
         term.countDown();
     }
 
-    public ShutdownActions install()
-    {
+    public ShutdownActions install() {
         Runtime
                 .getRuntime()
                 .addShutdownHook(new Thread(this));
@@ -40,25 +34,19 @@ class ShutdownActions implements Runnable
         return this;
     }
 
-    public void waitForTermination()
-    {
-        try
-        {
+    public void waitForTermination() {
+        try {
             term.await();
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    class Action
-    {
+    class Action {
         public String name;
         public Runnable action;
 
-        public Action(Runnable r, String name)
-        {
+        public Action(Runnable r, String name) {
             this.name = name;
             this.action = r;
         }

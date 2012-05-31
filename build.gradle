@@ -6,10 +6,26 @@ repositories {
 
 dependencies {
     compile (
+        [group: 'commons-cli', name: 'commons-cli', version: '20040117.000000'],
+        [group: 'com.h2database', name: 'h2', version: '1.3.167'],
         [group: 'com.google.guava', name: 'guava', version: '12.0'],
         [group: 'com.google.code.guice', name: 'guice', version: '1.0'],
         [group: 'com.h2database', name: 'h2', version: '1.3.167'],
-        [group: 'commons-cli', name: 'commons-cli', version: '20040117.000000']
-
     )
+}
+
+//Note...very important to do a .join on ' ' rather than .join(',') as described in the examples.
+
+jar {
+    manifest {
+        def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
+        attributes 'Class-Path': manifestClasspath
+        attributes 'Main-Class': 'splumb.core.host.Host'
+    }
+}
+
+
+task copyToLib(type: Copy) {
+    into "$buildDir/libs"
+    from configurations.runtime
 }

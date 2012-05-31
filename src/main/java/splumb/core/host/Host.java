@@ -22,6 +22,9 @@ public class Host {
     }
 
     Host(String[] args) {
+
+        System.out.printf("Say Hello\n");
+
         OptCollection opts = new OptCollection();
 
         opts.add(new PortOpt(),
@@ -29,8 +32,11 @@ public class Host {
                 new HelpOpt())
                 .processOpts(args);
 
-        injectModules.add(new DevInjectModule());
-        Injector injector = Guice.createInjector(injectModules);
+        //injectModules.add(new DevInjectModule());
+        Injector injector = Guice.createInjector(
+                new DevLoggingModule(),
+                new DBDevModule(),
+                new DevInjectModule());
 
         injector.getInstance(LogBus.class).sub(new ConsoleLogSink());
         injector.injectMembers(this);
@@ -52,13 +58,13 @@ public class Host {
     @Inject
     private LogPublisher logger;
 
-    private List<AbstractModule> injectModules =
-            new ArrayList<AbstractModule>() {
-                {
-                    add(new DevLoggingModule());
-                    add(new DBDevModule());
-                }
-            };
+//    private List<AbstractModule> injectModules =
+//            new ArrayList<AbstractModule>() {
+//                {
+//                    add(new DevLoggingModule());
+//                    add(new DBDevModule());
+//                }
+//            };
 
 
     //private Map<>
