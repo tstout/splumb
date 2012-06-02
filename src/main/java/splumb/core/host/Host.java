@@ -23,8 +23,6 @@ public class Host {
 
     Host(String[] args) {
 
-        System.out.printf("Say Hello\n");
-
         OptCollection opts = new OptCollection();
 
         opts.add(new PortOpt(),
@@ -42,7 +40,9 @@ public class Host {
         injector.injectMembers(this);
 
         final DBService db = injector.getInstance(DBService.class).start();
-        logger.info(" host Initialization Complete");
+        injector.getInstance(ComponentLoader.class).load();
+
+        logger.info("host Initialization Complete");
 
         new ShutdownActions()
                 .add(new Runnable() {

@@ -9,7 +9,7 @@ import splumb.core.logging.InfoLogEvent;
 import splumb.core.logging.LogEvent;
 
 public class ConsoleLogSink {
-    @Subscribe()
+    @Subscribe
     public void info(InfoLogEvent evt) {
         System.console().printf("[INFO] %s\n", fmtMsg(evt));
     }
