@@ -7,14 +7,17 @@ import splumb.core.logging.LogPublisher;
 
 import java.sql.SQLException;
 
-class H2Db extends AbstractIdleService {
+public class H2Db extends AbstractIdleService {
 
-    Server h2Server;
-    LogPublisher logger;
+    private Server h2Server;
+    private LogPublisher logger;
 
     @Inject
-    H2Db(LogPublisher logger) {
+    public void setLogger(LogPublisher logger) {
         this.logger = logger;
+    }
+
+    public H2Db() {
         try {
             h2Server = Server.createTcpServer(new String[]{});
         } catch (SQLException e) {

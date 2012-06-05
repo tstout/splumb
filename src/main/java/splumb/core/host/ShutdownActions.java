@@ -63,9 +63,11 @@ class ShutdownActions implements Runnable {
     }
 
     public ShutdownActions install() {
-        Runtime
-                .getRuntime()
-                .addShutdownHook(new Thread(this));
+        Runtime.getRuntime().addShutdownHook(new Thread(this));
+
+        for (Service service : services) {
+            service.start();
+        }
 
         return this;
     }
