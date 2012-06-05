@@ -1,5 +1,7 @@
 package splumb.core.host;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Service;
 import com.google.inject.*;
 import splumb.core.cli.AbstractOptAction;
 import splumb.core.cli.OptBuilder;
@@ -22,7 +24,6 @@ public class Host {
     }
 
     Host(String[] args) {
-
         OptCollection opts = new OptCollection();
 
         opts.add(new PortOpt(),
@@ -39,35 +40,40 @@ public class Host {
         injector.getInstance(LogBus.class).sub(new ConsoleLogSink());
         injector.injectMembers(this);
 
-        final DBService db = injector.getInstance(DBService.class).start();
-        injector.getInstance(ComponentLoader.class).load();
+        //
+        // Start any core services...
+        //
+        CoreServiceLoader coreLoader =
+                new CoreServiceLoader(injector.getInstance(ComponentLoader.class));
+
+
+        ShutdownActions actions = new ShutdownActions();
+        for (Class<? extends Service> service : coreLoader.load()) {
+            try {
+                Service coreService = service.newInstance();
+                injector.injectMembers(coreService);
+                actions.add(coreService);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         logger.info("host Initialization Complete");
+        actions.install().waitForTermination();
 
-        new ShutdownActions()
-                .add(new Runnable() {
-                    public void run() {
-                        db.stop();
-                    }
-                },
-                        "H2")
-                .install()
-                .waitForTermination();
+//        new ShutdownActions()
+//                .add(new Runnable() {
+//                    public void run() {
+//                        db.stop();
+//                    }
+//                },
+//                        "H2")
+//                .install()
+//                .waitForTermination();
     }
 
     @Inject
     private LogPublisher logger;
-
-//    private List<AbstractModule> injectModules =
-//            new ArrayList<AbstractModule>() {
-//                {
-//                    add(new DevLoggingModule());
-//                    add(new DBDevModule());
-//                }
-//            };
-
-
-    //private Map<>
 
     class PortOpt extends AbstractOptAction {
         public static final String OPT = "port";

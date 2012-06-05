@@ -2,20 +2,17 @@ package splumb.core.cli;
 
 import org.apache.commons.cli.Option;
 
-public abstract class AbstractOptAction implements OptAction
-{
+public abstract class AbstractOptAction implements OptAction {
     @Override
     public abstract void Run(String arg, OptCollection registry);
 
     @Override
-    public Option getOption()
-    {
+    public Option getOption() {
         return _opt;
     }
 
     @Override
-    public OptAction setOption(Option val)
-    {
+    public OptAction setOption(Option val) {
         _opt = val;
         return this;
     }
