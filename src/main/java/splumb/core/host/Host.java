@@ -20,6 +20,13 @@ import static com.google.common.collect.Lists.newArrayList;
 
 public class Host {
 
+    private LogPublisher logger;
+
+    @Inject
+    public void setLogger(LogPublisher logger) {
+        this.logger = logger;
+    }
+
     public static void main(String[] args) {
         new Host(args);
     }
@@ -44,28 +51,16 @@ public class Host {
         //
         // Start any core services...
         //
-
-        CoreServiceLoader coreLoader = injector.getInstance(CoreServiceLoader.class);
-
-        ShutdownActions actions = new ShutdownActions();
-        coreLoader.load(injector, actions);
+        CoreServiceLoader loader =
+                injector.getInstance(CoreServiceLoader.class)
+                        .load(injector);
 
         logger.info("host Initialization Complete");
-        actions.install().waitForTermination();
 
-//        new ShutdownActions()
-//                .add(new Runnable() {
-//                    public void run() {
-//                        db.stop();
-//                    }
-//                },
-//                        "H2")
-//                .install()
-//                .waitForTermination();
+        loader.waitForTerm();
     }
 
-    @Inject
-    private LogPublisher logger;
+
 
     class PortOpt extends AbstractOptAction {
         public static final String OPT = "port";
