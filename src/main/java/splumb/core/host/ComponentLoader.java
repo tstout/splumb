@@ -18,10 +18,14 @@ import java.util.Set;
 import static com.google.common.collect.Sets.newHashSet;
 
 class ComponentLoader {
-    @Inject
-    private LogPublisher logger;
 
+    private LogPublisher logger;
     private final Set<Class<? extends Service>> services = newHashSet();
+
+    @Inject
+    public ComponentLoader(LogPublisher logger) {
+        this.logger = logger;
+    }
 
     public ImmutableSet<Class<? extends Service>> load(final String basePackage) {
         logger.info("Scanning for components to load....");

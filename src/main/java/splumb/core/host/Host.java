@@ -12,6 +12,7 @@ import splumb.core.logging.DevLoggingModule;
 import splumb.core.logging.LogBus;
 import splumb.core.logging.LogPublisher;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,20 +44,11 @@ public class Host {
         //
         // Start any core services...
         //
-        CoreServiceLoader coreLoader =
-                new CoreServiceLoader(injector.getInstance(ComponentLoader.class));
 
+        CoreServiceLoader coreLoader = injector.getInstance(CoreServiceLoader.class);
 
         ShutdownActions actions = new ShutdownActions();
-        for (Class<? extends Service> service : coreLoader.load()) {
-            try {
-                Service coreService = service.newInstance();
-                injector.injectMembers(coreService);
-                actions.add(coreService);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
+        coreLoader.load(injector, actions);
 
         logger.info("host Initialization Complete");
         actions.install().waitForTermination();

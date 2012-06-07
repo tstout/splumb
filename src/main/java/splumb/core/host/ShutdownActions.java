@@ -2,6 +2,8 @@ package splumb.core.host;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Service;
+import com.google.inject.Inject;
+import splumb.core.logging.LogPublisher;
 
 import java.io.Console;
 import java.util.ArrayList;
@@ -12,7 +14,13 @@ import static com.google.common.collect.Lists.newArrayList;
 
 class ShutdownActions implements Runnable {
 
+    private LogPublisher logger;
     private List<Service> services = newArrayList();
+
+    @Inject
+    public ShutdownActions(LogPublisher logger) {
+        this.logger = logger;
+    }
 
     public ShutdownActions add(Runnable r, String name) {
         actions.add(new Action(r, name));
@@ -49,16 +57,12 @@ class ShutdownActions implements Runnable {
 
     @Override
     public void run() {
-        Console con = System.console();
 
         for (Service service : services) {
             service.stop();
-
-//            if (con != null) {
-//                con.printf("Shutdown of %s complete\n", r.name);
-//            }
         }
 
+        logger.info("All services stopped");
         term.countDown();
     }
 

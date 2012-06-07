@@ -7,7 +7,7 @@ import splumb.core.logging.LogPublisher;
 
 import java.sql.SQLException;
 
-public class H2Db extends AbstractIdleService {
+class H2Db extends AbstractIdleService {
 
     private Server h2Server;
     private LogPublisher logger;
@@ -28,6 +28,7 @@ public class H2Db extends AbstractIdleService {
     @Override
     protected void shutDown() throws Exception {
         h2Server.stop();
+        logger.info("H2 service shutdown complete");
     }
 
     @Override
