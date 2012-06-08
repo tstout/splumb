@@ -21,11 +21,7 @@ class CoreServiceLoader {
 
         for (Class<? extends Service> service : loader.load("splumb.core")) {
             try {
-                Constructor con = service.getDeclaredConstructor();
-                con.setAccessible(true);
-
-                Service coreService = (Service)con.newInstance();
-                injector.injectMembers(coreService);
+                Service coreService = injector.getInstance(service);
                 shutdownActions.add(coreService);
             } catch (Exception e) {
                 throw new RuntimeException(e);

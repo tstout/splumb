@@ -39,7 +39,6 @@ public class Host {
                 new HelpOpt())
                 .processOpts(args);
 
-        //injectModules.add(new DevInjectModule());
         Injector injector = Guice.createInjector(
                 new DevLoggingModule(),
                 new DBDevModule(),

@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import org.h2.tools.Server;
 import splumb.core.logging.LogPublisher;
+import splumb.core.logging.NoOpLogger;
 
 import java.sql.SQLException;
 
@@ -13,11 +14,9 @@ class H2Db extends AbstractIdleService {
     private LogPublisher logger;
 
     @Inject
-    public void setLogger(LogPublisher logger) {
+    public H2Db(LogPublisher logger) {
         this.logger = logger;
-    }
 
-    public H2Db() {
         try {
             h2Server = Server.createTcpServer(new String[]{});
         } catch (SQLException e) {
