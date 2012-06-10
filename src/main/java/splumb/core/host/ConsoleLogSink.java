@@ -2,16 +2,22 @@ package splumb.core.host;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+
 import com.google.common.eventbus.Subscribe;
 import splumb.core.logging.DebugLogEvent;
 import splumb.core.logging.ErrorLogEvent;
 import splumb.core.logging.InfoLogEvent;
 import splumb.core.logging.LogEvent;
 
+// TODO - look into benefits of console vs out...
 public class ConsoleLogSink {
+
+    SimpleDateFormat dateFmt =
+            new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");
+
     @Subscribe
     public void info(InfoLogEvent evt) {
-        System.console().printf("[INFO] %s\n", fmtMsg(evt));
+        System.out.printf("[INFO] %s\n", fmtMsg(evt));
     }
 
     Object[] append(Object[] first, Object rest) {
@@ -38,13 +44,10 @@ public class ConsoleLogSink {
 
     @Subscribe
     public void debug(DebugLogEvent evt) {
-        System.console().printf("%s: " + evt.fmt.get(), fmtTime(evt), evt.args.get());
+        System.out.printf("%s: " + evt.fmt.get(), fmtTime(evt), evt.args.get());
     }
 
     String fmtTime(LogEvent evt) {
         return dateFmt.format(evt.timeStamp.get());
     }
-
-    SimpleDateFormat dateFmt =
-            new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");
 }
