@@ -28,17 +28,16 @@ public class SplumbDB extends DBDatabase {
         }
     }
 
+
+    // TODO -
     public static SplumbDB create() {
         SplumbDB db = new SplumbDB();
-        H2Config h2cfg = new H2Config();
+        DBDriverFactory h2cfg = new H2Driver();
         db.open(h2cfg.getDriver(), h2cfg.getConnection());
 
-        //
-        // Check whether DB exists
-        //
         DBCommand cmd = db.createCommand();
+        cmd.select(db.Log.dateTime, db.Log.level, db.Log.msg);
 
-        cmd.select(db.Log.count());
 
         try {
             //
@@ -47,18 +46,12 @@ public class SplumbDB extends DBDatabase {
             DBSQLScript script = new DBSQLScript();
             Connection conn = h2cfg.getConnection();
             db.getCreateDDLScript(h2cfg.getDriver(), script);
-            // Show DDL Statement
-
-            System.out.println(script.toString());
-            // Execute Script
             script.run(h2cfg.getDriver(), conn, false);
-            // Commit
             db.commit(conn);
         } catch (Exception e) {
           // table already created...
+            //System.out.print(e.getMessage());
         }
-
-
         return db;
     }
 }

@@ -10,7 +10,8 @@ import splumb.core.logging.InfoLogEvent;
 import splumb.core.logging.LogEvent;
 
 // TODO - look into benefits of console vs out...
-public class ConsoleLogSink {
+// TODO - does this belong in host?
+class ConsoleLogSink {
 
     SimpleDateFormat dateFmt =
             new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss.SSS");

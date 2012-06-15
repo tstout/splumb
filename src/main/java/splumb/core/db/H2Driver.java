@@ -7,20 +7,18 @@ import org.h2.jdbcx.JdbcConnectionPool;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class H2Config {
+public class H2Driver implements DBDriverFactory {
 
     String url = "jdbc:h2:tcp://127.0.0.1/splumb";
     private JdbcConnectionPool pool = JdbcConnectionPool.create(url, "sa", "");
-    private DBDatabaseDriverH2 driver;
+    private DBDatabaseDriverH2 driver = new DBDatabaseDriverH2();
 
-    public H2Config() {
-        driver = new DBDatabaseDriverH2();
-    }
-
+    @Override
     public DBDatabaseDriver getDriver() {
         return driver;
     }
 
+    @Override
     public Connection getConnection() {
         try {
             return pool.getConnection();

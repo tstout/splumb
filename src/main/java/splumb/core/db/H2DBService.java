@@ -4,17 +4,16 @@ import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import org.h2.tools.Server;
 import splumb.core.logging.LogPublisher;
-import splumb.core.logging.NoOpLogger;
 
 import java.sql.SQLException;
 
-class H2Db extends AbstractIdleService {
+class H2DBService extends AbstractIdleService {
 
     private Server h2Server;
     private LogPublisher logger;
 
     @Inject
-    public H2Db(LogPublisher logger) {
+    public H2DBService(LogPublisher logger) {
         this.logger = logger;
 
         try {
