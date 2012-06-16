@@ -1,22 +1,17 @@
 package splumb.core.host;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.Service;
-import com.google.inject.*;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import splumb.core.cli.AbstractOptAction;
 import splumb.core.cli.OptBuilder;
 import splumb.core.cli.OptCollection;
 import splumb.core.db.DBDevModule;
 import splumb.core.db.SplumbDB;
+import splumb.core.logging.DBLogSink;
 import splumb.core.logging.DevLoggingModule;
 import splumb.core.logging.LogBus;
 import splumb.core.logging.LogPublisher;
-
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 public class Host {
 
@@ -44,7 +39,9 @@ public class Host {
                 new DBDevModule(),
                 new DevInjectModule());
 
-        injector.getInstance(LogBus.class).sub(new ConsoleLogSink());
+        LogBus logBus = injector.getInstance(LogBus.class);
+        logBus.sub(new ConsoleLogSink());
+        logBus.sub(injector.getInstance(DBLogSink.class));
         injector.injectMembers(this);
 
         //

@@ -15,6 +15,7 @@ public class DBLogSink {
     private DBDriverFactory driverFactory;
     private LogFormatter formatter = new LogFormatter();
 
+    // TODO - move this somewhere else
     enum LogLevel {
       ERROR, INFO, DEBUG
     }
@@ -22,6 +23,7 @@ public class DBLogSink {
     @Inject
     public DBLogSink(DBDriverFactory driverFactory) {
         this.driverFactory = driverFactory;
+        db.open(driverFactory.getDriver(), driverFactory.getConnection());
     }
 
     @Subscribe
@@ -42,9 +44,9 @@ public class DBLogSink {
     private void writeRecord(LogLevel level, LogEvent evt) {
         DBRecord rec = new DBRecord();
         rec.create(db.Log);
-        rec.setValue(db.Log.level, level);
+        rec.setValue(db.Log.level, level.ordinal());
         rec.setValue(db.Log.dateTime, evt.timeStamp.get());
-        rec.setValue(db.Log.msg, String.format(evt.fmt.get(), evt.args));
+        rec.setValue(db.Log.msg, String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()));
         rec.update(driverFactory.getConnection());
     }
 }

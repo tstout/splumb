@@ -20,8 +20,8 @@ public class SplumbDB extends DBDatabase {
             super("Log", db);
 
             logId = addColumn("logId", DataType.AUTOINC, 0, true, "logIdSequence");
-            level = addColumn("dateTime", DataType.DATETIME, 0, true);
-            dateTime = addColumn("level", DataType.INTEGER, 0, true);
+            dateTime = addColumn("dateTime", DataType.DATETIME, 0, true);
+            level = addColumn("level", DataType.INTEGER, 0, true);
             msg = addColumn("msg", DataType.TEXT, 2048, true);
 
             setPrimaryKey(logId);
