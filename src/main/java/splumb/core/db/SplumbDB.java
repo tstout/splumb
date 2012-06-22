@@ -29,8 +29,6 @@ public class SplumbDB extends DBDatabase {
     }
 
     public SplumbDB create(DBDriver driver) {
-//        SplumbDB db = new SplumbDB();
-//        DBDriver h2cfg = new H2Driver();
         this.open(driver.getDriver(), driver.getConnection());
 
         DBCommand cmd = createCommand();
@@ -47,7 +45,6 @@ public class SplumbDB extends DBDatabase {
             commit(conn);
         } catch (Exception e) {
           // table already created...
-            //System.out.print(e.getMessage());
         }
         return this;
     }
