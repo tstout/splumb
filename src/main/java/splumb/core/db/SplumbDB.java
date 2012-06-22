@@ -28,30 +28,27 @@ public class SplumbDB extends DBDatabase {
         }
     }
 
+    public SplumbDB create(DBDriver driver) {
+//        SplumbDB db = new SplumbDB();
+//        DBDriver h2cfg = new H2Driver();
+        this.open(driver.getDriver(), driver.getConnection());
 
-    // TODO -
-    public static SplumbDB create() {
-        SplumbDB db = new SplumbDB();
-        DBDriverFactory h2cfg = new H2Driver();
-        db.open(h2cfg.getDriver(), h2cfg.getConnection());
-
-        DBCommand cmd = db.createCommand();
-        cmd.select(db.Log.dateTime, db.Log.level, db.Log.msg);
-
+        DBCommand cmd = createCommand();
+        cmd.select(Log.dateTime, Log.level, Log.msg);
 
         try {
             //
             // TODO...empire DB must provide a better way...
             //
             DBSQLScript script = new DBSQLScript();
-            Connection conn = h2cfg.getConnection();
-            db.getCreateDDLScript(h2cfg.getDriver(), script);
-            script.run(h2cfg.getDriver(), conn, false);
-            db.commit(conn);
+            Connection conn = driver.getConnection();
+            getCreateDDLScript(driver.getDriver(), script);
+            script.run(driver.getDriver(), conn, false);
+            commit(conn);
         } catch (Exception e) {
           // table already created...
             //System.out.print(e.getMessage());
         }
-        return db;
+        return this;
     }
 }

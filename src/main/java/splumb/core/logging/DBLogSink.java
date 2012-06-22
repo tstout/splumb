@@ -3,7 +3,7 @@ package splumb.core.logging;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import org.apache.empire.db.DBRecord;
-import splumb.core.db.DBDriverFactory;
+import splumb.core.db.DBDriver;
 import splumb.core.db.SplumbDB;
 
 /**
@@ -12,7 +12,7 @@ import splumb.core.db.SplumbDB;
 public class DBLogSink {
 
     private SplumbDB db = new SplumbDB();
-    private DBDriverFactory driverFactory;
+    private DBDriver driverFactory;
     private LogFormatter formatter = new LogFormatter();
 
     // TODO - move this somewhere else
@@ -20,8 +20,11 @@ public class DBLogSink {
       ERROR, INFO, DEBUG
     }
 
+
+
+
     @Inject
-    public DBLogSink(DBDriverFactory driverFactory) {
+    public DBLogSink(DBDriver driverFactory) {
         this.driverFactory = driverFactory;
         db.open(driverFactory.getDriver(), driverFactory.getConnection());
     }

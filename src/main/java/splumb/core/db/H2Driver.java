@@ -7,7 +7,7 @@ import org.h2.jdbcx.JdbcConnectionPool;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class H2Driver implements DBDriverFactory {
+public class H2Driver implements DBDriver {
 
     String url = "jdbc:h2:tcp://127.0.0.1/splumb";
     private JdbcConnectionPool pool = JdbcConnectionPool.create(url, "sa", "");
