@@ -7,19 +7,22 @@ import org.apache.empire.db.DBTableColumn;
 
 public class Log extends DBTable {
 
-    public final DBTableColumn logId;
-    public final DBTableColumn level;
-    public final DBTableColumn dateTime;
-    public final DBTableColumn msg;
+    public final DBTableColumn LogId;
+    public final DBTableColumn Level;
+    public final DBTableColumn DateTime;
+    public final DBTableColumn Msg;
 
     public Log(DBDatabase db) {
         super("Log", db);
 
-        logId = addColumn("logId", DataType.AUTOINC, 0, true, "logIdSequence");
-        dateTime = addColumn("dateTime", DataType.DATETIME, 0, true);
-        level = addColumn("level", DataType.INTEGER, 0, true);
-        msg = addColumn("msg", DataType.TEXT, 2048, true);
+        //
+        // BAH! don't like this...consider a coustom wrapper to hide this ugliness..
+        //
+        LogId = addColumn("LogId", DataType.AUTOINC, 0, true, "logIdSequence");
+        DateTime = addColumn("DateTime", DataType.DATETIME, 0, true);
+        Level = addColumn("Level", DataType.INTEGER, 0, true);
+        Msg = addColumn("Msg", DataType.TEXT, 2048, true);
 
-        setPrimaryKey(logId);
+        setPrimaryKey(LogId);
     }
 }

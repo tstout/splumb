@@ -44,9 +44,9 @@ public class DBLogSink {
     private void writeRecord(LogLevel level, LogEvent evt) {
         DBRecord rec = new DBRecord();
         rec.create(db.Log);
-        rec.setValue(db.Log.level, level.ordinal());
-        rec.setValue(db.Log.dateTime, evt.timeStamp.get());
-        rec.setValue(db.Log.msg, String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()));
+        rec.setValue(db.Log.Level, level.ordinal());
+        rec.setValue(db.Log.DateTime, evt.timeStamp.get());
+        rec.setValue(db.Log.Msg, String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()));
         rec.update(driverFactory.getConnection());
     }
 }
