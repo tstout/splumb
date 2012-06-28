@@ -20,9 +20,6 @@ public class DBLogSink {
       ERROR, INFO, DEBUG
     }
 
-
-
-
     @Inject
     public DBLogSink(DBDriver driverFactory) {
         this.driverFactory = driverFactory;
