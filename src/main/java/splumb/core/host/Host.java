@@ -42,7 +42,7 @@ public class Host {
 
         LogBus logBus = injector.getInstance(LogBus.class);
         logBus.sub(new ConsoleLogSink());
-        logBus.sub(injector.getInstance(DBLogSink.class));
+
         injector.injectMembers(this);
 
         //
@@ -52,13 +52,13 @@ public class Host {
                 injector.getInstance(CoreServiceLoader.class)
                         .load(injector);
 
+        logBus.sub(injector.getInstance(DBLogSink.class));
+
         logger.info("host Initialization Complete");
 
         new SplumbDB().create(injector.getInstance(DBDriver.class));
         loader.waitForTerm();
     }
-
-
 
     class PortOpt extends AbstractOptAction {
         public static final String OPT = "port";

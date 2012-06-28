@@ -26,10 +26,7 @@ class AsyncBus implements LogBus {
     }
 
     @Override
-    public void pub(Object msg) {
-
-        // TODO - add filtering here...
-
+    public void pub(LogEvent msg) {
         bus.post(msg);
     }
 }
