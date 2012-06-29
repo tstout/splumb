@@ -1,15 +1,15 @@
 package splumb.core.db;
 
-import com.google.common.collect.ImmutableMap;
-import org.apache.empire.db.DBColumn;
-import org.apache.empire.db.DBDatabase;
-import org.apache.empire.db.DBRecord;
-import org.apache.empire.db.DBSQLScript;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import org.apache.empire.db.*;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogLevel;
 
 import java.sql.Connection;
-import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableSet.of;
 
 public class SplumbDB extends DBDatabase {
 
@@ -49,38 +49,67 @@ public class SplumbDB extends DBDatabase {
 
         Connection conn = driver.getConnection();
 
-        // TODO - remove this try/catch ...needed only for debug...
-        try {
+        new DataSet()
+                .withColumns(of(LogLevel.LogLevelId, LogLevel.Name))
+                .withValues(of(
+                        0, "ERROR",
+                        1, "INFO",
+                        2, "DEBUG"))
+                .insertInto(LogLevel, conn);
 
-        insertRow(ImmutableMap.<DBColumn, Object>of(
-                LogLevel.LogLevelId, 0,
-                LogLevel.Name, "ERROR"),
-                conn);
-
-        insertRow(ImmutableMap.<DBColumn, Object>of(
-                LogLevel.LogLevelId, 1,
-                LogLevel.Name, "INFO"),
-                conn);
-
-        insertRow(ImmutableMap.<DBColumn, Object>of(
-                LogLevel.LogLevelId, 2,
-                LogLevel.Name, "DEBUG"),
-                conn);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         commit(conn);
     }
 
-    private void insertRow(ImmutableMap<DBColumn, Object> rowData, Connection conn) {
-        DBRecord record = new DBRecord();
-        record.create(LogLevel, conn);
+//    private void insertRow(ImmutableMap<DBColumn, Object> rowData, Connection conn) {
+//        DBRecord record = new DBRecord();
+//        record.create(LogLevel, conn);
+//
+//        for (Map.Entry<DBColumn, Object> row : rowData.entrySet()) {
+//            record.setValue(row.getKey(), row.getValue());
+//        }
+//        record.update(conn);
+//    }
 
-        for (Map.Entry<DBColumn, Object> row : rowData.entrySet()) {
-            record.setValue(row.getKey(), row.getValue());
+    class DataSet {
+        private ImmutableSet<DBTableColumn> columns;
+        private ImmutableSet values;
+        private DBDriver driver;
+
+        public DataSet withDriver(DBDriver driver) {
+            this.driver = driver;
+            return this;
         }
-        record.update(conn);
+
+        public DataSet withColumns(ImmutableSet<DBTableColumn> columns) {
+            this.columns = columns;
+            return this;
+        }
+
+        public DataSet withValues(ImmutableSet values) {
+            this.values = values;
+            return this;
+        }
+
+        public void insertInto(DBTable table, Connection conn) {
+            checkState((values.size() % columns.size()) == 0, "Num columns does not match values");
+
+            Object[] valueArray = values.toArray();
+            ImmutableList<DBTableColumn> columnList = columns.asList();
+
+
+            for (int i = 0; i <  values.size(); i += columns.size()) {
+
+                DBRecord record = new DBRecord();
+                record.create(table, conn);
+
+                for (int j = 0; j < columnList.size(); j++) {
+                    record.setValue(columnList.get(j), valueArray[i + j]);
+                }
+
+                record.update(conn);
+            }
+        }
     }
+
 
 }
