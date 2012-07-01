@@ -1,12 +1,9 @@
 package splumb.core.host;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import splumb.core.logging.LogPublisher;
 
-import java.io.Console;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -14,6 +11,8 @@ import static com.google.common.collect.Lists.newArrayList;
 
 class ShutdownActions implements Runnable {
 
+    private List<Action> actions = newArrayList();
+    private CountDownLatch term = new CountDownLatch(1);
     private LogPublisher logger;
     private List<Service> services = newArrayList();
 
@@ -94,6 +93,4 @@ class ShutdownActions implements Runnable {
         }
     }
 
-    private List<Action> actions = new ArrayList<Action>();
-    private CountDownLatch term = new CountDownLatch(1);
 }
