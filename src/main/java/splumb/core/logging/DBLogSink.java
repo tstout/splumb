@@ -2,7 +2,6 @@ package splumb.core.logging;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import splumb.core.db.DBDriver;
 import splumb.core.db.DataSet;
 import splumb.core.db.SplumbDB;
 
@@ -13,8 +12,7 @@ import static com.google.common.collect.ImmutableSet.of;
  */
 public class DBLogSink {
 
-    private SplumbDB db = new SplumbDB();
-    private DBDriver driverFactory;
+    private SplumbDB db;
     private LogFormatter formatter = new LogFormatter();
 
     // TODO - move this somewhere else
@@ -23,9 +21,8 @@ public class DBLogSink {
     }
 
     @Inject
-    public DBLogSink(DBDriver driverFactory) {
-        this.driverFactory = driverFactory;
-        db.open(driverFactory.getDriver(), driverFactory.getConnection());
+    public DBLogSink(SplumbDB db) {
+        this.db = db;
     }
 
     @Subscribe
@@ -51,7 +48,7 @@ public class DBLogSink {
                         level.ordinal(),
                         evt.timeStamp.get(),
                         String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get())))
-                .insertInto(db.Log, driverFactory.getConnection());
+                .insertInto(db.Log, db.getConnection());
 
 
 //        DBRecord rec = new DBRecord();

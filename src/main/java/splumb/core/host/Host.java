@@ -7,7 +7,6 @@ import splumb.core.cli.AbstractOptAction;
 import splumb.core.cli.OptBuilder;
 import splumb.core.cli.OptCollection;
 import splumb.core.db.DBDevModule;
-import splumb.core.db.DBDriver;
 import splumb.core.db.SplumbDB;
 import splumb.core.logging.DBLogSink;
 import splumb.core.logging.DevLoggingModule;
@@ -52,11 +51,10 @@ public class Host {
                 injector.getInstance(CoreServiceLoader.class)
                         .load(injector);
 
+        injector.getInstance(SplumbDB.class).create();
         logBus.sub(injector.getInstance(DBLogSink.class));
 
         logger.info("host Initialization Complete");
-
-        new SplumbDB().create(injector.getInstance(DBDriver.class));
         loader.waitForTerm();
     }
 

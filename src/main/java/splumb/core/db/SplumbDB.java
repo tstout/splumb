@@ -1,5 +1,6 @@
 package splumb.core.db;
 
+import com.google.inject.Inject;
 import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
 import splumb.core.db.tables.Log;
@@ -16,13 +17,20 @@ public class SplumbDB extends DBDatabase {
 
     private DBDriver driver;
 
-    public SplumbDB() {
+    @Inject
+    public SplumbDB(DBDriver driver) {
+        this.driver = driver;
         addRelation(Log.Level.referenceOn(LogLevel.LogLevelId));
+        this.open(driver.getDriver(), driver.getConnection());
     }
 
-    public SplumbDB create(DBDriver driver) {
-        this.open(driver.getDriver(), driver.getConnection());
-        this.driver = driver;
+    public Connection getConnection() {
+        return driver.getConnection();
+    }
+
+    public SplumbDB create() {
+//        this.open(driver.getDriver(), driver.getConnection());
+//        this.driver = driver;
 
         try {
             //
