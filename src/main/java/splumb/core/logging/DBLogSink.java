@@ -9,6 +9,7 @@ import static com.google.common.collect.ImmutableSet.of;
 
 /**
  * A Log consumer that writes to a database.
+ * todo - probably don't need this to be public....
  */
 public class DBLogSink {
 
