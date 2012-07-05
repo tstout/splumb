@@ -1,6 +1,9 @@
 package splumb.core.logging;
 
-public class LogRecord {
+import org.apache.empire.db.DBRecord;
+
+// TOOD - DBRecord parent not necessary to pass unit test.  Investigate the real utility of DBRecord.
+public class LogRecord extends DBRecord {
     private int level;
     private String msg;
 

@@ -40,6 +40,7 @@ public class DBLogSinkTest {
         rdr.open(cmd, db.getConnection());
 
         List<LogRecord> records;
+
         try {
             records = rdr.getBeanList(LogRecord.class);
         } finally {
