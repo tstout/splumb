@@ -2,7 +2,7 @@ package splumb.core.logging;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import splumb.core.db.DataSet;
+import splumb.common.db.DataSet;
 import splumb.core.db.SplumbDB;
 
 import static com.google.common.collect.ImmutableSet.of;

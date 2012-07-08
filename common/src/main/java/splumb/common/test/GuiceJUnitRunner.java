@@ -1,4 +1,4 @@
-package splumb.core.test;
+package splumb.common.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

@@ -1,4 +1,4 @@
-package splumb.core.db;
+package splumb.common.db;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

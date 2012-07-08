@@ -1,6 +1,8 @@
 package splumb.core.db;
 
 import com.google.inject.AbstractModule;
+import splumb.common.db.DBDriver;
+import splumb.common.db.H2InMemDriver;
 
 public class DBTestModule extends AbstractModule {
 

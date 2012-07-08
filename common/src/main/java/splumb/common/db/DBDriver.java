@@ -1,4 +1,4 @@
-package splumb.core.db;
+package splumb.common.db;
 
 import org.apache.empire.db.DBDatabaseDriver;
 

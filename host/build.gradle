@@ -1,0 +1,38 @@
+dependencies {
+    compile (
+            project(':common'),
+            'commons-cli:commons-cli:20040117.000000',
+            'com.h2database:h2:1.3.167',
+            'com.google.guava:guava:12.0',
+            'com.google.code.guice:guice:1.0',
+            'net.sf.extcos:extcos:0.3b',
+            'org.apache.empire-db:empire-db:2.3.0'
+    )
+}
+
+//Note...very important to do a .join on ' ' rather than .join(',') as described in the examples.
+
+//
+// Note sure which of these I prefer....
+
+jar {
+    manifest {
+        def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
+        attributes 'Class-Path': manifestClasspath
+        attributes 'Main-Class': 'splumb.core.host.Host'
+    }
+}
+
+
+//
+// This creates an uber jar
+//
+//jar {
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
+//}
+
+task copyToLib(type: Copy) {
+    into "$buildDir/libs"
+    from configurations.runtime
+}

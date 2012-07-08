@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import splumb.core.db.DBTestModule;
 import splumb.core.db.SplumbDB;
-import splumb.core.test.GuiceJUnitRunner;
-import splumb.core.test.GuiceJUnitRunner.GuiceModules;
+import splumb.common.test.GuiceJUnitRunner;
+import splumb.common.test.GuiceJUnitRunner.GuiceModules;
 
 import java.util.List;
 
@@ -38,6 +38,8 @@ public class DBLogSinkTest {
         cmd.select(db.Log.Level, db.Log.Msg);
         DBReader rdr = new DBReader();
         rdr.open(cmd, db.getConnection());
+
+        //rdr.getRecordData(cmd, db.getConnection());
 
         List<LogRecord> records;
 

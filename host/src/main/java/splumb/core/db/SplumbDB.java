@@ -3,6 +3,8 @@ package splumb.core.db;
 import com.google.inject.Inject;
 import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
+import splumb.common.db.DBDriver;
+import splumb.common.db.DataSet;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogLevel;
 

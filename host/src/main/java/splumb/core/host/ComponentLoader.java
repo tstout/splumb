@@ -1,18 +1,12 @@
 package splumb.core.host;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.common.io.LittleEndianDataInputStream;
-import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
 import splumb.core.logging.LogPublisher;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;

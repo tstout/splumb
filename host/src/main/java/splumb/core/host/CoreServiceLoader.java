@@ -1,11 +1,8 @@
 package splumb.core.host;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import java.lang.reflect.Constructor;
 
 class CoreServiceLoader {
     private ComponentLoader loader;
