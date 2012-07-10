@@ -16,6 +16,7 @@ dependencies {
 // Note sure which of these I prefer....
 
 jar {
+    baseName = 'splumb-host'
     manifest {
         def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
         attributes 'Class-Path': manifestClasspath
@@ -23,9 +24,8 @@ jar {
     }
 }
 
-
 //
-// This creates an uber jar
+// This creates an uberjar
 //
 //jar {
 //    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
