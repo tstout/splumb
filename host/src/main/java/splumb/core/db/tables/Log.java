@@ -14,15 +14,6 @@ public class Log extends DBTable {
 
     public Log(DBDatabase db) {
         super("Log", db);
-
-        //
-        // BAH! don't like this...consider a custom wrapper to hide this ugliness..
-        //
-        //LogId = addColumn("LogId", DataType.AUTOINC, 0, true, "logIdSequence");
-        //DateTime = addColumn("DateTime", DataType.DATETIME, 0, true);
-        //Level = addColumn("Level", DataType.INTEGER, 0, true);
-        //Msg = addColumn("Msg", DataType.TEXT, 2048, true);
-
         setPrimaryKey(LogId);
     }
 }

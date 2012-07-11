@@ -1,5 +1,6 @@
 package splumb.core.db;
 
+
 import com.google.inject.Inject;
 import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
@@ -33,6 +34,13 @@ public class SplumbDB extends DBDatabase {
     public SplumbDB create() {
 //        this.open(driver.getDriver(), driver.getConnection());
 //        this.driver = driver;
+
+//        DBSQLScript dropScript = new DBSQLScript();
+//
+//        Connection dropConn = driver.getConnection();
+//        driver.getDriver().getDDLScript(DBCmdType.DROP, Log, dropScript);
+//        dropScript.run(driver.getDriver(), getConnection(), false);
+//        commit(dropConn);
 
         try {
             //

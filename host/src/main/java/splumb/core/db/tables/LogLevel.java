@@ -7,15 +7,11 @@ import org.apache.empire.db.DBTableColumn;
 
 public class LogLevel extends DBTable {
 
-    public final DBTableColumn LogLevelId;
-    public final DBTableColumn Name;
+    public final DBTableColumn LogLevelId = addColumn("LogLevelId", DataType.INTEGER, 0, true);
+    public final DBTableColumn Name = addColumn("Name", DataType.TEXT, 128, true);
 
     public LogLevel(DBDatabase db) {
         super("LogLevel", db);
-
-        LogLevelId = addColumn("LogLevelId", DataType.INTEGER, 0, true);
-        Name = addColumn("Name", DataType.TEXT, 128, true);
-
         setPrimaryKey(LogLevelId);
     }
 }
