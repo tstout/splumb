@@ -2,7 +2,7 @@ package splumb.core.host;
 
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
-import splumb.core.logging.LogPublisher;
+import splumb.common.logging.LogPublisher;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;

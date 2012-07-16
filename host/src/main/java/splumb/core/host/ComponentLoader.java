@@ -5,7 +5,7 @@ import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
-import splumb.core.logging.LogPublisher;
+import splumb.common.logging.LogPublisher;
 
 import java.util.Set;
 

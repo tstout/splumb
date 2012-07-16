@@ -1,4 +1,4 @@
-package splumb.core.logging;
+package splumb.common.logging;
 
 public interface LogPublisher {
     void info(String fmt, Object... parms);

@@ -1,6 +1,7 @@
 package splumb.core.logging;
 
 import com.google.inject.Inject;
+import splumb.common.logging.LogPublisher;
 
 //
 // TODO - need to add some filtering capabilities here

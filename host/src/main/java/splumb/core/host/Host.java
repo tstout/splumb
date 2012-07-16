@@ -11,7 +11,7 @@ import splumb.core.db.SplumbDB;
 import splumb.core.logging.DBLogSink;
 import splumb.core.logging.DevLoggingModule;
 import splumb.core.logging.LogBus;
-import splumb.core.logging.LogPublisher;
+import splumb.common.logging.LogPublisher;
 
 public class Host {
 

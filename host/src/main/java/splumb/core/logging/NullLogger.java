@@ -1,6 +1,8 @@
 package splumb.core.logging;
 
 
+import splumb.common.logging.LogPublisher;
+
 public class NullLogger implements LogPublisher {
     @Override
     public void info(String fmt, Object... parms) {

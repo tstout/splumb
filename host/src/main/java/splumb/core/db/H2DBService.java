@@ -3,7 +3,7 @@ package splumb.core.db;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import org.h2.tools.Server;
-import splumb.core.logging.LogPublisher;
+import splumb.common.logging.LogPublisher;
 
 import java.sql.SQLException;
 
