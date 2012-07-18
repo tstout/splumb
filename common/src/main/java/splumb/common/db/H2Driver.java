@@ -13,6 +13,11 @@ public class H2Driver implements DBDriver {
     private JdbcConnectionPool pool = JdbcConnectionPool.create(url, "sa", "");
     private DBDatabaseDriverH2 driver = new DBDatabaseDriverH2();
 
+    public H2Driver() {
+        System.out.printf("%s\n", getClass().getProtectionDomain().getCodeSource().getLocation().toString());
+    }
+
+
     @Override
     public DBDatabaseDriver getDriver() {
         return driver;

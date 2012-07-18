@@ -50,13 +50,5 @@ public class DBLogSink {
                         evt.timeStamp.get(),
                         String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get())))
                 .insertInto(db.Log, db.getConnection());
-
-
-//        DBRecord rec = new DBRecord();
-//        rec.create(db.Log);
-//        rec.setValue(db.Log.Level, level.ordinal());
-//        rec.setValue(db.Log.DateTime, evt.timeStamp.get());
-//        rec.setValue(db.Log.Msg, String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()));
-//        rec.update(driverFactory.getConnection());
     }
 }
