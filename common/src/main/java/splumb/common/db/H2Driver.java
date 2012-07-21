@@ -14,7 +14,7 @@ public class H2Driver implements DBDriver {
     private DBDatabaseDriverH2 driver = new DBDatabaseDriverH2();
 
     public H2Driver() {
-        System.out.printf("%s\n", getClass().getProtectionDomain().getCodeSource().getLocation().toString());
+        //System.out.printf("%s\n", getClass().getProtectionDomain().getCodeSource().getLocation().toString());
     }
 
 
