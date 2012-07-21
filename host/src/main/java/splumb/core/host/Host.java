@@ -3,6 +3,7 @@ package splumb.core.host;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import joptsimple.OptionParser;
 import splumb.core.cli.AbstractOptAction;
 import splumb.core.cli.OptBuilder;
 import splumb.core.cli.OptCollection;
@@ -27,17 +28,14 @@ public class Host {
     }
 
     Host(String[] args) {
-        OptCollection opts = new OptCollection();
 
-        opts.add(new PortOpt(),
-                new ProcIDOpt(),
-                new HelpOpt())
-                .processOpts(args);
+        OptionParser parser = new OptionParser();
+        parser.accepts("nodb", "Run without database");
 
         Injector injector = Guice.createInjector(
                 new DevLoggingModule(),
                 new DBDevModule(),
-                new DevInjectModule());
+                new DevInjectModule(args));
 
         LogBus logBus = injector.getInstance(LogBus.class);
         logBus.sub(new ConsoleLogSink());
@@ -56,49 +54,5 @@ public class Host {
 
         logger.info("host Initialization Complete");
         loader.waitForTerm();
-    }
-
-    class PortOpt extends AbstractOptAction {
-        public static final String OPT = "port";
-
-        public PortOpt() {
-            setOption(new OptBuilder()
-                    .withArgName(OPT).hasArg()
-                    .withDescription("controller socket port")
-                    .create(OPT));
-        }
-
-        @Override
-        public void Run(String arg, OptCollection registry) {
-            //new ParentConn(Integer.parseInt(arg)).start();
-        }
-    }
-
-    class ProcIDOpt extends AbstractOptAction {
-        public static final String OPT = "ID";
-
-        public ProcIDOpt() {
-            setOption(new OptBuilder()
-                    .withArgName(OPT).hasArg()
-                    .withDescription("Unique process ID")
-                    .create(OPT));
-        }
-
-        @Override
-        public void Run(String arg, OptCollection registry) {
-        }
-    }
-
-    class HelpOpt extends AbstractOptAction {
-        public HelpOpt() {
-            setOption(new OptBuilder()
-                    .withDescription("Show Help")
-                    .create("h"));
-        }
-
-        @Override
-        public void Run(String arg, OptCollection registry) {
-            registry.showDescr("sphost");
-        }
     }
 }
