@@ -2,6 +2,7 @@ package splumb.core.logging;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import splumb.common.logging.LogBus;
 import splumb.common.logging.LogPublisher;
 
 public class DevLoggingModule extends AbstractModule {

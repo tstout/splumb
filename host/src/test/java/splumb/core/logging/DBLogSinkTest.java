@@ -6,6 +6,7 @@ import org.apache.empire.db.DBReader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import splumb.common.logging.InfoLogEvent;
 import splumb.core.db.DBTestModule;
 import splumb.core.db.SplumbDB;
 import splumb.common.test.GuiceJUnitRunner;
@@ -35,7 +36,7 @@ public class DBLogSinkTest {
         dbSink.info(new InfoLogEvent("%s", new Object[]{TEST_MSG}));
 
         DBCommand cmd = db.createCommand();
-        cmd.select(db.Log.Level, db.Log.Msg);
+        cmd.select(db.Log.LEVEL, db.Log.MSG);
         DBReader rdr = new DBReader();
         rdr.open(cmd, db.getConnection());
 

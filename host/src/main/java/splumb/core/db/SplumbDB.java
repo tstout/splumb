@@ -8,6 +8,7 @@ import splumb.common.db.DBDriver;
 import splumb.common.db.DataSet;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogLevel;
+import splumb.core.db.tables.LogSource;
 
 import java.sql.Connection;
 
@@ -17,13 +18,18 @@ public class SplumbDB extends DBDatabase {
 
     public final Log Log = new Log(this);
     public final LogLevel LogLevel = new LogLevel(this);
+    public final LogSource LogSource = new LogSource(this);
 
     private DBDriver driver;
 
     @Inject
     public SplumbDB(DBDriver driver) {
         this.driver = driver;
-        addRelation(Log.Level.referenceOn(LogLevel.LogLevelId));
+
+        addRelation(Log.LEVEL.referenceOn(LogLevel.LOG_LEVEL_ID));
+        addRelation(Log.LOG_SOURCE_ID.referenceOn(LogSource.LOG_SOURCE_ID));
+
+
         this.open(driver.getDriver(), driver.getConnection());
     }
 
@@ -64,7 +70,7 @@ public class SplumbDB extends DBDatabase {
     private void addDefaultData(Connection conn) {
 
         new DataSet()
-                .withColumns(of(LogLevel.LogLevelId, LogLevel.Name))
+                .withColumns(of(LogLevel.LOG_LEVEL_ID, LogLevel.NAME))
                 .withValues(of(
                         0, "ERROR",
                         1, "INFO",

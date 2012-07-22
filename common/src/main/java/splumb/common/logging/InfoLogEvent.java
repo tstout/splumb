@@ -1,4 +1,4 @@
-package splumb.core.logging;
+package splumb.common.logging;
 
 // TODO -  make varargs...
 public class InfoLogEvent extends LogEvent {

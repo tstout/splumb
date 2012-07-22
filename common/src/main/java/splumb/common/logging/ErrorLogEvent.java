@@ -1,4 +1,5 @@
-package splumb.core.logging;
+package splumb.common.logging;
+
 
 public class ErrorLogEvent extends LogEvent {
     public ErrorLogEvent(String fmt, Object[] args) {

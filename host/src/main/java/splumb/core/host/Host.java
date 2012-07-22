@@ -4,12 +4,9 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import joptsimple.OptionParser;
-import splumb.core.db.DBDevModule;
-import splumb.core.db.SplumbDB;
-import splumb.core.logging.DBLogSink;
-import splumb.core.logging.DevLoggingModule;
-import splumb.core.logging.LogBus;
 import splumb.common.logging.LogPublisher;
+import splumb.core.db.DBDevModule;
+import splumb.core.logging.DevLoggingModule;
 
 public class Host {
 
@@ -34,20 +31,14 @@ public class Host {
                 new DBDevModule(),
                 new DevInjectModule(args));
 
-        LogBus logBus = injector.getInstance(LogBus.class);
-        logBus.sub(new ConsoleLogSink());
-
-        injector.injectMembers(this);
-
         //
-        // Start any core services...
+        // Start core services...
         //
         CoreServiceLoader loader =
                 injector.getInstance(CoreServiceLoader.class)
                         .load(injector);
 
-        injector.getInstance(SplumbDB.class).create();
-        logBus.sub(injector.getInstance(DBLogSink.class));
+        injector.injectMembers(this);
 
         logger.info("host Initialization Complete");
         loader.waitForTerm();

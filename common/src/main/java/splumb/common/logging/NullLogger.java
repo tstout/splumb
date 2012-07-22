@@ -1,7 +1,5 @@
-package splumb.core.logging;
+package splumb.common.logging;
 
-
-import splumb.common.logging.LogPublisher;
 
 public class NullLogger implements LogPublisher {
     @Override

@@ -2,6 +2,8 @@ package splumb.core.logging;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import splumb.common.logging.LogBus;
+import splumb.common.logging.LogEvent;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -23,6 +25,11 @@ class AsyncBus implements LogBus {
     @Override
     public void sub(Object listener) {
         bus.register(listener);
+    }
+
+    @Override
+    public void unsub(Object listener) {
+        bus.unregister(listener);
     }
 
     @Override

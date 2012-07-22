@@ -1,4 +1,4 @@
-package splumb.core.util;
+package splumb.common.util;
 
 public class Prop<T> {
     public T get() {

@@ -2,14 +2,13 @@ package splumb.core.db;
 
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
-import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
 import splumb.common.logging.LogPublisher;
 
 import java.sql.SQLException;
 
-class H2DBService extends AbstractIdleService {
+public class H2DBService extends AbstractIdleService {
 
     private Server h2Server;
     private LogPublisher logger;

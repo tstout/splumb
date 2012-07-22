@@ -1,4 +1,6 @@
-package splumb.core.logging;
+package splumb.common.logging;
+
+import splumb.common.logging.LogEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;

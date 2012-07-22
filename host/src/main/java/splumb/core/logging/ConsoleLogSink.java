@@ -1,13 +1,13 @@
-package splumb.core.host;
+package splumb.core.logging;
+
+import com.google.common.eventbus.Subscribe;
+import splumb.common.logging.DebugLogEvent;
+import splumb.common.logging.ErrorLogEvent;
+import splumb.common.logging.InfoLogEvent;
+import splumb.common.logging.LogEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-
-import com.google.common.eventbus.Subscribe;
-import splumb.core.logging.DebugLogEvent;
-import splumb.core.logging.ErrorLogEvent;
-import splumb.core.logging.InfoLogEvent;
-import splumb.core.logging.LogEvent;
 
 // TODO - look into benefits of console vs out...
 // TODO - does this belong in host?

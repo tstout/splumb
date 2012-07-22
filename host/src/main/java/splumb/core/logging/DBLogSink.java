@@ -2,19 +2,19 @@ package splumb.core.logging;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import splumb.common.db.DataSet;
+import splumb.common.logging.DebugLogEvent;
+import splumb.common.logging.ErrorLogEvent;
+import splumb.common.logging.InfoLogEvent;
+import splumb.common.logging.LogEvent;
 import splumb.core.db.SplumbDB;
-
-import static com.google.common.collect.ImmutableSet.of;
 
 /**
  * A Log consumer that writes to a database.
- * todo - probably don't need this to be public....
  */
-public class DBLogSink {
+ class DBLogSink {
 
     private SplumbDB db;
-    private LogFormatter formatter = new LogFormatter();
+
 
     // TODO - move this somewhere else
     enum LogLevel {
@@ -43,12 +43,12 @@ public class DBLogSink {
 
     private void writeRecord(LogLevel level, LogEvent evt) {
 
-        new DataSet()
-                .withColumns(of(db.Log.Level, db.Log.DateTime, db.Log.Msg))
-                .withValues(of(
-                        level.ordinal(),
-                        evt.timeStamp.get(),
-                        String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get())))
-                .insertInto(db.Log, db.getConnection());
+//        new DataSet()
+//                .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.MSG))
+//                .withValues(of(
+//                        level.ordinal() + 1,
+//                        evt.timeStamp.get(),
+//                        String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get())))
+//                .insertInto(db.Log, db.getConnection());
     }
 }
