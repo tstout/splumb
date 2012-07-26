@@ -2,11 +2,14 @@ package splumb.core.logging;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
+import splumb.common.db.DataSet;
 import splumb.common.logging.DebugLogEvent;
 import splumb.common.logging.ErrorLogEvent;
 import splumb.common.logging.InfoLogEvent;
 import splumb.common.logging.LogEvent;
 import splumb.core.db.SplumbDB;
+
+import static com.google.common.collect.ImmutableSet.of;
 
 /**
  * A Log consumer that writes to a database.
@@ -43,12 +46,13 @@ import splumb.core.db.SplumbDB;
 
     private void writeRecord(LogLevel level, LogEvent evt) {
 
-//        new DataSet()
-//                .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.MSG))
-//                .withValues(of(
-//                        level.ordinal() + 1,
-//                        evt.timeStamp.get(),
-//                        String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get())))
-//                .insertInto(db.Log, db.getConnection());
+        new DataSet()
+                .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.LOG_SOURCE_ID, db.Log.MSG))
+                .withValues(of(
+                        level.ordinal() + 1,
+                        evt.timeStamp.get(),
+                        "unknown",
+                        String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get())))
+                .insertInto(db.Log, db.getConnection());
     }
 }
