@@ -24,6 +24,8 @@ public class SplumbDB extends DBDatabase {
 
     @Inject
     public SplumbDB(DBDriver driver) {
+        // TODO - need to investigate using schema names.
+        //super("SPLUMB");
         this.driver = driver;
 
         addRelation(Log.LEVEL.referenceOn(LogLevel.LOG_LEVEL_ID));

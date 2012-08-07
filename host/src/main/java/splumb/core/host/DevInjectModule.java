@@ -1,7 +1,6 @@
 package splumb.core.host;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -20,5 +19,19 @@ class DevInjectModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(OptionSet.class).toInstance(optionSet);
+
+//        bindListener(Matchers.any(), new TypeListener() {
+//            public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
+//                typeEncounter.register(new InjectionListener<I>() {
+//                    public void afterInjection(I i) {
+//
+//                        //eventBus.register(i);
+//                    }
+//                });
+//            }
+//        });
+
+
+
     }
 }

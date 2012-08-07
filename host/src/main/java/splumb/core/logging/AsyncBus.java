@@ -17,7 +17,6 @@ class AsyncBus implements LogBus {
 
     private AsyncEventBus bus = new AsyncEventBus(eventThr);
 
-    // TODO - inject a log configuration .....
     public AsyncBus() {
     }
 
