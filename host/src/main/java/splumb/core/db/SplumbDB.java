@@ -29,7 +29,7 @@ public class SplumbDB extends DBDatabase {
         this.driver = driver;
 
         addRelation(Log.LEVEL.referenceOn(LogLevel.LOG_LEVEL_ID));
-        //addRelation(Log.LOG_SOURCE_ID.referenceOn(LogSource.LOG_SOURCE_ID));
+        //addRelation(Log.LOG_SOURCE.referenceOn(LogSource.LOG_SOURCE));
 
 
         this.open(driver.getDriver(), driver.getConnection());

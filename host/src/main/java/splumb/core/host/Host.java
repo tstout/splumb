@@ -12,35 +12,41 @@ public class Host {
 
     private LogPublisher logger;
 
+    public Host() {}
+
     @Inject
     public void setLogger(LogPublisher logger) {
         this.logger = logger;
     }
 
     public static void main(String[] args) {
-        new Host(args);
-    }
-
-    Host(String[] args) {
-
-        OptionParser parser = new OptionParser();
-        parser.accepts("nodb", "Run without database");
 
         Injector injector = Guice.createInjector(
                 new DevLoggingModule(),
                 new DBDevModule(),
                 new DevInjectModule(args));
 
-        //
-        // Start core services...
-        //
+        injector.getInstance(Host.class).start(injector);
+    }
+
+    void start(Injector injector) {
         CoreServiceLoader loader =
                 injector.getInstance(CoreServiceLoader.class)
                         .load(injector);
 
-        injector.injectMembers(this);
+        //injector.injectMembers(this);
 
         logger.info("host Initialization Complete");
         loader.waitForTerm();
+
+    }
+
+
+    Host(String[] args) {
+
+        OptionParser parser = new OptionParser();
+        parser.accepts("nodb", "Run without database");
+
+
     }
 }

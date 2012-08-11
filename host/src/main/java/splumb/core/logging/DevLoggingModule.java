@@ -22,7 +22,7 @@ public class DevLoggingModule extends AbstractModule {
 
                 //
                 //if (typeLiteral.getRawType() == Logger.class) {
-                    System.out.printf("type is %s (Encounter name: %s)\n", typeLiteral.getRawType().getName(), typeEncounter.getClass().getName());
+                    //System.out.printf("type is %s (Encounter name: %s)\n", typeLiteral.getRawType().getName(), typeEncounter.getClass().getName());
                 //}
 
 //                typeEncounter.register(new InjectionListener<I>() {
