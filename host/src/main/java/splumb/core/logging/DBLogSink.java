@@ -3,10 +3,7 @@ package splumb.core.logging;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import splumb.common.db.DataSet;
-import splumb.common.logging.DebugLogEvent;
-import splumb.common.logging.ErrorLogEvent;
-import splumb.common.logging.InfoLogEvent;
-import splumb.common.logging.LogEvent;
+import splumb.common.logging.*;
 import splumb.core.db.SplumbDB;
 
 import static com.google.common.collect.ImmutableSet.of;
@@ -17,12 +14,6 @@ import static com.google.common.collect.ImmutableSet.of;
  class DBLogSink {
 
     private SplumbDB db;
-
-
-    // TODO - move this somewhere else
-    enum LogLevel {
-      ERROR, INFO, DEBUG
-    }
 
     @Inject
     public DBLogSink(SplumbDB db) {
