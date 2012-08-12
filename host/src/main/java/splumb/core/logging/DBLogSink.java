@@ -53,7 +53,7 @@ import static com.google.common.collect.ImmutableSet.of;
                         evt.timeStamp.get(),
                         "unknown",
                         String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()),
-                        Thread.currentThread().getName()))
+                        evt.thread.get()))
                 .insertInto(db.Log, db.getConnection());
     }
 }
