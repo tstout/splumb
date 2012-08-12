@@ -12,11 +12,13 @@ import static splumb.common.util.Prop.newProp;
 // Perhaps this is better suited to an immutable object with a builder.
 //
 public class LogEvent {
-    public final Prop<Date> timeStamp = Prop.newProp(new Date());
+    public final Prop<Date> timeStamp = newProp(new Date());
 
-    public final Prop<String> fmt = Prop.newProp();
+    public final Prop<String> fmt = newProp();
 
-    public final Prop<Object[]> args = Prop.newProp();
+    public final Prop<Object[]> args = newProp();
+
+    public final Prop<String> thread = newProp(Thread.currentThread().getName());
 
     public LogEvent() {
     }
