@@ -1,6 +1,6 @@
 package splumb.common.logging;
 
-public enum LogLevel {
+public enum Level {
     ERROR,
     INFO,
     DEBUG

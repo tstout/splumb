@@ -32,7 +32,7 @@ public class DBLogSinkTest {
 
     @Test
     public void testInfoWrite() {
-        dbSink.info(new InfoLogEvent("%s", new Object[]{TEST_MSG}));
+        dbSink.info(new InfoLogEvent("DBLogSinkTest", "%s", new Object[]{TEST_MSG}));
 
         DBCommand cmd = db.createCommand();
         cmd.select(db.Log.LEVEL, db.Log.MSG);

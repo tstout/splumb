@@ -1,53 +1,45 @@
-package splumb.core.logging;
-
-import com.google.inject.Inject;
-import splumb.common.logging.*;
+package splumb.common.logging;
 
 //
 // TODO - need to add some filtering capabilities here
 // the configuration needs to be injected here, not the
 // async bus for perf reasons.
 //
-class Logger implements LogPublisher {
+public abstract class AbstractLogger implements LogPublisher {
 
-    private LogBus bus;
 
-    enum Level {
-        ERROR,
-        INFO,
-        DEBUG
-    };
-
-    @Inject
-    Logger(LogBus bus) {
-        this.bus = bus;
+    public AbstractLogger() {
     }
+
+    protected abstract LogBus getLogBus();
+
+    protected abstract String getSource();
 
     @Override
     public void info(String fmt, Object... parms) {
         if (isRouteable(Level.INFO)) {
-            bus.pub(new InfoLogEvent(fmt, parms));
+            getLogBus().pub(new InfoLogEvent(getSource(), fmt, parms));
         }
     }
 
     @Override
     public void info(String msg) {
         if (isRouteable(Level.INFO)) {
-            bus.pub(new InfoLogEvent("%s", new Object[]{msg}));
+            getLogBus().pub(new InfoLogEvent(getSource(), "%s", new Object[]{msg}));
         }
     }
 
     @Override
     public void error(String fmt, Object... parms) {
         if (isRouteable(Level.ERROR)) {
-            bus.pub(new ErrorLogEvent(fmt, parms));
+            getLogBus().pub(new ErrorLogEvent(getSource(), fmt, parms));
         }
     }
 
     @Override
     public void debug(String fmt, Object... parms) {
         if (isRouteable(Level.DEBUG)) {
-            bus.pub(new DebugLogEvent(fmt, parms));
+            getLogBus().pub(new DebugLogEvent(getSource(), fmt, parms));
         }
     }
 

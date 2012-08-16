@@ -22,27 +22,27 @@ import static com.google.common.collect.ImmutableSet.of;
 
     @Subscribe
     public void info(InfoLogEvent evt) {
-        writeRecord(LogLevel.INFO, evt);
+        writeRecord(Level.INFO, evt);
     }
 
     @Subscribe
     public void error(ErrorLogEvent evt) {
-       writeRecord(LogLevel.ERROR, evt);
+       writeRecord(Level.ERROR, evt);
     }
 
     @Subscribe
     public void debug(DebugLogEvent evt) {
-        writeRecord(LogLevel.DEBUG, evt);
+        writeRecord(Level.DEBUG, evt);
     }
 
-    private void writeRecord(LogLevel level, LogEvent evt) {
+    private void writeRecord(Level level, LogEvent evt) {
 
         new DataSet()
                 .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.LOG_SOURCE, db.Log.MSG, db.Log.THREAD))
                 .withValues(of(
                         level.ordinal() + 1,
                         evt.timeStamp.get(),
-                        "unknown",
+                        evt.source.get(),
                         String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()),
                         evt.thread.get()))
                 .insertInto(db.Log, db.getConnection());

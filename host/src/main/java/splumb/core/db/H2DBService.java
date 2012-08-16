@@ -4,18 +4,18 @@ import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
-import splumb.common.logging.LogPublisher;
+import splumb.core.host.HostLogger;
 
 import java.sql.SQLException;
 
 public class H2DBService extends AbstractIdleService {
 
     private Server h2Server;
-    private LogPublisher logger;
+    private HostLogger logger;
     private Impl implementation;
 
     @Inject
-    public H2DBService(LogPublisher logger, OptionSet optionSet) {
+    public H2DBService(HostLogger logger, OptionSet optionSet) {
         this.logger = logger;
         implementation = optionSet.has("nodb") ? new Impl() : new ActiveImpl();
     }

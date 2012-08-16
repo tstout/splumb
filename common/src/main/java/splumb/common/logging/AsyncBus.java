@@ -1,14 +1,12 @@
-package splumb.core.logging;
+package splumb.common.logging;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import splumb.common.logging.LogBus;
-import splumb.common.logging.LogEvent;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-class AsyncBus implements LogBus {
+public class AsyncBus implements LogBus {
 
     private Executor eventThr = Executors.newSingleThreadExecutor(
             new ThreadFactoryBuilder()

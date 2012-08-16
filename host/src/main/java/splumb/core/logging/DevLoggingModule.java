@@ -6,14 +6,14 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import splumb.common.logging.AsyncBus;
 import splumb.common.logging.LogBus;
-import splumb.common.logging.LogPublisher;
 
 public class DevLoggingModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(LogPublisher.class).to(Logger.class);
+        //bind(LogPublisher.class).to(AbstractLogger.class);
 
         bind(LogBus.class).to(AsyncBus.class).in(Scopes.SINGLETON);
 
@@ -21,7 +21,7 @@ public class DevLoggingModule extends AbstractModule {
             public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
 
                 //
-                //if (typeLiteral.getRawType() == Logger.class) {
+                //if (typeLiteral.getRawType() == AbstractLogger.class) {
                     //System.out.printf("type is %s (Encounter name: %s)\n", typeLiteral.getRawType().getName(), typeEncounter.getClass().getName());
                 //}
 

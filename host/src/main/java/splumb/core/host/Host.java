@@ -1,20 +1,20 @@
 package splumb.core.host;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
-import splumb.common.logging.LogPublisher;
 import splumb.core.db.DBDevModule;
 import splumb.core.logging.DevLoggingModule;
 
+import javax.inject.Inject;
+
 public class Host {
 
-    private LogPublisher logger;
+    private HostLogger logger;
 
     public Host() {}
 
     @Inject
-    public void setLogger(LogPublisher logger) {
+    public void setLogger(HostLogger logger) {
         this.logger = logger;
     }
 
