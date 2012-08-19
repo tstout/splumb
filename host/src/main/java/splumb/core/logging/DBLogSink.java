@@ -38,7 +38,7 @@ import static com.google.common.collect.ImmutableSet.of;
     private void writeRecord(Level level, LogEvent evt) {
 
         new DataSet()
-                .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.LOG_SOURCE, db.Log.MSG, db.Log.THREAD))
+                .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.LOGGER, db.Log.MSG, db.Log.THREAD))
                 .withValues(of(
                         level.ordinal() + 1,
                         evt.timeStamp.get(),

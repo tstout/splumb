@@ -23,7 +23,7 @@ public class Host {
         Injector injector = Guice.createInjector(
                 new DevLoggingModule(),
                 new DBDevModule(),
-                new DevInjectModule(args));
+                new HostInjectModule(args));
 
         injector.getInstance(Host.class).start(injector);
     }

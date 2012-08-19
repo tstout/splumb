@@ -4,16 +4,17 @@ import com.google.inject.AbstractModule;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
-class DevInjectModule extends AbstractModule {
+class HostInjectModule extends AbstractModule {
 
     private String[] args;
     private OptionSet optionSet;
 
-    public DevInjectModule(String[] args) {
+    public HostInjectModule(String[] args) {
         OptionParser parser = new OptionParser();
-            parser.accepts("nodb", "Run without DB");
+        parser.accepts("nodb", "Run without DB");
+        parser.accepts("droptables", "drop and recreate tables at startup");
 
-            optionSet = parser.parse(args);
+        optionSet = parser.parse(args);
     }
 
     @Override
@@ -30,7 +31,6 @@ class DevInjectModule extends AbstractModule {
 //                });
 //            }
 //        });
-
 
 
     }

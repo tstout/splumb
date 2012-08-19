@@ -11,7 +11,7 @@ public class Log extends DBTable {
     public final DBTableColumn LEVEL = addColumn("LEVEL", DataType.INTEGER, 0, true);
     public final DBTableColumn DATE_TIME = addColumn("DATE_TIME", DataType.DATETIME, 0, true);
     public final DBTableColumn MSG = addColumn("MSG", DataType.TEXT, 8096, true);
-    public final DBTableColumn LOG_SOURCE = addColumn("LOG_SOURCE", DataType.TEXT, 256, true);
+    public final DBTableColumn LOGGER = addColumn("LOGGER", DataType.TEXT, 256, true);
     public final DBTableColumn THREAD = addColumn("THREAD", DataType.TEXT, 128, true);
 
     public Log(DBDatabase db) {
