@@ -31,6 +31,10 @@ public class DBLogSinkTest {
     }
 
     @Test
+    public void testf() {
+
+    }
+    //@Test
     public void testInfoWrite() {
         dbSink.info(new InfoLogEvent("DBLogSinkTest", "%s", new Object[]{TEST_MSG}));
 

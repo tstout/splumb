@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
-import splumb.core.host.HostLogger;
+import splumb.core.logging.HostLogger;
 
 import java.sql.SQLException;
 

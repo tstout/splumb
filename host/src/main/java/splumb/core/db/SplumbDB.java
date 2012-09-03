@@ -9,9 +9,11 @@ import org.apache.empire.db.DBSQLScript;
 import org.apache.empire.db.DBTable;
 import splumb.common.db.DBDriver;
 import splumb.common.db.DataSet;
+import splumb.common.logging.Level;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
+import splumb.core.logging.HostLogger;
 
 import java.sql.Connection;
 
@@ -83,15 +85,17 @@ public class SplumbDB extends DBDatabase {
 
     private void addDefaultData(Connection conn) {
 
-        new DataSet()
-                .withColumns(of(LogLevel.LOG_LEVEL_ID, LogLevel.NAME))
-                .withValues(of(
-                        2, "ERROR",
-                        1, "INFO",
-                        0, "DEBUG"))
-                .insertInto(LogLevel, conn);
+         new DataSet()
+                 .withColumns(of(LogLevel.LOG_LEVEL_ID, LogLevel.NAME))
+                 .withValues(of(
+                         2, "ERROR",
+                         1, "INFO",
+                         0, "DEBUG"))
+                 .insertInto(LogLevel, conn);
 
-        commit(conn);
-
+         new DataSet()
+                 .withColumns(of(LogConfig.LOGGER, LogConfig.LOG_LEVEL))
+                 .withValues(of(HostLogger.LOGGER_NAME, Level.DEBUG.ordinal()))
+                 .insertInto(LogConfig, driver.getConnection());
     }
 }

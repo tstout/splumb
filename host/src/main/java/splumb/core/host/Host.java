@@ -6,6 +6,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import splumb.core.db.DBDevModule;
 import splumb.core.logging.DevLoggingModule;
+import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
 
