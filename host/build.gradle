@@ -13,7 +13,7 @@ dependencies {
 //Note...very important to do a .join on ' ' rather than .join(',') as described in the examples.
 
 //
-// Note sure which of these I prefer....
+// Not sure which of these I prefer....
 
 jar {
     baseName = 'splumb-host'

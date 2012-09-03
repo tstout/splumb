@@ -15,6 +15,8 @@ public abstract class AbstractLogger implements LogPublisher {
 
     protected abstract String getSource();
 
+    protected abstract boolean isRouteable(Level logLevel);
+
     @Override
     public void info(String fmt, Object... parms) {
         if (isRouteable(Level.INFO)) {
@@ -42,9 +44,4 @@ public abstract class AbstractLogger implements LogPublisher {
             getLogBus().pub(new DebugLogEvent(getSource(), fmt, parms));
         }
     }
-
-    private boolean isRouteable(Level logLevel) {
-        return true;
-    }
-
 }

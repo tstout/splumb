@@ -2,6 +2,8 @@ package splumb.core.host;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
 import splumb.core.db.DBDevModule;
 import splumb.core.logging.DevLoggingModule;
 
@@ -18,12 +20,24 @@ public class Host {
         this.logger = logger;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
+        OptionParser parser = new OptionParser();
+        parser.accepts("nodb", "Run without DB");
+        parser.accepts("droptables", "drop and recreate tables at startup");
+        parser.accepts("help", "Show help");
+
+        OptionSet optionSet = parser.parse(args);
+
+        if (optionSet.has("help")) {
+            parser.printHelpOn(System.out);
+            System.exit(0);
+        }
 
         Injector injector = Guice.createInjector(
                 new DevLoggingModule(),
                 new DBDevModule(),
-                new HostInjectModule(args));
+                new HostInjectModule(optionSet));
 
         injector.getInstance(Host.class).start(injector);
     }
