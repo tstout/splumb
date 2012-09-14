@@ -1,4 +1,4 @@
-package splumb.common.util;
+package splumb.common.message;
 
 public class ROProp<T> {
     public T get() {

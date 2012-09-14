@@ -1,10 +1,10 @@
 package splumb.common.logging;
 
-import splumb.common.util.Prop;
+import splumb.common.message.Prop;
 
 import java.util.Date;
 
-import static splumb.common.util.Prop.newProp;
+import static splumb.common.message.Prop.newProp;
 
 //
 // TODO - would an interface be a better design here...not sure

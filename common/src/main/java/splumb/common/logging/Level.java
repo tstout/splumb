@@ -5,6 +5,8 @@ public enum Level {
     INFO,
     ERROR;
 
+    // TODO - replace with BiMap...
+
     public static Level fromInt(int val) {
         switch (val) {
             case 0:

@@ -21,7 +21,7 @@ class CoreServiceLoader {
 
     public CoreServiceLoader load(Injector injector) {
 
-        for (Class<? extends Service> service : of(LogService.class, H2DBService.class, DBLogService.class)) {
+        for (Class<? extends Service> service : of(H2DBService.class, LogService.class, DBLogService.class)) {
 
             Service coreService = injector.getInstance(service);
 
