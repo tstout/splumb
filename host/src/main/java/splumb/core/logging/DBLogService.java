@@ -21,8 +21,8 @@ public class DBLogService extends AbstractIdleService {
 
     @Override
     protected void startUp() throws Exception {
-        db.create();
         bus.sub(sink);
+        db.create();
     }
 
     @Override

@@ -2,12 +2,12 @@ package splumb.core.db;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractIdleService;
-import com.google.inject.Inject;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
 import splumb.core.events.DbAvailableEvent;
 import splumb.core.logging.HostLogger;
 
+import javax.inject.Inject;
 import java.sql.SQLException;
 
 public class H2DBService extends AbstractIdleService {
@@ -57,7 +57,6 @@ public class H2DBService extends AbstractIdleService {
 
         public void stop() {
             h2Server.stop();
-            logger.info("H2 service shutdown complete");
         }
     }
 }

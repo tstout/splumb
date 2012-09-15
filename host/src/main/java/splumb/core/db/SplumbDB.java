@@ -1,6 +1,8 @@
 package splumb.core.db;
 
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import joptsimple.OptionSet;
 import org.apache.empire.db.DBCmdType;
@@ -13,6 +15,8 @@ import splumb.common.logging.Level;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
+import splumb.core.events.DbAvailableEvent;
+import splumb.core.events.HostDbTablesAvailableEvent;
 import splumb.core.logging.HostLogger;
 
 import java.sql.Connection;
@@ -27,14 +31,19 @@ public class SplumbDB extends DBDatabase {
 
     private DBDriver driver;
     private OptionSet options;
+    private EventBus eventBus;
 
     @Inject
-    public SplumbDB(DBDriver driver, OptionSet options) {
+    public SplumbDB(DBDriver driver, OptionSet options, EventBus eventBus) {
         // TODO - need to investigate using schema names.
         //super("SPLUMB");
         this.driver = driver;
         this.options = options;
+        this.eventBus = eventBus;
+    }
 
+    @Subscribe
+    public void init(DbAvailableEvent evt) {
         addRelation(Log.LEVEL.referenceOn(LogLevel.LOG_LEVEL_ID));
         this.open(driver.getDriver(), driver.getConnection());
     }
@@ -80,6 +89,7 @@ public class SplumbDB extends DBDatabase {
             }
         }
 
+        eventBus.post(new HostDbTablesAvailableEvent());
         return this;
     }
 

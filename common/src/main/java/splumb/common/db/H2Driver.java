@@ -31,7 +31,4 @@ public class H2Driver implements DBDriver {
             throw new RuntimeException(e);
         }
     }
-
-
-
 }
