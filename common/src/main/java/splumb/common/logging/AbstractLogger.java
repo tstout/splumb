@@ -1,10 +1,6 @@
 package splumb.common.logging;
 
-//
-// TODO - need to add some filtering capabilities here
-// the configuration needs to be injected here, not the
-// async bus for perf reasons.
-//
+
 public abstract class AbstractLogger implements LogPublisher {
 
 

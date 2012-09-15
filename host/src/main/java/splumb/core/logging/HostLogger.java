@@ -3,7 +3,7 @@ package splumb.core.logging;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import splumb.common.logging.*;
-import splumb.core.events.DbAvailableEvent;
+import splumb.core.events.HostDbTablesAvailableEvent;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static splumb.common.logging.Level.*;
 
 
-public class HostLogger extends AbstractLogger{
+public class HostLogger extends AbstractLogger {
     public static String LOGGER_NAME = "host";
 
     private LogBus logBus;
@@ -42,6 +42,11 @@ public class HostLogger extends AbstractLogger{
     }
 
     @Override
+    public void info(String msg) {
+        logImpl.info("%s", msg);
+    }
+
+    @Override
     public void info(String fmt, Object... parms) {
         logImpl.info(fmt, parms);
     }
@@ -57,7 +62,7 @@ public class HostLogger extends AbstractLogger{
     }
 
     @Subscribe
-    private void dbAvailable(DbAvailableEvent dbAvailableEvent) {
+    public void dbAvailable(HostDbTablesAvailableEvent hostDbTablesAvailableEvent) {
         logImpl = new ActiveImpl();
 
         for (LogRecord log : logQueue) {
@@ -65,15 +70,16 @@ public class HostLogger extends AbstractLogger{
                 case INFO:
                     logImpl.info(log.fmt, log.args);
                     break;
-                    case ERROR:
-                        logImpl.error(log.fmt, log.args);
-                        break;
-                    case DEBUG:
-                        logImpl.debug(log.fmt, log.args);
-                        break;
-
+                case ERROR:
+                    logImpl.error(log.fmt, log.args);
+                    break;
+                case DEBUG:
+                    logImpl.debug(log.fmt, log.args);
+                    break;
             }
         }
+
+        logQueue.clear();
     }
 
     class ActiveImpl extends AbstractLogger {
@@ -115,7 +121,7 @@ public class HostLogger extends AbstractLogger{
 
         @Override
         public void info(String msg) {
-            logQueue.add(new LogRecord(INFO, "%s", new Object[] {msg}));
+            logQueue.add(new LogRecord(INFO, "%s", new Object[]{msg}));
         }
 
         @Override
