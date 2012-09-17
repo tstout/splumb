@@ -3,7 +3,7 @@ package splumb.core.logging;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import splumb.common.logging.*;
-import splumb.core.events.HostDbTablesAvailableEvent;
+import splumb.core.host.events.HostDbTablesAvailableEvent;
 
 import java.util.List;
 

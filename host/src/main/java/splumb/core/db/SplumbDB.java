@@ -15,8 +15,8 @@ import splumb.common.logging.Level;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
-import splumb.core.events.DbAvailableEvent;
-import splumb.core.events.HostDbTablesAvailableEvent;
+import splumb.core.host.events.DbAvailableEvent;
+import splumb.core.host.events.HostDbTablesAvailableEvent;
 import splumb.core.logging.HostLogger;
 
 import java.sql.Connection;

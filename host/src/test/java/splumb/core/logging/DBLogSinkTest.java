@@ -31,7 +31,7 @@ public class DBLogSinkTest {
     }
 
     @Test
-    public void testf() {
+    public void testF() {
 
     }
     //@Test

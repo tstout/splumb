@@ -4,7 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractIdleService;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
-import splumb.core.events.DbAvailableEvent;
+import splumb.core.host.events.DbAvailableEvent;
 import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;

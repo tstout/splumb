@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 // TODO - look into benefits of console vs out...
-// TODO - does this belong in host?
 class ConsoleLogSink {
 
     SimpleDateFormat dateFmt =

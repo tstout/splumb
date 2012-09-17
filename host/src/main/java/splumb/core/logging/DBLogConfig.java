@@ -7,7 +7,7 @@ import org.apache.empire.db.DBReader;
 import splumb.common.logging.Level;
 import splumb.common.logging.LogConfig;
 import splumb.core.db.SplumbDB;
-import splumb.core.events.HostDbTablesAvailableEvent;
+import splumb.core.host.events.HostDbTablesAvailableEvent;
 
 import javax.inject.Inject;
 import java.util.Map;

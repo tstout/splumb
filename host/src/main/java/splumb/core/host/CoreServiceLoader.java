@@ -10,18 +10,16 @@ import splumb.core.logging.LogService;
 import static com.google.common.collect.ImmutableSet.of;
 
 class CoreServiceLoader {
-    //private ComponentLoader loader;
     private ShutdownActions shutdownActions;
 
     @Inject
     public CoreServiceLoader(ShutdownActions shutdownActions) {
-        //this.loader = loader;
         this.shutdownActions = shutdownActions;
     }
 
     public CoreServiceLoader load(Injector injector) {
 
-        for (Class<? extends Service> service : of(H2DBService.class, LogService.class, DBLogService.class)) {
+        for (Class<? extends Service> service : of(LogService.class, H2DBService.class, DBLogService.class)) {
 
             Service coreService = injector.getInstance(service);
 

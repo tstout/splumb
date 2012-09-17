@@ -10,7 +10,6 @@ public class DevLoggingModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        //bind(LogPublisher.class).to(AbstractLogger.class);
 
         bind(LogBus.class).to(AsyncBus.class).in(Scopes.SINGLETON);
         bind(LogConfig.class).to(DBLogConfig.class).in(Scopes.SINGLETON);

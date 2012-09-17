@@ -6,7 +6,10 @@ dependencies {
             'com.google.inject:guice:3.0',
             'net.sf.extcos:extcos:0.3b',
             'org.apache.empire-db:empire-db:2.3.0',
-            'net.sf.jopt-simple:jopt-simple:4.3'
+            'net.sf.jopt-simple:jopt-simple:4.3',
+            'org.mockito:mockito-core:1.9.0',
+            'org.xeustechnologies:jcl-core:2.4',
+            'org.abstractmeta:compilation-toolbox:0.3.1'
     )
 }
 

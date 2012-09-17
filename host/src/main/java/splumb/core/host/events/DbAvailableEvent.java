@@ -1,4 +1,4 @@
-package splumb.core.events;
+package splumb.core.host.events;
 
 public class DbAvailableEvent {
 }
