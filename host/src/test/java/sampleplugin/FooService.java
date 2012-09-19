@@ -2,7 +2,7 @@ package sampleplugin;
 
 import com.google.common.util.concurrent.AbstractIdleService;
 
-class FooService extends AbstractIdleService {
+public class FooService extends AbstractIdleService {
 
     public FooService() {
     }

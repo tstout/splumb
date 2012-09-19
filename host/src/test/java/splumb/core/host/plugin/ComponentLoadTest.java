@@ -9,8 +9,8 @@ import org.xeustechnologies.jcl.JarClassLoader;
 import splumb.core.logging.HostLogger;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
+import static com.google.common.collect.FluentIterable.from;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -26,18 +26,21 @@ public class ComponentLoadTest {
     }
 
     @Test
-    public void loadPluginTest() throws FileNotFoundException {
+    public void loadPluginTest() throws Exception {
         createJar();
 
         ComponentLoader loader = new ComponentLoader(logger);
         JarClassLoader jarClassLoader = new JarClassLoader();
 
-        jarClassLoader.add(String.format("%s/", System.getProperty("user.dir")));
+        jarClassLoader.add(String.format("%s/sampleplugin.jar", System.getProperty("user.dir")));
 
         ImmutableSet<Class<? extends Service>> services =
                 loader.load("sampleplugin",
                         jarClassLoader);
 
+        Service testService = from(services).first().get().newInstance();
+
+        testService.startAndWait();
         assertThat(services.size(), not(0));
     }
 
