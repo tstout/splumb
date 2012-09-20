@@ -1,22 +1,26 @@
 package splumb.core.host.plugin;
 
 import java.io.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+
+import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
 
 public class JarBuilder {
 
     private JarOutputStream target;
     private Manifest manifest = new Manifest();
     private String basePath;
+    private CopyOnWriteArrayList<File> files = newCopyOnWriteArrayList();
 
     public JarBuilder() {
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
     }
 
-    public JarBuilder withBasePath(String basePath) {
+    public JarBuilder withStripFromPath(String basePath) {
         this.basePath = basePath;
         return this;
     }
@@ -31,24 +35,43 @@ public class JarBuilder {
         return this;
     }
 
-    public void build() {
+
+    public JarBuilder write() {
+        for (File file : files) {
+            writeFile(file);
+        }
+
+        files.clear();
+        return this;
+    }
+
+    public JarBuilder close() {
+
         try {
             target.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        return this;
     }
 
     public JarBuilder withFile(File source) {
+        files.add(source);
+        return this;
+    }
+
+    private void writeFile(File source) {
 
         BufferedInputStream in = null;
         try {
             if (source.isDirectory()) {
                 String name = source.getPath().replace("\\", "/");
-                if (!name.isEmpty()) {
-                    if (!name.endsWith("/"))
-                        name += "/";
 
+                if (!name.isEmpty()) {
+                    if (!name.endsWith("/")) {
+                        name += "/";
+                    }
 
                     JarEntry entry = new JarEntry(name.replace(basePath, ""));
 
@@ -58,10 +81,10 @@ public class JarBuilder {
                 }
 
                 for (File nestedFile : source.listFiles()) {
-                    withFile(nestedFile);
+                    writeFile(nestedFile);
                 }
 
-                return this;
+                return;
             }
 
             JarEntry entry = new JarEntry(
@@ -90,7 +113,6 @@ public class JarBuilder {
                     throw new RuntimeException(e);
                 }
         }
-
-        return this;
     }
 }
+

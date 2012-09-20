@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
 import splumb.common.logging.LogPublisher;
+import splumb.common.plugin.ServiceConfig;
 import splumb.core.logging.HostLogger;
 
 import java.util.Set;
@@ -16,6 +17,7 @@ class ComponentLoader {
 
     private LogPublisher logger;
     private final Set<Class<? extends Service>> services = newHashSet();
+    private final Set<Class<? extends ServiceConfig>> serviceConfig = newHashSet();
 
     @Inject
     public ComponentLoader(HostLogger logger) {
@@ -24,6 +26,24 @@ class ComponentLoader {
 
     public ImmutableSet<Class<? extends Service>> load(final String basePackage) {
         return load(basePackage, Thread.currentThread().getContextClassLoader());
+    }
+
+    public ImmutableSet<Class<? extends ServiceConfig>> loadServiceConfig(ClassLoader classLoader) {
+
+        ComponentScanner scanner = new ComponentScanner();
+
+        scanner.getClasses(new ComponentQuery() {
+            protected void query() {
+                select()
+                        .from("splumb.plugin")
+                        .andStore(thoseImplementing(ServiceConfig.class)
+                                .into(serviceConfig));
+            }
+        }, classLoader);
+
+        logger.info("Found %d Components...", services.size());
+
+        return ImmutableSet.copyOf(serviceConfig);
     }
 
     public ImmutableSet<Class<? extends Service>> load(final String basePackage, ClassLoader classLoader) {
