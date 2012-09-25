@@ -49,7 +49,7 @@ public class H2DBService extends AbstractIdleService {
                 h2Server = Server.createTcpServer(new String[]{});
                 h2Server.start();
                 eventBus.post(new DbAvailableEvent());
-                logger.info("H2 Started: %s", h2Server.getStatus());
+                logger.info("H2 Started -- Status:%s Url:%s", h2Server.getStatus(), h2Server.getURL());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

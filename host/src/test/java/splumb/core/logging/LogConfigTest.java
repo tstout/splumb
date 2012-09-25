@@ -20,7 +20,7 @@ public class LogConfigTest {
 
     @Test
     public void testDebugSetting() {
-        //assertThat(logConfig.getLevel(HostLogger.LOGGER_NAME).compareTo(Level.DEBUG), is(0));
+ //       assertThat(logConfig.getLevel(HostLogger.LOGGER_NAME).compareTo(Level.DEBUG), is(0));
     }
 
     @Test

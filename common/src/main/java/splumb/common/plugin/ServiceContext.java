@@ -9,7 +9,7 @@ public class ServiceContext {
         this.baseScanPackages = baseScanPackages;
     }
 
-    public List<String> getBaseScanPackage() {
+    public List<String> basePackages() {
         return baseScanPackages;
     }
 }

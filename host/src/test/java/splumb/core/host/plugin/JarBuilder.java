@@ -9,6 +9,9 @@ import java.util.jar.Manifest;
 
 import static com.google.common.collect.Lists.newCopyOnWriteArrayList;
 
+//
+// TODO - clean this up...could be useful outside of testing...
+//
 public class JarBuilder {
 
     private JarOutputStream target;

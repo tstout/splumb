@@ -10,6 +10,8 @@ import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
 
+import static java.util.Arrays.asList;
+
 public class Host {
 
     private HostLogger logger;
@@ -26,7 +28,7 @@ public class Host {
         OptionParser parser = new OptionParser();
         parser.accepts("nodb", "Run without DB");
         parser.accepts("droptables", "drop and recreate tables at startup");
-        parser.accepts("help", "Show help");
+        parser.acceptsAll(asList("help", "h"), "Show help");
 
         OptionSet optionSet = parser.parse(args);
 

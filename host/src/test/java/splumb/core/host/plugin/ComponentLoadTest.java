@@ -24,11 +24,11 @@ public class ComponentLoadTest {
     @Before
     public void setup() {
         initMocks(this);
+        createJar();
     }
 
     @Test
     public void loadPluginTest() throws Exception {
-        createJar();
 
         ComponentLoader loader = new ComponentLoader(logger);
         JarClassLoader jarClassLoader = new JarClassLoader();
@@ -39,6 +39,7 @@ public class ComponentLoadTest {
                 loader.load("sampleplugin",
                         jarClassLoader);
 
+        assertThat(services.size(), not(0));
         Service testService = from(services).first().get().newInstance();
 
         testService.startAndWait();
@@ -47,7 +48,6 @@ public class ComponentLoadTest {
 
     @Test
     public void loadServiceConfigTest() throws IllegalAccessException, InstantiationException {
-        createJar();
 
         ComponentLoader loader = new ComponentLoader(logger);
         JarClassLoader jarClassLoader = new JarClassLoader();
@@ -59,7 +59,7 @@ public class ComponentLoadTest {
 
         ServiceConfig testConfig = from(serviceConfig).first().get().newInstance();
 
-        assertThat(testConfig.getServiceContext().getBaseScanPackage().size(), not(0));
+        assertThat(testConfig.getServiceContext().basePackages().size(), not(0));
         assertThat(serviceConfig.size(), not(0));
     }
 
@@ -67,7 +67,10 @@ public class ComponentLoadTest {
     private void createJar() {
         String dir = System.getProperty("user.dir");
 
+
+
         File classDir = new File(dir, "classes/test/host/sampleplugin");
+
         new JarBuilder()
                 .withStripFromPath(dir + "/classes/test/host")
                 .withJarName("sampleplugin.jar")

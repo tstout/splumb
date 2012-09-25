@@ -5,6 +5,10 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+// TODO - is a builder useful here or how about simply
+// providing protected methods to configure data.
+//
+
 /**
  * Service jars must place this in a package named splumb.plugin.config
  */
