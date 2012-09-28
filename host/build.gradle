@@ -7,9 +7,11 @@ dependencies {
             'net.sf.extcos:extcos:0.3b',
             'org.apache.empire-db:empire-db:2.3.0',
             'net.sf.jopt-simple:jopt-simple:4.3',
-            'org.mockito:mockito-core:1.9.0',
             'org.xeustechnologies:jcl-core:2.4',
             'org.abstractmeta:compilation-toolbox:0.3.1'
+    )
+    testCompile(
+            'org.mockito:mockito-core:1.9.0'
     )
 }
 
@@ -18,22 +20,23 @@ dependencies {
 //
 // Not sure which of these I prefer....
 
-jar {
-    baseName = 'splumb-host'
-    manifest {
-        def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
-        attributes 'Class-Path': manifestClasspath
-        attributes 'Main-Class': 'splumb.core.host.Host'
-    }
-}
+//jar {
+//    baseName = 'splumb-host'
+//    manifest {
+//        def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
+//        attributes 'Class-Path': manifestClasspath
+//        attributes 'Main-Class': 'splumb.core.host.Host'
+//    }
+//}
 
 //
 // This creates an uberjar
 //
-//jar {
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
-//}
+jar {
+    baseName= 'splumb-host'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
+}
 
 task copyToLib(type: Copy) {
     into "$buildDir/libs"

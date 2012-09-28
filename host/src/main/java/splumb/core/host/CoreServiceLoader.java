@@ -19,6 +19,7 @@ class CoreServiceLoader {
 
     public CoreServiceLoader load(Injector injector) {
 
+        // todo - why is there a LogService and DBLogService...why not just LogService?
         for (Class<? extends Service> service : of(LogService.class, H2DBService.class, DBLogService.class)) {
 
             Service coreService = injector.getInstance(service);

@@ -52,6 +52,11 @@ public class ComponentLoadTest {
         ComponentLoader loader = new ComponentLoader(logger);
         JarClassLoader jarClassLoader = new JarClassLoader();
 
+        // TOOD change this to use user.home instead fo working dir...
+        // working dir causes a problem when running tests under gradle.
+
+
+        String x = System.getProperty("user.home");
         jarClassLoader.add(String.format("%s/sampleplugin.jar", System.getProperty("user.dir")));
 
         ImmutableSet<Class<? extends ServiceConfig>> serviceConfig =
@@ -66,7 +71,6 @@ public class ComponentLoadTest {
 
     private void createJar() {
         String dir = System.getProperty("user.dir");
-
 
 
         File classDir = new File(dir, "classes/test/host/sampleplugin");
