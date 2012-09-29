@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import splumb.core.db.DBDevModule;
+import splumb.core.host.plugin.PluginLoader;
 import splumb.core.logging.DevLoggingModule;
 import splumb.core.logging.HostLogger;
 
@@ -49,6 +50,8 @@ public class Host {
         CoreServiceLoader loader =
                 injector.getInstance(CoreServiceLoader.class)
                         .load(injector);
+
+        injector.getInstance(PluginLoader.class).load();
 
         logger.info("host Initialization Complete");
         loader.waitForTerm();

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.xeustechnologies.jcl.JarClassLoader;
-import splumb.common.plugin.ServiceConfig;
+import splumb.common.plugin.PluginConfig;
 import splumb.core.logging.HostLogger;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class ComponentLoadTest {
         ComponentLoader loader = new ComponentLoader(logger);
         JarClassLoader jarClassLoader = new JarClassLoader();
 
-        jarClassLoader.add(String.format("%s/sampleplugin.jar", System.getProperty("user.dir")));
+        jarClassLoader.add(String.format("%s/sampleplugin.jar", System.getProperty("user.home")));
 
         ImmutableSet<Class<? extends Service>> services =
                 loader.load("sampleplugin",
@@ -57,12 +57,15 @@ public class ComponentLoadTest {
 
 
         String x = System.getProperty("user.home");
-        jarClassLoader.add(String.format("%s/sampleplugin.jar", System.getProperty("user.dir")));
+        jarClassLoader.add(String.format("%s/sampleplugin.jar", System.getProperty("user.home")));
 
-        ImmutableSet<Class<? extends ServiceConfig>> serviceConfig =
-                loader.loadServiceConfig(jarClassLoader);
+//        ImmutableSet<Class<? extends PluginConfig>> serviceConfig =
+//                loader.loadServiceConfig(jarClassLoader);
 
-        ServiceConfig testConfig = from(serviceConfig).first().get().newInstance();
+        ImmutableSet<Class<? extends PluginConfig>> serviceConfig =
+                loader.loadServiceConfig(Thread.currentThread().getContextClassLoader());
+
+        PluginConfig testConfig = from(serviceConfig).first().get().newInstance();
 
         assertThat(testConfig.getServiceContext().basePackages().size(), not(0));
         assertThat(serviceConfig.size(), not(0));

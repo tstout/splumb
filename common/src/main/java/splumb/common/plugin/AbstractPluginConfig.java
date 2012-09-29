@@ -10,20 +10,20 @@ import static com.google.common.collect.Lists.newArrayList;
 //
 
 /**
- * Service jars must place this in a package named splumb.plugin.config
+ * Plugin jars must place this in a package named splumb.plugin.config
  */
-public abstract class AbstractServiceConfig implements ServiceConfig {
+public abstract class AbstractPluginConfig implements PluginConfig {
 
-    private ServiceContext serviceContext;
+    private PluginContext serviceContext;
 
-    public AbstractServiceConfig() {
+    public AbstractPluginConfig() {
         Builder builder = new Builder();
         configure(builder);
         serviceContext = builder.build();
     }
 
     @Override
-    public ServiceContext getServiceContext() {
+    public PluginContext getServiceContext() {
         return serviceContext;
     }
 
@@ -31,14 +31,20 @@ public abstract class AbstractServiceConfig implements ServiceConfig {
 
     public class Builder {
         private List<String> baseScanPackages = newArrayList();
+        private PluginName name;
 
         public Builder withBaseScanPackage(String baseScanPackage) {
             this.baseScanPackages.add(baseScanPackage);
             return this;
         }
 
-        ServiceContext build() {
-            return new ServiceContext(baseScanPackages);
+        public Builder withName(PluginName name) {
+            this.name = name;
+            return this;
+        }
+
+        PluginContext build() {
+            return new PluginContext(baseScanPackages, name);
         }
     }
 }
