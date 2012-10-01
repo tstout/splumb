@@ -35,7 +35,7 @@ class ComponentLoader {
         scanner.getClasses(new ComponentQuery() {
             protected void query() {
                 select()
-                        .from("splumb.plugin")
+                        .from("splumb.plugin.config")
                         .andStore(thoseImplementing(PluginConfig.class)
                                 .into(serviceConfig));
             }
@@ -47,7 +47,7 @@ class ComponentLoader {
     }
 
     public ImmutableSet<Class<? extends Service>> load(final String basePackage, ClassLoader classLoader) {
-        logger.info("Scanning for components to load from %s....", basePackage);
+        logger.info("Scanning for components to loadConfigurations from %s....", basePackage);
 
         ComponentScanner scanner = new ComponentScanner();
 

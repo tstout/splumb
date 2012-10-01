@@ -8,12 +8,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 class PluginDir {
-    private File dir = new File(System.getProperty("user.home"), ".splumb/sample.jar");
+    private File dir = new File(System.getProperty("user.home"), ".splumb");
+    private String parentDir;
 
     public PluginDir() {
+        File pluginDir = new File(System.getProperty("user.home"), ".splumb/sample.jar");
+        parentDir = pluginDir.getParent();
 
         try {
-            Files.createParentDirs(dir);
+            Files.createParentDirs(pluginDir);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -32,6 +35,6 @@ class PluginDir {
     }
 
     public String path() {
-        return dir.getParent();
+        return parentDir;
     }
 }

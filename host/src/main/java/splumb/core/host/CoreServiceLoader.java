@@ -28,7 +28,7 @@ class CoreServiceLoader {
             coreService.startAndWait();
         }
 
-//        for (Class<? extends Service> service : loader.load("splumb.core")) {
+//        for (Class<? extends Service> service : loader.loadConfigurations("splumb.core")) {
 //            try {
 //                Service coreService = injector.getInstance(service);
 //                shutdownActions.add(coreService);
