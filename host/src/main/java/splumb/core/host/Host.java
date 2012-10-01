@@ -11,7 +11,7 @@ import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 
 public class Host {
 

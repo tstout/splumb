@@ -25,7 +25,7 @@ public class PluginLoader {
         loader = new ComponentLoader(logger);
     }
 
-    public Map<PluginName, Plugin> loadConfigurations() {
+    public void loadConfigurations() {
         PluginDir dir = new PluginDir();
 
         logger.info("Attempting to load configurations plugins from %s", dir.path());
@@ -49,7 +49,6 @@ public class PluginLoader {
         }
 
         logger.info("Found %d plugin configurations", plugins.size());
-        return plugins;
     }
 
     private URLClassLoader newClassLoader(PluginDir dir, String jarFile) {
