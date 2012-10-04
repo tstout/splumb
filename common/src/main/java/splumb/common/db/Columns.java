@@ -19,8 +19,16 @@ public class Columns {
         return table.addColumn(name, DataType.INTEGER, 0, false);
     }
 
+    public static DBTableColumn autoIncCol(DBTable table, String name) {
+        return table.addColumn(name, DataType.AUTOINC, 0, true);
+    }
+
     public static DBTableColumn intCol(DBTable table, String name) {
         return table.addColumn(name, DataType.INTEGER, 0, true);
+    }
+
+    public static DBTableColumn dateTimeCol(DBTable table, String name) {
+        return table.addColumn(name, DataType.DATETIME, 0, true);
     }
 
     public static class Builder {

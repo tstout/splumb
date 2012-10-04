@@ -33,8 +33,8 @@ class ConsoleLogSink {
     }
 
     String fmtMsg(LogEvent evt) {
-        return String.format("%s " + evt.fmt.get(),
-                prepend(fmtTime(evt), evt.args.get()));
+        return String.format("%s" + evt.fmt.get(),
+                prepend(String.format("%s %s ", fmtTime(evt), evt.source.get()), evt.args.get()));
     }
 
     @Subscribe

@@ -12,7 +12,7 @@ import static splumb.common.logging.Level.*;
 
 
 public class HostLogger extends AbstractLogger {
-    public static String LOGGER_NAME = "host";
+    public static String LOGGER_NAME = "splumb.host";
 
     private LogBus logBus;
     private LogConfig logConfig;
