@@ -24,11 +24,11 @@ class ComponentLoader {
         this.logger = logger;
     }
 
-    public ImmutableSet<Class<? extends Service>> load(final String basePackage) {
+    public Set<Class<? extends Service>> load(final String basePackage) {
         return load(basePackage, Thread.currentThread().getContextClassLoader());
     }
 
-    public ImmutableSet<Class<? extends PluginConfig>> loadServiceConfig(ClassLoader classLoader) {
+    public Set<Class<? extends PluginConfig>> loadServiceConfig(ClassLoader classLoader) {
 
         ComponentScanner scanner = new ComponentScanner();
 
@@ -46,7 +46,7 @@ class ComponentLoader {
         return ImmutableSet.copyOf(serviceConfig);
     }
 
-    public ImmutableSet<Class<? extends Service>> load(final String basePackage, ClassLoader classLoader) {
+    public Set<Class<? extends Service>> load(final String basePackage, ClassLoader classLoader) {
         logger.info("Scanning for components to loadConfigurations from %s....", basePackage);
 
         ComponentScanner scanner = new ComponentScanner();

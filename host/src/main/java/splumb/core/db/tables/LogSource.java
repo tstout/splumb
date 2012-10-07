@@ -5,9 +5,11 @@ import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 
+import static splumb.common.db.Columns.*;
+
 public class LogSource extends DBTable {
 
-    public final DBTableColumn LOG_SOURCE_ID = addColumn("LOGGER", DataType.AUTOINC, 0, true);
+    public final DBTableColumn LOG_SOURCE_ID = autoIncCol(this, "LOGGER");
     public final DBTableColumn SOURCE = addColumn("SOURCE", DataType.TEXT, 256, true);
 
     public LogSource(DBDatabase db) {

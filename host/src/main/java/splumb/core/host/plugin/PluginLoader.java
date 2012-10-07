@@ -12,6 +12,7 @@ import java.net.URLClassLoader;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.*;
+import static java.lang.String.format;
 
 public class PluginLoader {
 
@@ -25,7 +26,7 @@ public class PluginLoader {
         loader = new ComponentLoader(logger);
     }
 
-    public void loadConfigurations() {
+    public PluginLoader loadConfigurations() {
         PluginDir dir = new PluginDir();
 
         logger.info("Attempting to load configurations plugins from %s", dir.path());
@@ -48,19 +49,24 @@ public class PluginLoader {
             }
         }
 
-        logger.info("Found %d plugin configurations", plugins.size());
+        logger.info("Found %d plugin configuration%s", plugins.size(), plugins.size() == 1 ? "" : "s");
+        return this;
+    }
+
+    public PluginLoader loadServices() {
+        return this;
     }
 
     private URLClassLoader newClassLoader(PluginDir dir, String jarFile) {
         URL jarUrl;
 
         try {
-            jarUrl = new URL("jar", "","file:" + dir.path() + "/" + jarFile + "!/");
+            jarUrl = new URL("jar", "", format("file:%s/%s!/", dir.path(), jarFile));
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
 
-        return new URLClassLoader(new URL[] {jarUrl}, getClass().getClassLoader());
+        return new URLClassLoader(new URL[]{jarUrl}, getClass().getClassLoader());
     }
 }
 

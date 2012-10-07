@@ -47,10 +47,15 @@ public class Host {
     }
 
     void start(Injector injector) {
+        //
+        // Fire up any intrinsic services...
+        //
         CoreServiceLoader loader =
                 injector.getInstance(CoreServiceLoader.class)
                         .load(injector);
-
+        //
+        // Load up any plugins...
+        //
         injector.getInstance(PluginLoader.class).loadConfigurations();
 
         logger.info("host Initialization Complete");

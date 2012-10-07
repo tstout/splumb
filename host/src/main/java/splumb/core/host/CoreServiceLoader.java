@@ -5,16 +5,19 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import splumb.core.db.H2DBService;
 import splumb.core.logging.DBLogService;
+import splumb.core.logging.HostLogger;
 import splumb.core.logging.LogService;
 
 import static com.google.common.collect.ImmutableSet.of;
 
 class CoreServiceLoader {
     private ShutdownActions shutdownActions;
+    private HostLogger logger;
 
     @Inject
-    public CoreServiceLoader(ShutdownActions shutdownActions) {
+    public CoreServiceLoader(HostLogger logger, ShutdownActions shutdownActions) {
         this.shutdownActions = shutdownActions;
+        this.logger = logger;
     }
 
     public CoreServiceLoader load(Injector injector) {

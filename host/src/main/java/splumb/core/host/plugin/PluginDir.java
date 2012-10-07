@@ -6,6 +6,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Set;
 
 class PluginDir {
     private File dir = new File(System.getProperty("user.home"), ".splumb");
@@ -22,7 +23,7 @@ class PluginDir {
         }
     }
 
-    public ImmutableSet<File> getJarFiles() {
+    public Set<File> getJarFiles() {
 
         File[] files = dir.listFiles(new FilenameFilter() {
             @Override
