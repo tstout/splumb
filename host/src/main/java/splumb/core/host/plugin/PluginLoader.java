@@ -1,7 +1,9 @@
 package splumb.core.host.plugin;
 
+import com.google.common.util.concurrent.Service;
 import splumb.common.plugin.PluginConfig;
 import splumb.common.plugin.PluginName;
+import splumb.core.host.ShutdownActions;
 import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
@@ -10,20 +12,24 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.collect.Maps.*;
-import static java.lang.String.format;
+import static com.google.common.collect.Sets.*;
+import static java.lang.String.*;
 
 public class PluginLoader {
 
     private HostLogger logger;
     private Map<PluginName, Plugin> plugins = newHashMap();
     private ComponentLoader loader;
+    private ShutdownActions shutdownActions;
 
     @Inject
-    public PluginLoader(HostLogger logger) {
+    public PluginLoader(HostLogger logger, ShutdownActions shutdownActions) {
         this.logger = logger;
         loader = new ComponentLoader(logger);
+        this.shutdownActions = shutdownActions;
     }
 
     public PluginLoader loadConfigurations() {
@@ -31,7 +37,7 @@ public class PluginLoader {
 
         logger.info("Attempting to load configurations plugins from %s", dir.path());
 
-        for (File jarFile : dir.getJarFiles()) {
+        for (File jarFile : dir.jarFiles()) {
 
             ClassLoader classLoaderForJar = newClassLoader(dir, jarFile.getName());
 
@@ -54,8 +60,46 @@ public class PluginLoader {
     }
 
     public PluginLoader loadServices() {
+
+        for (Plugin plugin : plugins.values()) {
+            for (String basePackage : plugin.config.getServiceContext().basePackages()) {
+                plugin.serviceClasses.addAll(loader.load(basePackage, plugin.classLoader));
+            }
+        }
+
+        instantiateServices();
         return this;
     }
+
+    private void instantiateServices() {
+        for (Plugin plugin : plugins.values()) {
+            for (Class clazz : plugin.serviceClasses) {
+                try {
+                    Service newService = (Service)clazz.newInstance();
+                    shutdownActions.add(newService);
+                    plugin.serviceInstances.add(newService);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    public void startServices() {
+        for (Plugin plugin : plugins.values()) {
+            for (Service service : plugin.serviceInstances) {
+                service.startAndWait();
+            }
+        }
+    }
+
+//    public void stopServices() {
+//        for (Plugin plugin : plugins.values()) {
+//            for (Service service: plugin.serviceInstances) {
+//                service.stopAndWait();
+//            }
+//        }
+//    }
 
     private URLClassLoader newClassLoader(PluginDir dir, String jarFile) {
         URL jarUrl;
@@ -73,4 +117,6 @@ public class PluginLoader {
 class Plugin {
     PluginConfig config;
     ClassLoader classLoader;
+    Set<Class<? extends Service>> serviceClasses = newHashSet();
+    Set<Service> serviceInstances = newHashSet();
 }

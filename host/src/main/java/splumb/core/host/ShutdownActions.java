@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-class ShutdownActions implements Runnable {
+public class ShutdownActions implements Runnable {
 
     private List<Action> actions = newArrayList();
     private CountDownLatch term = new CountDownLatch(1);

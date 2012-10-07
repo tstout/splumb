@@ -27,6 +27,7 @@ class HostInjectModule extends AbstractModule {
         bind(OptionSet.class).toInstance(optionSet);
         bind(EventBus.class).toInstance(eventBus);
         bind(SplumbDB.class).in(Scopes.SINGLETON);
+        bind(ShutdownActions.class).in(Scopes.SINGLETON);
 
         bindListener(Matchers.any(), new TypeListener() {
             public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {

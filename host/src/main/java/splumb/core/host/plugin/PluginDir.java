@@ -23,7 +23,7 @@ class PluginDir {
         }
     }
 
-    public Set<File> getJarFiles() {
+    public Set<File> jarFiles() {
 
         File[] files = dir.listFiles(new FilenameFilter() {
             @Override

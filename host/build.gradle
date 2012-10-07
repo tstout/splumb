@@ -20,23 +20,23 @@ dependencies {
 //
 // Not sure which of these I prefer....
 
-jar {
-    baseName = 'splumb-host'
-    manifest {
-        def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
-        attributes 'Class-Path': manifestClasspath
-        attributes 'Main-Class': 'splumb.core.host.Host'
-    }
-}
+//jar {
+//    baseName = 'splumb-host'
+//    manifest {
+//        def manifestClasspath = configurations.runtime.collect { it.getName() }.join(' ')
+//        attributes 'Class-Path': manifestClasspath
+//        attributes 'Main-Class': 'splumb.core.host.Host'
+//    }
+//}
 
 //
 // This creates an uberjar
 //
-//jar {
-//    baseName= 'splumb-host'
-//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-//    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
-//}
+jar {
+    baseName= 'splumb-host'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
+}
 
 task copyToLib(type: Copy) {
     into "$buildDir/libs"

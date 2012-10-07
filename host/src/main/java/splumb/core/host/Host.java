@@ -56,7 +56,10 @@ public class Host {
         //
         // Load up any plugins...
         //
-        injector.getInstance(PluginLoader.class).loadConfigurations();
+        injector.getInstance(PluginLoader.class)
+                .loadConfigurations()
+                .loadServices()
+                .startServices();
 
         logger.info("host Initialization Complete");
         loader.waitForTerm();
