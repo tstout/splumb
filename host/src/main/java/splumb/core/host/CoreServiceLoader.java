@@ -3,19 +3,19 @@ package splumb.core.host;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import splumb.common.logging.LogPublisher;
 import splumb.core.db.H2DBService;
 import splumb.core.logging.DBLogService;
-import splumb.core.logging.HostLogger;
 import splumb.core.logging.LogService;
 
-import static com.google.common.collect.ImmutableSet.of;
+import static com.google.common.collect.ImmutableSet.*;
 
 class CoreServiceLoader {
     private ShutdownActions shutdownActions;
-    private HostLogger logger;
+    private LogPublisher logger;
 
     @Inject
-    public CoreServiceLoader(HostLogger logger, ShutdownActions shutdownActions) {
+    public CoreServiceLoader(LogPublisher logger, ShutdownActions shutdownActions) {
         this.shutdownActions = shutdownActions;
         this.logger = logger;
     }

@@ -4,8 +4,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractIdleService;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
+import splumb.common.logging.LogPublisher;
 import splumb.core.host.events.DbAvailableEvent;
-import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
@@ -13,12 +13,12 @@ import java.sql.SQLException;
 public class H2DBService extends AbstractIdleService {
 
     private Server h2Server;
-    private HostLogger logger;
+    private LogPublisher logger;
     private Impl implementation;
     private EventBus eventBus;
 
     @Inject
-    public H2DBService(HostLogger logger, OptionSet optionSet, EventBus eventBus) {
+    public H2DBService(LogPublisher logger, OptionSet optionSet, EventBus eventBus) {
         this.logger = logger;
         this.eventBus = eventBus;
         implementation = optionSet.has("nodb") ? new Impl() : new ActiveImpl();

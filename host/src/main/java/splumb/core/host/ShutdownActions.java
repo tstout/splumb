@@ -2,22 +2,22 @@ package splumb.core.host;
 
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
-import splumb.core.logging.HostLogger;
+import splumb.common.logging.LogPublisher;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.*;
 
 public class ShutdownActions implements Runnable {
 
     private List<Action> actions = newArrayList();
     private CountDownLatch term = new CountDownLatch(1);
-    private HostLogger logger;
+    private LogPublisher logger;
     private List<Service> services = newArrayList();
 
     @Inject
-    public ShutdownActions(HostLogger logger) {
+    public ShutdownActions(LogPublisher logger) {
         this.logger = logger;
     }
 

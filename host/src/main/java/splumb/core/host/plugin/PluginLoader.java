@@ -1,10 +1,11 @@
 package splumb.core.host.plugin;
 
 import com.google.common.util.concurrent.Service;
+import com.google.inject.Injector;
+import splumb.common.logging.LogPublisher;
 import splumb.common.plugin.PluginConfig;
 import splumb.common.plugin.PluginName;
 import splumb.core.host.ShutdownActions;
-import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -20,13 +21,13 @@ import static java.lang.String.*;
 
 public class PluginLoader {
 
-    private HostLogger logger;
+    private LogPublisher logger;
     private Map<PluginName, Plugin> plugins = newHashMap();
     private ComponentLoader loader;
     private ShutdownActions shutdownActions;
 
     @Inject
-    public PluginLoader(HostLogger logger, ShutdownActions shutdownActions) {
+    public PluginLoader(LogPublisher logger, ShutdownActions shutdownActions) {
         this.logger = logger;
         loader = new ComponentLoader(logger);
         this.shutdownActions = shutdownActions;
@@ -59,7 +60,7 @@ public class PluginLoader {
         return this;
     }
 
-    public PluginLoader loadServices() {
+    public PluginLoader loadServices(Injector injector) {
 
         for (Plugin plugin : plugins.values()) {
             for (String basePackage : plugin.config.getServiceContext().basePackages()) {
@@ -67,15 +68,17 @@ public class PluginLoader {
             }
         }
 
-        instantiateServices();
+        instantiateServices(injector);
         return this;
     }
 
-    private void instantiateServices() {
+    private void instantiateServices(Injector injector) {
         for (Plugin plugin : plugins.values()) {
-            for (Class clazz : plugin.serviceClasses) {
+            for (Class<? extends Service> clazz : plugin.serviceClasses) {
                 try {
-                    Service newService = (Service)clazz.newInstance();
+                    Service newService = injector.getInstance(clazz);
+
+                    //Service newService = (Service)clazz.newInstance();
                     shutdownActions.add(newService);
                     plugin.serviceInstances.add(newService);
                 } catch (Exception e) {

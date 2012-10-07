@@ -4,10 +4,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import splumb.common.logging.LogPublisher;
 import splumb.core.db.DBDevModule;
 import splumb.core.host.plugin.PluginLoader;
 import splumb.core.logging.DevLoggingModule;
-import splumb.core.logging.HostLogger;
 
 import javax.inject.Inject;
 
@@ -15,12 +15,12 @@ import static java.util.Arrays.*;
 
 public class Host {
 
-    private HostLogger logger;
+    private LogPublisher logger;
 
     public Host() {}
 
     @Inject
-    public void setLogger(HostLogger logger) {
+    public void setLogger(LogPublisher logger) {
         this.logger = logger;
     }
 
@@ -30,6 +30,7 @@ public class Host {
         parser.accepts("nodb", "Run without DB");
         parser.accepts("droptables", "drop and recreate tables at startup");
         parser.acceptsAll(asList("help", "h"), "Show help");
+        parser.accepts("verbose", "Dump log to stdout");
 
         OptionSet optionSet = parser.parse(args);
 
@@ -58,7 +59,7 @@ public class Host {
         //
         injector.getInstance(PluginLoader.class)
                 .loadConfigurations()
-                .loadServices()
+                .loadServices(injector)
                 .startServices();
 
         logger.info("host Initialization Complete");

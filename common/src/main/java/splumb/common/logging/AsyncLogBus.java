@@ -6,7 +6,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class AsyncBus implements LogBus {
+public class AsyncLogBus implements LogBus {
 
     private Executor eventThr = Executors.newSingleThreadExecutor(
             new ThreadFactoryBuilder()
@@ -15,7 +15,7 @@ public class AsyncBus implements LogBus {
 
     private AsyncEventBus bus = new AsyncEventBus(eventThr);
 
-    public AsyncBus() {
+    public AsyncLogBus() {
     }
 
 

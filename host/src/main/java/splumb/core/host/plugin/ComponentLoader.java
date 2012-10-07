@@ -7,11 +7,10 @@ import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
 import splumb.common.logging.LogPublisher;
 import splumb.common.plugin.PluginConfig;
-import splumb.core.logging.HostLogger;
 
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Sets.*;
 
 class ComponentLoader {
 
@@ -20,7 +19,7 @@ class ComponentLoader {
     private final Set<Class<? extends PluginConfig>> serviceConfig = newHashSet();
 
     @Inject
-    public ComponentLoader(HostLogger logger) {
+    public ComponentLoader(LogPublisher logger) {
         this.logger = logger;
     }
 
