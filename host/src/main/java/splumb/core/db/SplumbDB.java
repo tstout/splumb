@@ -21,7 +21,7 @@ import splumb.core.logging.HostLogger;
 
 import java.sql.Connection;
 
-import static com.google.common.collect.ImmutableSet.of;
+import static com.google.common.collect.ImmutableSet.*;
 
 public class SplumbDB extends DBDatabase {
 

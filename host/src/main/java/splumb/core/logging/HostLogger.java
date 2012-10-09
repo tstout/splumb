@@ -1,15 +1,14 @@
 package splumb.core.logging;
 
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import splumb.common.logging.*;
-import splumb.core.host.events.HostDbTablesAvailableEvent;
 
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.*;
 import static splumb.common.logging.Level.*;
 
+// todo - remove queueing impl from here...added to property place in DBLogSink.
 
 public class HostLogger extends AbstractLogger {
     public static String LOGGER_NAME = "splumb.host";
@@ -18,12 +17,14 @@ public class HostLogger extends AbstractLogger {
     private LogConfig logConfig;
     private List<LogRecord> logQueue = newArrayList();
     private LogPublisher logImpl;
+    private int logCnt = 0;
 
     @Inject
     public HostLogger(LogBus logBus, LogConfig logConfig) {
         this.logBus = logBus;
         this.logConfig = logConfig;
-        logImpl = new QueueingImpl();
+        //logImpl = new QueueingImpl();
+        logImpl = new ActiveImpl();
     }
 
     @Override
@@ -61,26 +62,26 @@ public class HostLogger extends AbstractLogger {
         logImpl.debug(fmt, parms);
     }
 
-    @Subscribe
-    public void dbAvailable(HostDbTablesAvailableEvent hostDbTablesAvailableEvent) {
-        logImpl = new ActiveImpl();
-
-        for (LogRecord log : logQueue) {
-            switch (log.level) {
-                case INFO:
-                    logImpl.info(log.fmt, log.args);
-                    break;
-                case ERROR:
-                    logImpl.error(log.fmt, log.args);
-                    break;
-                case DEBUG:
-                    logImpl.debug(log.fmt, log.args);
-                    break;
-            }
-        }
-
-        logQueue.clear();
-    }
+//    @Subscribe
+//    public void dbAvailable(HostDbTablesAvailableEvent hostDbTablesAvailableEvent) {
+//        logImpl = new ActiveImpl();
+//
+//        for (LogRecord log : logQueue) {
+//            switch (log.level) {
+//                case INFO:
+//                    logImpl.info(log.fmt, log.args);
+//                    break;
+//                case ERROR:
+//                    logImpl.error(log.fmt, log.args);
+//                    break;
+//                case DEBUG:
+//                    logImpl.debug(log.fmt, log.args);
+//                    break;
+//            }
+//        }
+//
+//        logQueue.clear();
+//    }
 
     class ActiveImpl extends AbstractLogger {
 
@@ -117,11 +118,13 @@ public class HostLogger extends AbstractLogger {
         @Override
         public void info(String fmt, Object... parms) {
             logQueue.add(new LogRecord(INFO, fmt, parms));
+            logCnt++;
         }
 
         @Override
         public void info(String msg) {
             logQueue.add(new LogRecord(INFO, "%s", new Object[]{msg}));
+            logCnt++;
         }
 
         @Override

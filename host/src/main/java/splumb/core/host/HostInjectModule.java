@@ -9,6 +9,7 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import joptsimple.OptionSet;
+import splumb.common.logging.LogPublisher;
 import splumb.core.db.SplumbDB;
 
 class HostInjectModule extends AbstractModule {
@@ -34,6 +35,9 @@ class HostInjectModule extends AbstractModule {
                 typeEncounter.register(new InjectionListener<I>() {
                     public void afterInjection(I i) {
 
+                        if (i instanceof LogPublisher) {
+                            int x = 0;
+                        }
                         eventBus.register(i);
                     }
                 });
