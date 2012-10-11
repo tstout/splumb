@@ -7,7 +7,9 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.*;
 
-// todo - remove queueing impl from here...added to property place in DBLogSink.
+// todo - remove queueing impl from here...added to proper place in DBLogSink.
+// This is now not injected as a singleton, let's try to inject the class name into this class when loading in the
+// guice module.
 
 public class HostLogger extends AbstractLogger {
     public static String LOGGER_NAME = "splumb.host";
@@ -16,7 +18,12 @@ public class HostLogger extends AbstractLogger {
     private LogConfig logConfig;
     private List<LogRecord> logQueue = newArrayList();
     private LogPublisher logImpl;
+    private String srcClassName;
 
+    @Inject
+    private void setSrcClass(String className) {
+        this.srcClassName = className;
+    }
 
     @Inject
     public HostLogger(LogBus logBus, LogConfig logConfig) {
