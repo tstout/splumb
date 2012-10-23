@@ -9,7 +9,6 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import joptsimple.OptionSet;
-import splumb.common.logging.LogPublisher;
 import splumb.core.db.SplumbDB;
 
 class HostInjectModule extends AbstractModule {
@@ -30,6 +29,9 @@ class HostInjectModule extends AbstractModule {
         bind(SplumbDB.class).in(Scopes.SINGLETON);
         bind(ShutdownActions.class).in(Scopes.SINGLETON);
 
+        //
+        // Setup the event bus....
+        //
         bindListener(Matchers.any(), new TypeListener() {
             public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
                 TypeLiteral<I> tl = typeLiteral;
@@ -37,12 +39,9 @@ class HostInjectModule extends AbstractModule {
                 // TODO - looks like typeLiteral.getRawType().getName() contains the class name
                 // that is having an object injected into it.  This is a good place to inject the logger name...
                 // in another binListener matching on
+
                 typeEncounter.register(new InjectionListener<I>() {
                     public void afterInjection(I i) {
-
-                        if (i instanceof LogPublisher) {
-                            int x = 0;
-                        }
                         eventBus.register(i);
                     }
                 });

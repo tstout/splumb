@@ -1,6 +1,7 @@
 package splumb.core.db;
 
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -17,7 +18,6 @@ import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
 import splumb.core.host.events.DbAvailableEvent;
 import splumb.core.host.events.HostDbTablesAvailableEvent;
-import splumb.core.logging.HostLogger;
 
 import java.sql.Connection;
 
@@ -103,9 +103,18 @@ public class SplumbDB extends DBDatabase {
                          0, "DEBUG"))
                  .insertInto(LogLevel, conn);
 
-         new DataSet()
-                 .withColumns(of(LogConfig.LOGGER, LogConfig.LOG_LEVEL))
-                 .withValues(of(HostLogger.LOGGER_NAME, Level.DEBUG.ordinal()))
-                 .insertInto(LogConfig, driver.getConnection());
+
+        for (String loggerName : ImmutableSet.of(
+                "splumb.core.db.H2DBService$ActiveImpl",
+                "splumb.core.host.Host",
+                "splumb.core.host.plugin.PluginLoader",
+                "splumb.core.host.CoreServiceLoader")) {
+            new DataSet()
+                    .withColumns(of(LogConfig.LOGGER, LogConfig.LOG_LEVEL))
+                    .withValues(of(loggerName, Level.DEBUG.ordinal()))
+                    .insertInto(LogConfig, conn);
+        }
+
+
     }
 }
