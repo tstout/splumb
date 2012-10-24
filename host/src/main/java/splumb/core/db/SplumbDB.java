@@ -1,7 +1,6 @@
 package splumb.core.db;
 
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -103,8 +102,7 @@ public class SplumbDB extends DBDatabase {
                          0, "DEBUG"))
                  .insertInto(LogLevel, conn);
 
-
-        for (String loggerName : ImmutableSet.of(
+        for (String loggerName : of(
                 "splumb.core.db.H2DBService$ActiveImpl",
                 "splumb.core.host.Host",
                 "splumb.core.host.plugin.PluginLoader",

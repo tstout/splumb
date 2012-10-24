@@ -34,12 +34,6 @@ class HostInjectModule extends AbstractModule {
         //
         bindListener(Matchers.any(), new TypeListener() {
             public <I> void hear(TypeLiteral<I> typeLiteral, TypeEncounter<I> typeEncounter) {
-                TypeLiteral<I> tl = typeLiteral;
-
-                // TODO - looks like typeLiteral.getRawType().getName() contains the class name
-                // that is having an object injected into it.  This is a good place to inject the logger name...
-                // in another binListener matching on
-
                 typeEncounter.register(new InjectionListener<I>() {
                     public void afterInjection(I i) {
                         eventBus.register(i);

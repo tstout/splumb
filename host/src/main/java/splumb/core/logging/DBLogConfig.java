@@ -46,6 +46,6 @@ class DBLogConfig implements LogConfig {
 
     @Override
     public Level getLevel(String logger) {
-        return Functions.forMap(settings, Level.ERROR).apply(logger);
+        return Functions.forMap(settings, Level.INFO).apply(logger);
     }
 }
