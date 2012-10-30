@@ -2,9 +2,9 @@ package splumb.common.message;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.Lists.*;
 import static org.junit.Assert.*;
 
 public class ProxyTest
@@ -41,15 +41,7 @@ public class ProxyTest
     {
         ModelX m = new PropFactory().newProp(ModelX.class);
 
-        m.names().set(new ArrayList<String>());
-        m.names().get().add("first name");
-        m.names().get().add("second name");
-        m.names().get().add("thrid name");
-
-//              for (String n : m.names().get())
-//              {
-//                      System.out.printf("Name is: %s\n", n);
-//              }
+        m.names().set(newArrayList("first name", "second name", "third name"));
 
         assertTrue(m.names().get().size() == 3);
     }
