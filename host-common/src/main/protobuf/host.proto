@@ -1,0 +1,28 @@
+package splumb;
+
+option java_package = "splumb.msg";
+option java_outer_classname = "SpHostMsg";
+option optimize_for = SPEED;
+
+enum MsgType
+{
+    PING_REQ = 1;
+    PING_RESP = 2;
+}
+
+message HostMessage
+{
+    required MsgType type = 1;
+    optional PingReq pingReq = 2;
+    optional PingResp pingResp = 3;
+}
+
+message PingReq
+{
+    optional string appName = 1 [default = "unknown"];
+}
+
+message PingResp
+{
+    optional string startTime = 1 [default = "unknown"];
+}

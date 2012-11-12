@@ -1,3 +1,5 @@
+apply plugin: 'java'
+
 dependencies {
     compile (
             project(':common'),
@@ -12,7 +14,7 @@ task genProtobuf(type:Exec) {
 
     args = ["--java_out=" + file('target/generated-sources/protobuf'),
             "--proto_path=" + file('src/main/protobuf/'),
-            file('src/main/protobuf/sample.proto')]
+            file('src/main/protobuf/host.proto')]
 
     executable 'protoc'
 }
