@@ -12,7 +12,7 @@ dependencies {
 
 task genProtobuf(type:Exec) {
 
-    args = ["--java_out=" + file('target/generated-sources/protobuf'),
+    args = ["--java_out=" + file('target/generated-sources'),
             "--proto_path=" + file('src/main/protobuf/'),
             file('src/main/protobuf/host.proto')]
 
