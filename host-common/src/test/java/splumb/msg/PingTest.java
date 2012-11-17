@@ -5,12 +5,13 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static splumb.msg.SpHostMsg.*;
 
 public class PingTest {
 
     @Test
     public void pingEncodeTest() {
-        SpHostMsg.PingReq req = SpHostMsg.PingReq.newBuilder()
+        PingReq req = PingReq.newBuilder()
                 .setAppName("testapp")
                 .build();
 
@@ -19,11 +20,11 @@ public class PingTest {
 
     @Test
     public void pingDecodeTest() throws InvalidProtocolBufferException {
-        SpHostMsg.PingResp resp = SpHostMsg.PingResp.newBuilder()
+        PingResp resp = PingResp.newBuilder()
                 .setStartTime("now")
                 .build();
 
-        SpHostMsg.PingResp parsedResp = SpHostMsg.PingResp.parseFrom(resp.toByteArray());
+        PingResp parsedResp = PingResp.parseFrom(resp.toByteArray());
 
         assertThat(parsedResp.getStartTime(), is("now"));
     }
