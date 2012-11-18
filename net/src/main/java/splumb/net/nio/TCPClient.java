@@ -1,4 +1,4 @@
-package splumb.net;
+package splumb.net.nio;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -11,10 +11,8 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 
 class TCPClient implements Client {
-    private Supplier<SocketChannel> sockSupplier = new Supplier<SocketChannel>()
-    {
-        public SocketChannel get()
-        {
+    private Supplier<SocketChannel> sockSupplier = new Supplier<SocketChannel>() {
+        public SocketChannel get() {
             return connect();
         }
     };
@@ -29,8 +27,7 @@ class TCPClient implements Client {
             InetAddress hostAddress,
             int port,
             MsgHandler handler,
-            NIOSelect select)
-    {
+            NIOSelect select) {
         this.hostAddress = hostAddress;
         this.port = port;
         this.handler = handler;
@@ -43,13 +40,11 @@ class TCPClient implements Client {
     }
 
     @Override
-    public void send(byte[] msg)
-    {
+    public void send(byte[] msg) {
         send(msg, handler);
     }
 
-    private void send(byte[] data, MsgHandler handler)
-    {
+    private void send(byte[] data, MsgHandler handler) {
         select.applyChange(
                 new SelectorCmd(
                         sock(),
@@ -57,10 +52,8 @@ class TCPClient implements Client {
                         ByteBuffer.wrap(data)));
     }
 
-    private SocketChannel connect()
-    {
-        try
-        {
+    private SocketChannel connect() {
+        try {
             SocketChannel socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);
 
@@ -77,15 +70,12 @@ class TCPClient implements Client {
                             SelectionKey.OP_CONNECT));
 
             return socketChannel;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private SocketChannel sock()
-    {
+    private SocketChannel sock() {
         return memoizedSock.get();
     }
 }

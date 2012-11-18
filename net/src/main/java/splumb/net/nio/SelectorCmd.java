@@ -1,4 +1,4 @@
-package splumb.net;
+package splumb.net.nio;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectableChannel;
@@ -6,8 +6,7 @@ import java.nio.channels.SelectableChannel;
 //
 // TODO - refactor this into separate command classes
 //
-class SelectorCmd
-{
+class SelectorCmd {
     public SelectableChannel socket;
     public NetEndpoint channel;
     public SelectorOps type;
@@ -20,8 +19,7 @@ class SelectorCmd
             NetEndpoint channel,
             MsgHandler handler,
             SelectorOps type,
-            int ops)
-    {
+            int ops) {
         this.socket = socket;
         this.type = type;
         this.ops = ops;
@@ -29,8 +27,7 @@ class SelectorCmd
         this.handler = handler;
     }
 
-    public SelectorCmd(SelectableChannel socket, NetEndpoint channel, ByteBuffer data)
-    {
+    public SelectorCmd(SelectableChannel socket, NetEndpoint channel, ByteBuffer data) {
         this.socket = socket;
         this.channel = channel;
         this.data = data;

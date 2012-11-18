@@ -1,4 +1,7 @@
-package splumb.net;
+package splumb.net.nio;
+
+import splumb.net.nio.MsgHandler;
+import splumb.net.nio.NetEndpoint;
 
 import java.nio.channels.SocketChannel;
 

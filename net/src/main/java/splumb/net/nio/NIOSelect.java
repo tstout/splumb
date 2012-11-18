@@ -1,4 +1,4 @@
-package splumb.net;
+package splumb.net.nio;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import splumb.common.logging.LogPublisher;
@@ -87,7 +87,7 @@ class NIOSelect implements Runnable {
         env.channelMap = channelMap;
         env.pendingData = pendingData;
 
-        for (;;) {
+        for (; ; ) {
             try {
                 synchronized (pendingChanges) {
                     for (SelectorCmd change : pendingChanges) {

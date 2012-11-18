@@ -1,4 +1,4 @@
-package splumb.net;
+package splumb.net.nio;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;

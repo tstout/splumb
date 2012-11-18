@@ -1,4 +1,4 @@
-package splumb.net;
+package splumb.net.nio;
 
 import splumb.common.logging.LogPublisher;
 
@@ -9,8 +9,7 @@ import java.nio.channels.Selector;
 import java.util.List;
 import java.util.Map;
 
-class SelectorEnv
-{
+class SelectorEnv {
     public SelectableChannel socket;
 
     public Map<SelectionKey, NetEndpoint> channelMap;

@@ -1,12 +1,11 @@
-package splumb.net;
+package splumb.net.nio;
 
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static com.google.common.collect.Queues.newLinkedBlockingQueue;
+import static com.google.common.collect.Queues.*;
 
-class NIOWorker implements Runnable
-{
+class NIOWorker implements Runnable {
     private LinkedBlockingQueue<NIODataEvent> queue = newLinkedBlockingQueue();
 
 
@@ -15,8 +14,7 @@ class NIOWorker implements Runnable
             SocketChannel socket,
             byte[] data,
             int count,
-            MsgHandler handler)
-    {
+            MsgHandler handler) {
         byte[] dataCopy = new byte[count];
         System.arraycopy(data, 0, dataCopy, 0, count);
 
@@ -24,14 +22,11 @@ class NIOWorker implements Runnable
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         NIODataEvent dataEvent;
 
-        for (;;)
-        {
-            try
-            {
+        for (; ; ) {
+            try {
                 dataEvent = queue.take();
 
                 //bus.post(new MsgChannelDataEvent(dataEvent.src, dataEvent.data));
@@ -41,9 +36,7 @@ class NIOWorker implements Runnable
                         .msgAvailable(dataEvent.src, dataEvent.data);
 
 
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
                 // TODO - research what should be done here...break maybe?
             }
         }
