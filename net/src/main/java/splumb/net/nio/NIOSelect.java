@@ -6,6 +6,7 @@ import splumb.common.logging.LogPublisher;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +43,7 @@ class NIOSelect implements Runnable {
 
     private LogPublisher tracer;
 
-    public NIOSelect(LogPublisher tracer) {
+    NIOSelect(LogPublisher tracer) {
         this.tracer = tracer;
         worker = new NIOWorker();
 
@@ -108,8 +109,11 @@ class NIOSelect implements Runnable {
                 //
                 // TODO - consider refactoring this if-else tree...
                 //
-                for (SelectionKey key : selector.selectedKeys()) {
-                    selector.selectedKeys().remove(key);
+                Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
+
+                while (iter.hasNext()) {
+                    SelectionKey key = iter.next();
+                    iter.remove();
 
                     if (!key.isValid()) {
                         tracer.error("Invalid key");

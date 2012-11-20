@@ -8,7 +8,6 @@ import static com.google.common.collect.Queues.*;
 class NIOWorker implements Runnable {
     private LinkedBlockingQueue<NIODataEvent> queue = newLinkedBlockingQueue();
 
-
     public void processData(
             NetEndpoint channel,
             SocketChannel socket,
@@ -25,7 +24,7 @@ class NIOWorker implements Runnable {
     public void run() {
         NIODataEvent dataEvent;
 
-        for (; ; ) {
+        for (;;) {
             try {
                 dataEvent = queue.take();
 
@@ -41,8 +40,4 @@ class NIOWorker implements Runnable {
             }
         }
     }
-
-
-    //private EventBus bus;
-
 }

@@ -13,7 +13,7 @@ class TCPServer implements Server {
     private Boolean listening = false;
     private MsgHandler handler;
 
-    public TCPServer(NIOSelect selector, MsgHandler handler) {
+    TCPServer(NIOSelect selector, MsgHandler handler) {
         this.selector = selector;
         this.handler = handler;
 

@@ -23,7 +23,7 @@ class TCPClient implements Client {
     private MsgHandler handler;
     private NIOSelect select;
 
-    public TCPClient(
+    TCPClient(
             InetAddress hostAddress,
             int port,
             MsgHandler handler,
@@ -41,15 +41,11 @@ class TCPClient implements Client {
 
     @Override
     public void send(byte[] msg) {
-        send(msg, handler);
-    }
-
-    private void send(byte[] data, MsgHandler handler) {
         select.applyChange(
                 new SelectorCmd(
                         sock(),
                         this,
-                        ByteBuffer.wrap(data)));
+                        ByteBuffer.wrap(msg)));
     }
 
     private SocketChannel connect() {
@@ -59,7 +55,7 @@ class TCPClient implements Client {
 
             socketChannel.connect(
                     new InetSocketAddress(this.hostAddress,
-                            this.port));
+                            port));
 
             select.applyChange(
                     new SelectorCmd(
