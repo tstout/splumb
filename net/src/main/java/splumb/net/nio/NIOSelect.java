@@ -1,5 +1,6 @@
 package splumb.net.nio;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import splumb.common.logging.LogPublisher;
 
@@ -14,6 +15,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+//
+// TODO - this class is way too busy...refactor...
+//
 class NIOSelect implements Runnable {
 
     private ConcurrentLinkedQueue<SelectorCmd> pendingChanges =
@@ -32,19 +36,16 @@ class NIOSelect implements Runnable {
     // TODO - this buff size needs to be configurable
     //
     private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
-
     private Executor workerThr;
-
     private Executor selectThr;
-
     private NIOWorker worker;
-
     private Selector selector;
-
     private LogPublisher tracer;
+    private EventBus bus;
 
-    NIOSelect(LogPublisher tracer) {
+    NIOSelect(LogPublisher tracer, EventBus bus) {
         this.tracer = tracer;
+        this.bus = bus;
         worker = new NIOWorker();
 
         try {
@@ -259,13 +260,20 @@ class NIOSelect implements Runnable {
                             this,
                             ByteBuffer.wrap(msg)));
         }
+
+        @Override
+        public void close() {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 
     private void finishConnection(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         try {
-            socketChannel.finishConnect();
+            if (socketChannel.finishConnect()) {
+                bus.post(new SocketConnectedEvent(key.channel()));
+            }
             //tracer.log("Client Connected");
         } catch (IOException e) {
             key.cancel();

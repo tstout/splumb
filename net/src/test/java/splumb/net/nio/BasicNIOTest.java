@@ -1,16 +1,21 @@
 package splumb.net.nio;
 
 import com.google.common.net.InetAddresses;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import splumb.common.logging.LogPublisher;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.MockitoAnnotations.*;
 
 public class BasicNIOTest {
+    Server server;
 
     @Mock
     LogPublisher logger;
@@ -20,13 +25,18 @@ public class BasicNIOTest {
         initMocks(this);
     }
 
+    @After
+    public void teardown() {
+        server.close();
+    }
+
     @Test
-    public void msgTransferTest() throws InterruptedException {
+    public void serverBeforeClientTest() throws InterruptedException {
         NetEndpoints endpoints = new NetEndpoints(logger);
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
-        Server server = endpoints.newTCPServer(new MsgHandler() {
+        server = endpoints.newTCPServer(new MsgHandler() {
             @Override
             public void msgAvailable(NetEndpoint sender, byte[] msg) {
                 msgRx.countDown();
@@ -44,11 +54,10 @@ public class BasicNIOTest {
         });
 
         client.send("hello".getBytes());
-        msgRx.await();
-
+        assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
     }
 
-    //@Test  TODO - this is broken...fix!!!
+    @Test
     public void clientBeforeServerTest() throws InterruptedException {
         NetEndpoints endpoints = new NetEndpoints(logger);
 
@@ -62,7 +71,8 @@ public class BasicNIOTest {
         });
 
         client.send("hello".getBytes());
-        Server server = endpoints.newTCPServer(new MsgHandler() {
+
+        server = endpoints.newTCPServer(new MsgHandler() {
             @Override
             public void msgAvailable(NetEndpoint sender, byte[] msg) {
                 msgRx.countDown();
@@ -71,7 +81,7 @@ public class BasicNIOTest {
         });
 
         server.listen(8000);
-        msgRx.await();
+        assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
     }
 
 }

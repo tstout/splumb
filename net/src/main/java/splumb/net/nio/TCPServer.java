@@ -1,5 +1,7 @@
 package splumb.net.nio;
 
+import com.google.common.base.Throwables;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -45,7 +47,16 @@ class TCPServer implements Server {
                     SelectorOps.REGISTER,
                     SelectionKey.OP_ACCEPT));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Throwables.propagate(e);
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            channel.close();
+        } catch (IOException e) {
+            Throwables.propagate(e);
         }
     }
 }
