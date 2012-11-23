@@ -1,5 +1,6 @@
 package splumb.net.nio;
 
+import com.google.common.base.Throwables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import splumb.common.logging.LogPublisher;
@@ -51,7 +52,7 @@ class NIOSelect implements Runnable {
         try {
             selector = Selector.open();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Throwables.propagate(e);
         }
 
         selectThr = Executors.newSingleThreadExecutor(
@@ -183,7 +184,7 @@ class NIOSelect implements Runnable {
         }
 
         worker.processData(
-                channelMap.get(key),
+                (Client)channelMap.get(key),
                 socketChannel,
                 readBuffer.array(),
                 numRead,
@@ -201,7 +202,7 @@ class NIOSelect implements Runnable {
         // Empty the transmit queue...
         //
         while (!queue.isEmpty()) {
-            ByteBuffer buf = (ByteBuffer) queue.get(0);
+            ByteBuffer buf = queue.get(0);
             socketChannel.write(buf);
 
             if (buf.remaining() > 0) {
@@ -263,7 +264,6 @@ class NIOSelect implements Runnable {
 
         @Override
         public void close() {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 
@@ -282,6 +282,4 @@ class NIOSelect implements Runnable {
 
         key.interestOps(key.interestOps() | SelectionKey.OP_READ);
     }
-
-
 }

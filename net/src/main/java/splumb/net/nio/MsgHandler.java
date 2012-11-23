@@ -5,5 +5,5 @@ package splumb.net.nio;
 // at least make the sender a Client instead of NetEndpoint....
 //
 public interface MsgHandler {
-    void msgAvailable(NetEndpoint sender, byte[] msg);
+    void msgAvailable(Client sender, byte[] msg);
 }

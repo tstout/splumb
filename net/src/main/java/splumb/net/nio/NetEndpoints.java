@@ -7,6 +7,9 @@ import java.net.InetAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * Provides factories for creating non-blocking network connections.
+ */
 public class NetEndpoints {
 
     private LogPublisher logger;

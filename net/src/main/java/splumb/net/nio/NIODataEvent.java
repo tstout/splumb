@@ -1,19 +1,16 @@
 package splumb.net.nio;
 
-import splumb.net.nio.MsgHandler;
-import splumb.net.nio.NetEndpoint;
-
 import java.nio.channels.SocketChannel;
 
 class NIODataEvent
 {
-    public NetEndpoint src;
-    public SocketChannel socket;
-    public byte[] data;
-    public MsgHandler handler;
+    Client src;
+    SocketChannel socket;
+    byte[] data;
+    MsgHandler handler;
 
-    public NIODataEvent(
-            NetEndpoint src,
+    NIODataEvent(
+            Client src,
             SocketChannel socket,
             byte[] data,
             MsgHandler handler)

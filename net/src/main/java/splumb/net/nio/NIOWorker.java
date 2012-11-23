@@ -9,7 +9,7 @@ class NIOWorker implements Runnable {
     private LinkedBlockingQueue<NIODataEvent> queue = newLinkedBlockingQueue();
 
     public void processData(
-            NetEndpoint channel,
+            Client channel,
             SocketChannel socket,
             byte[] data,
             int count,

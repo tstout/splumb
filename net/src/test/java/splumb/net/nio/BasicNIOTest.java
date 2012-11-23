@@ -1,6 +1,5 @@
 package splumb.net.nio;
 
-import com.google.common.net.InetAddresses;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.MockitoAnnotations.*;
+import static splumb.net.nio.NIOTestConstants.*;
 
 public class BasicNIOTest {
     Server server;
@@ -38,17 +38,19 @@ public class BasicNIOTest {
 
         server = endpoints.newTCPServer(new MsgHandler() {
             @Override
-            public void msgAvailable(NetEndpoint sender, byte[] msg) {
+            public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
                 ((Client)sender).send("howdy".getBytes());
             }
         });
 
-        server.listen(8000);
+        server.listen(LOCAL_HOST_PORT);
 
-        Client client = endpoints.newTCPClient(InetAddresses.forString("127.0.0.1"), 8000, new MsgHandler() {
+        Client client = endpoints.newTCPClient(LOCAL_HOST,
+                LOCAL_HOST_PORT,
+                new MsgHandler() {
             @Override
-            public void msgAvailable(NetEndpoint sender, byte[] msg) {
+            public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
             }
         });
@@ -63,9 +65,12 @@ public class BasicNIOTest {
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
-        Client client = endpoints.newTCPClient(InetAddresses.forString("127.0.0.1"), 8000, new MsgHandler() {
+
+        Client client = endpoints.newTCPClient(LOCAL_HOST,
+                LOCAL_HOST_PORT,
+                new MsgHandler() {
             @Override
-            public void msgAvailable(NetEndpoint sender, byte[] msg) {
+            public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
             }
         });
@@ -74,14 +79,39 @@ public class BasicNIOTest {
 
         server = endpoints.newTCPServer(new MsgHandler() {
             @Override
-            public void msgAvailable(NetEndpoint sender, byte[] msg) {
+            public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
-                ((Client)sender).send("howdy".getBytes());
+                sender.send("howdy".getBytes());
             }
         });
 
-        server.listen(8000);
+        server.listen(LOCAL_HOST_PORT);
         assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
+    }
+
+    //
+    // TODO - this test fails occasionally, revealing a race somewhere in the select processing.
+    @Test
+    public void twoClientTest() {
+        NetEndpoints endpoints = new NetEndpoints(logger);
+
+        server = endpoints.newTCPServer(new MsgHandler() {
+            @Override
+            public void msgAvailable(Client sender, byte[] msg) {
+                sender.send(msg);
+            }
+        });
+
+        server.listen(NIOTestConstants.LOCAL_HOST_PORT);
+
+        TestClient tc1 = new TestClient(endpoints);
+        tc1.socket().send("Howdy".getBytes());
+
+        TestClient tc2 = new TestClient(endpoints);
+        tc2.socket().send("Howdy1".getBytes());
+
+        assertThat(tc1.waitForData(), is(true));
+        assertThat(tc2.waitForData(), is(true));
     }
 
 }
