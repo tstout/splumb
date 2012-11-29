@@ -114,6 +114,64 @@ public class BasicNIOTest {
         assertThat(tc2.waitForData(), is(true));
     }
 
+    @Test
+    public void threeClientTest() {
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
+
+        server = endpoints.newTCPServer(new MsgHandler() {
+            @Override
+            public void msgAvailable(Client sender, byte[] msg) {
+                sender.send(msg);
+            }
+        });
+
+        server.listen(LOCAL_HOST_PORT);
+
+        TestClient tc1 = new TestClient(endpoints);
+        tc1.socket().send("Howdy1".getBytes());
+
+        TestClient tc2 = new TestClient(endpoints);
+        tc2.socket().send("Howdy2".getBytes());
+
+        TestClient tc3 = new TestClient(endpoints);
+        tc3.socket().send("Howdy2".getBytes());
+
+        assertThat(tc1.waitForData(), is(true));
+        assertThat(tc2.waitForData(), is(true));
+        assertThat(tc3.waitForData(), is(true));
+    }
+
+    @Test
+    public void clientBeforeServerWithDelay() throws InterruptedException {
+        NetEndpoints endpoints = new NetEndpoints(logger);
+
+        final CountDownLatch msgRx = new CountDownLatch(2);
+
+        Client client = endpoints.newTCPClient(LOCAL_HOST,
+                LOCAL_HOST_PORT,
+                new MsgHandler() {
+                    @Override
+                    public void msgAvailable(Client sender, byte[] msg) {
+                        msgRx.countDown();
+                    }
+                });
+
+        client.send("hello".getBytes());
+
+        Thread.sleep(1500);
+
+        server = endpoints.newTCPServer(new MsgHandler() {
+            @Override
+            public void msgAvailable(Client sender, byte[] msg) {
+                msgRx.countDown();
+                sender.send("howdy".getBytes());
+            }
+        });
+
+        server.listen(LOCAL_HOST_PORT);
+        assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
+
+    }
 }
 
 class ConsoleLog implements LogPublisher {

@@ -189,8 +189,6 @@ class NIOSelect implements Runnable {
                 readBuffer.array(),  // TODO - does array() make a copy?
                 numRead,
                 rspHandlers.get(socketChannel));
-
-        tracer.info(String.format("Posted data to worker %s", key));
     }
 
     private void write(SelectionKey key) throws IOException {
