@@ -16,13 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.collect.Lists.*;
 
 class TCPClient implements Client {
-//    private Supplier<SocketChannel> sockSupplier = new Supplier<SocketChannel>() {
-//        public SocketChannel get() {
-//            return connect();
-//        }
-//    };
 
-    //private Supplier<SocketChannel> memoizedSock = Suppliers.memoize(sockSupplier);
     private InetAddress hostAddress;
     private int port;
     private MsgHandler handler;

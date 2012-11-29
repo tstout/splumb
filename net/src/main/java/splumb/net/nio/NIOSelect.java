@@ -33,7 +33,6 @@ class NIOSelect implements Runnable {
 
     private Map<SelectionKey, NetEndpoint> channelMap = newConcurrentMap();
 
-
     //
     // TODO - this buff size needs to be configurable
     //
@@ -147,7 +146,6 @@ class NIOSelect implements Runnable {
         SocketChannel socketChannel = (SocketChannel) key.channel();
 
         readBuffer.clear();
-
 
         int numRead;
         try {
