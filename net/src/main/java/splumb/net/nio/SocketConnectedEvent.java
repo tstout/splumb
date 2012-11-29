@@ -3,13 +3,13 @@ package splumb.net.nio;
 import java.nio.channels.SelectableChannel;
 
 class SocketConnectedEvent {
-    private final SelectableChannel socketChannel;
+    private final SelectableChannel selectableChannel;
 
     public SocketConnectedEvent(SelectableChannel socketChannel) {
-        this.socketChannel = socketChannel;
+        this.selectableChannel = socketChannel;
     }
 
-    public SelectableChannel getSocketChannel() {
-        return socketChannel;
+    public SelectableChannel getSelectableChannel() {
+        return selectableChannel;
     }
 }

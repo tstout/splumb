@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import splumb.common.logging.LogPublisher;
 
+import java.util.Formatter;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +42,7 @@ public class BasicNIOTest {
             @Override
             public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
-                ((Client)sender).send("howdy".getBytes());
+                sender.send("howdy".getBytes());
             }
         });
 
@@ -65,7 +67,6 @@ public class BasicNIOTest {
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
-
         Client client = endpoints.newTCPClient(LOCAL_HOST,
                 LOCAL_HOST_PORT,
                 new MsgHandler() {
@@ -89,11 +90,10 @@ public class BasicNIOTest {
         assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
     }
 
-    //
-    // TODO - this test fails occasionally, revealing a race somewhere in the select processing.
     @Test
-    public void twoClientTest() {
-        NetEndpoints endpoints = new NetEndpoints(logger);
+    public void twoClientTest() throws InterruptedException {
+
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
 
         server = endpoints.newTCPServer(new MsgHandler() {
             @Override
@@ -102,16 +102,39 @@ public class BasicNIOTest {
             }
         });
 
-        server.listen(NIOTestConstants.LOCAL_HOST_PORT);
+        server.listen(LOCAL_HOST_PORT);
 
         TestClient tc1 = new TestClient(endpoints);
-        tc1.socket().send("Howdy".getBytes());
+        tc1.socket().send("Howdy1".getBytes());
 
         TestClient tc2 = new TestClient(endpoints);
-        tc2.socket().send("Howdy1".getBytes());
+        tc2.socket().send("Howdy2".getBytes());
 
         assertThat(tc1.waitForData(), is(true));
         assertThat(tc2.waitForData(), is(true));
     }
 
+}
+
+class ConsoleLog implements LogPublisher {
+
+    @Override
+    public void info(String fmt, Object... parms) {
+        System.out.printf(new Formatter(Locale.getDefault()).format(fmt, parms).toString());
+    }
+
+    @Override
+    public void info(String msg) {
+       System.out.printf("%s\n", msg);
+    }
+
+    @Override
+    public void error(String fmt, Object... parms) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void debug(String fmt, Object... parms) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

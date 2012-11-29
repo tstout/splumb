@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.google.common.collect.Maps.newConcurrentMap;
+
 //
 // TODO - this class is way too busy...refactor...
 //
@@ -24,14 +26,13 @@ class NIOSelect implements Runnable {
     private ConcurrentLinkedQueue<SelectorCmd> pendingChanges =
             new ConcurrentLinkedQueue<SelectorCmd>();
 
-    private Map<SelectableChannel, MsgHandler> rspHandlers =
-            new ConcurrentHashMap<SelectableChannel, MsgHandler>();
+    private Map<SelectableChannel, MsgHandler> rspHandlers = newConcurrentMap();
 
     private Map<SelectableChannel, List<ByteBuffer>> pendingData =
             new ConcurrentHashMap<SelectableChannel, List<ByteBuffer>>();
 
-    private Map<SelectionKey, NetEndpoint> channelMap =
-            new ConcurrentHashMap<SelectionKey, NetEndpoint>();
+    private Map<SelectionKey, NetEndpoint> channelMap = newConcurrentMap();
+
 
     //
     // TODO - this buff size needs to be configurable
@@ -90,7 +91,7 @@ class NIOSelect implements Runnable {
         env.channelMap = channelMap;
         env.pendingData = pendingData;
 
-        for (; ; ) {
+        for (;;) {
             try {
                 synchronized (pendingChanges) {
                     for (SelectorCmd change : pendingChanges) {
@@ -147,6 +148,7 @@ class NIOSelect implements Runnable {
 
         readBuffer.clear();
 
+
         int numRead;
         try {
             numRead = socketChannel.read(readBuffer);
@@ -184,13 +186,13 @@ class NIOSelect implements Runnable {
         }
 
         worker.processData(
-                (Client)channelMap.get(key),
+                (Client) channelMap.get(key),
                 socketChannel,
-                readBuffer.array(),
+                readBuffer.array(),  // TODO - does array() make a copy?
                 numRead,
                 rspHandlers.get(socketChannel));
 
-        tracer.info("Posted data to worker");
+        tracer.info(String.format("Posted data to worker %s", key));
     }
 
     private void write(SelectionKey key) throws IOException {
@@ -231,7 +233,7 @@ class NIOSelect implements Runnable {
         rspHandlers.put(socketChannel, rspHandlers.get(serverSocketChannel));
 
         //
-        // TODO - use SelectionKey.attach() instead of separate channelMap...
+        // TODO - consider using SelectionKey.attach() instead of separate channelMap...
         //
         SelectionKey newKey = socketChannel.register(selector,
                 SelectionKey.OP_READ);
@@ -272,6 +274,7 @@ class NIOSelect implements Runnable {
 
         try {
             if (socketChannel.finishConnect()) {
+                tracer.info(String.format("finishConnect success for %s\n", key.channel()));
                 bus.post(new SocketConnectedEvent(key.channel()));
             }
             //tracer.log("Client Connected");

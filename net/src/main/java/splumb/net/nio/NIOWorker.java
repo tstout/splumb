@@ -1,5 +1,7 @@
 package splumb.net.nio;
 
+import com.google.common.base.Throwables;
+
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -14,6 +16,8 @@ class NIOWorker implements Runnable {
             byte[] data,
             int count,
             MsgHandler handler) {
+
+        // TODO - review scatter/gather nio support...might make this copy moot.
         byte[] dataCopy = new byte[count];
         System.arraycopy(data, 0, dataCopy, 0, count);
 
@@ -27,16 +31,13 @@ class NIOWorker implements Runnable {
         for (;;) {
             try {
                 dataEvent = queue.take();
-
-                //bus.post(new MsgChannelDataEvent(dataEvent.src, dataEvent.data));
-
                 dataEvent
                         .handler
                         .msgAvailable(dataEvent.src, dataEvent.data);
 
 
             } catch (InterruptedException e) {
-                // TODO - research what should be done here...break maybe?
+                Throwables.propagate(e);
             }
         }
     }

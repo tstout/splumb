@@ -30,7 +30,7 @@ class TCPClient implements Client {
     private ScheduledExecutorService scheduler;
     private Reconnect pendingConnect;
     private Boolean connected = false;
-    private SelectableChannel socketChannel;
+    private SelectableChannel selectableChannel;
     private Transmitter transmitter = new QueueingTransmitter();
 
     TCPClient(InetAddress hostAddress,
@@ -56,8 +56,10 @@ class TCPClient implements Client {
 
     private void connect() {
         try {
+
             SocketChannel socketChannel = SocketChannel.open();
             socketChannel.configureBlocking(false);
+            selectableChannel = socketChannel;
 
             boolean rc = socketChannel.connect(
                     new InetSocketAddress(this.hostAddress,
@@ -93,13 +95,16 @@ class TCPClient implements Client {
 
     @Subscribe
     public void connected(SocketConnectedEvent socketConnectedEvent) {
-        synchronized (transmitter) {
-            socketChannel = socketConnectedEvent.getSocketChannel();
-            ConnectedTransmitter connectedTransmitter = new ConnectedTransmitter();
-            transmitter.sendAll(connectedTransmitter);
-            transmitter = connectedTransmitter;
+        if (selectableChannel == socketConnectedEvent.getSelectableChannel()) {
 
-            setConnected(true);
+            synchronized (transmitter) {
+                selectableChannel = socketConnectedEvent.getSelectableChannel();
+                ConnectedTransmitter connectedTransmitter = new ConnectedTransmitter();
+                transmitter.sendAll(connectedTransmitter);
+                transmitter = connectedTransmitter;
+
+                setConnected(true);
+            }
         }
     }
 
@@ -120,6 +125,7 @@ class TCPClient implements Client {
 
     interface Transmitter {
         void send(byte[] msg);
+
         void sendAll(Transmitter transmitter);
 
     }
@@ -146,7 +152,7 @@ class TCPClient implements Client {
         public void send(byte[] msg) {
             select.applyChange(
                     new SelectorCmd(
-                            socketChannel,
+                            selectableChannel,
                             TCPClient.this,
                             ByteBuffer.wrap(msg)));
         }

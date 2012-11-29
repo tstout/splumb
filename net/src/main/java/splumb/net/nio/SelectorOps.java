@@ -11,7 +11,7 @@ enum SelectorOps {
         @Override
         public void process(SelectorEnv env) {
             try {
-                env.trace.info("SelectorOps: REGISTER");
+                //env.trace.info("SelectorOps: REGISTER");
                 env.channelMap
                         .put(env.socket.register(env.selector, env.ops),
                                 env.channel);
@@ -24,7 +24,7 @@ enum SelectorOps {
     CHANGEOPS {
         @Override
         void process(SelectorEnv env) {
-            env.trace.info("SelectorOps: CHANGEOPS");
+            //env.trace.info("SelectorOps: CHANGEOPS");
             SelectionKey key =
                     env.socket.keyFor(env.selector);
 
@@ -36,7 +36,6 @@ enum SelectorOps {
     TRANSMIT {
         @Override
         void process(SelectorEnv env) {
-            env.trace.info("SelectorOps: TRANSMIT");
             SelectionKey keyForWrite =
                     env.socket.keyFor(env.selector);
 
@@ -52,7 +51,6 @@ enum SelectorOps {
                     keyForWrite.interestOps() |
                             SelectionKey.OP_WRITE);
         }
-
     };
 
     abstract void process(SelectorEnv env);
