@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Provides factories for creating non-blocking network connections.
+ * Provides factories for creating network connections.
  */
 public class NetEndpoints {
 
@@ -31,4 +31,6 @@ public class NetEndpoints {
         bus.register(client);
         return client;
     }
+
+    // TODO - add UDPServer and UDPClient...
 }
