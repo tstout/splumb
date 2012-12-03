@@ -22,7 +22,7 @@ enum KeyState {
         }
 
         @Override
-        void exec(SelectorEnv env) {
+        void process(SelectorEnv env) {
             env.logger.info("Processing Accept");
             ServerSocketChannel serverSocketChannel = (ServerSocketChannel) env.key
                     .channel();
@@ -61,7 +61,7 @@ enum KeyState {
         }
 
         @Override
-        void exec(SelectorEnv env) {
+        void process(SelectorEnv env) {
             SocketChannel socketChannel = (SocketChannel) env.key.channel();
 
             try {
@@ -85,14 +85,14 @@ enum KeyState {
 //        }
 //
 //        @Override
-//        void exec(SelectorEnv env) {
+//        void process(SelectorEnv env) {
 //            //To change body of implemented methods use File | Settings | File Templates.
 //        }
 //    },
 
     READABLE(3) {
         @Override
-        void exec(SelectorEnv env) {
+        void process(SelectorEnv env) {
             SocketChannel socketChannel = (SocketChannel) env.key.channel();
 
             env.readBuffer.clear();
@@ -154,7 +154,7 @@ enum KeyState {
         }
 
         @Override
-        void exec(SelectorEnv env) {
+        void process(SelectorEnv env) {
             env.logger.info("Processing write");
             SocketChannel socketChannel = (SocketChannel) env.key.channel();
 
@@ -189,7 +189,7 @@ enum KeyState {
         }
     };
 
-    abstract void exec(SelectorEnv env);
+    abstract void process(SelectorEnv env);
 
     abstract boolean isActive(SelectionKey key);
 
