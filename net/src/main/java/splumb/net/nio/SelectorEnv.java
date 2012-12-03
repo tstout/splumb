@@ -1,5 +1,6 @@
 package splumb.net.nio;
 
+import com.google.common.eventbus.EventBus;
 import splumb.common.logging.LogPublisher;
 
 import java.nio.ByteBuffer;
@@ -10,19 +11,31 @@ import java.util.List;
 import java.util.Map;
 
 class SelectorEnv {
-    public SelectableChannel socket;
+    SelectableChannel socket;
 
-    public Map<SelectionKey, NetEndpoint> channelMap;
+    Map<SelectionKey, NetEndpoint> channelMap;
 
-    public Map<SelectableChannel, List<ByteBuffer>> pendingData;
+    Map<SelectableChannel, List<ByteBuffer>> pendingData;
 
-    public int ops;
+    Map<SelectableChannel, MsgHandler> rspHandlers;
 
-    public Selector selector;
+    int ops;
 
-    public NetEndpoint channel;
+    Selector selector;
 
-    public ByteBuffer data;
+    NetEndpoint channel;
 
-    public LogPublisher trace;
+    ByteBuffer data;
+
+    LogPublisher logger;
+
+    SelectionKey key;
+
+    NIOSelect nioSelector;
+
+    EventBus bus;
+
+    ByteBuffer readBuffer;
+
+    NIOWorker worker;
 }

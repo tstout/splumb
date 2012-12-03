@@ -6,17 +6,19 @@ import java.nio.channels.SelectionKey;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Throwables.propagate;
+
 enum SelectorOps {
-    REGISTER() {
+    REGISTER {
         @Override
         public void process(SelectorEnv env) {
             try {
-                //env.trace.info("SelectorOps: REGISTER");
+                //env.logger.info("SelectorOps: REGISTER");
                 env.channelMap
                         .put(env.socket.register(env.selector, env.ops),
                                 env.channel);
             } catch (ClosedChannelException e) {
-                throw new RuntimeException(e);
+                propagate(e);
             }
         }
     },
@@ -24,7 +26,7 @@ enum SelectorOps {
     CHANGEOPS {
         @Override
         void process(SelectorEnv env) {
-            //env.trace.info("SelectorOps: CHANGEOPS");
+            //env.logger.info("SelectorOps: CHANGEOPS");
             SelectionKey key =
                     env.socket.keyFor(env.selector);
 

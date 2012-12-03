@@ -3,7 +3,6 @@ package splumb.net.nio;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import splumb.common.logging.LogPublisher;
 
 import java.util.Formatter;
@@ -19,9 +18,6 @@ import static splumb.net.nio.NIOTestConstants.*;
 public class BasicNIOTest {
     Server server;
 
-    @Mock
-    LogPublisher logger;
-
     @Before
     public void setup() {
         initMocks(this);
@@ -34,7 +30,7 @@ public class BasicNIOTest {
 
     @Test
     public void serverBeforeClientTest() throws InterruptedException {
-        NetEndpoints endpoints = new NetEndpoints(logger);
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
@@ -63,7 +59,7 @@ public class BasicNIOTest {
 
     @Test
     public void clientBeforeServerTest() throws InterruptedException {
-        NetEndpoints endpoints = new NetEndpoints(logger);
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
@@ -143,7 +139,7 @@ public class BasicNIOTest {
 
     @Test
     public void clientBeforeServerWithDelay() throws InterruptedException {
-        NetEndpoints endpoints = new NetEndpoints(logger);
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 

@@ -7,7 +7,9 @@ import splumb.common.logging.LogPublisher;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +18,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static com.google.common.collect.Maps.newConcurrentMap;
+import static com.google.common.base.Throwables.*;
+import static com.google.common.collect.Maps.*;
 
-//
-// TODO - this class is way too busy...refactor...
-//
 class NIOSelect implements Runnable {
 
     private ConcurrentLinkedQueue<SelectorCmd> pendingChanges =
@@ -89,6 +89,12 @@ class NIOSelect implements Runnable {
         env.selector = selector;
         env.channelMap = channelMap;
         env.pendingData = pendingData;
+        env.rspHandlers = rspHandlers;
+        env.nioSelector = this;
+        env.bus = bus;
+        env.logger = tracer;
+        env.readBuffer = readBuffer;
+        env.worker = worker;
 
         for (;;) {
             try {
@@ -98,7 +104,6 @@ class NIOSelect implements Runnable {
                         env.socket = change.socket;
                         env.ops = change.ops;
                         env.data = change.data;
-                        env.trace = tracer;
 
                         change.type.process(env);
                     }
@@ -108,177 +113,24 @@ class NIOSelect implements Runnable {
 
                 selector.select();
 
-                //
-                // TODO - consider refactoring this if-else tree...
-                //
                 Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
 
                 while (iter.hasNext()) {
                     SelectionKey key = iter.next();
                     iter.remove();
 
+                    env.key = key;
+
                     if (!key.isValid()) {
                         tracer.error("Invalid key");
                         continue;
                     }
 
-                    if (key.isAcceptable()) {
-                        tracer.info("Processing accept");
-                        accept(key);
-                    } else if (key.isConnectable()) {
-                        tracer.info("Processing finishConnection");
-                        finishConnection(key);
-                    } else if (key.isReadable()) {
-                        tracer.info("Processing read");
-                        read(key);
-                    } else if (key.isWritable()) {
-                        tracer.info("Processing write");
-                        write(key);
-                    }
+                   KeyState.current(key).exec(env);
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                propagate(e);
             }
         }
-    }
-
-    private void read(SelectionKey key) {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-
-        readBuffer.clear();
-
-        int numRead;
-        try {
-            numRead = socketChannel.read(readBuffer);
-        } catch (IOException e) {
-            //
-            // far end closed the connection, cancel the selection key and
-            // close the channel.
-            //
-            key.cancel();
-
-            try {
-                channelMap.remove(key);
-                socketChannel.close();
-            } catch (IOException e1) {
-                throw new RuntimeException(e1);
-            }
-
-            return;
-        }
-
-        if (numRead == -1) {
-            //
-            // Remote shutdown...close the connection.
-            //
-            try {
-                channelMap.remove(key);
-                key.channel().close();
-                tracer.info("Read detected remote shutdown");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            key.cancel();
-            return;
-        }
-
-        worker.processData(
-                (Client) channelMap.get(key),
-                socketChannel,
-                readBuffer.array(),  // TODO - does array() make a copy?
-                numRead,
-                rspHandlers.get(socketChannel));
-    }
-
-    private void write(SelectionKey key) throws IOException {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-
-        List<ByteBuffer> queue = pendingData.get(socketChannel);
-
-        //
-        // Empty the transmit queue...
-        //
-        while (!queue.isEmpty()) {
-            ByteBuffer buf = queue.get(0);
-            socketChannel.write(buf);
-
-            if (buf.remaining() > 0) {
-                // ... or the socket's buffer fills up
-                break;
-            }
-            queue.remove(0);
-        }
-
-        if (queue.isEmpty()) {
-            //
-            // All data transmitted, switch back to read...
-            //
-            key.interestOps(SelectionKey.OP_READ);
-        }
-    }
-
-    private void accept(SelectionKey key) throws IOException {
-        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key
-                .channel();
-
-        SocketChannel socketChannel = serverSocketChannel.accept();
-
-        socketChannel.configureBlocking(false);
-
-        rspHandlers.put(socketChannel, rspHandlers.get(serverSocketChannel));
-
-        //
-        // TODO - consider using SelectionKey.attach() instead of separate channelMap...
-        //
-        SelectionKey newKey = socketChannel.register(selector,
-                SelectionKey.OP_READ);
-
-        channelMap.put(newKey, new InternalChannel(this, socketChannel));
-
-        tracer.info("Server Accepted");
-    }
-
-    //
-    // MsgChannel created after accept...
-    //
-    class InternalChannel implements Client {
-        NIOSelect select;
-        SelectableChannel sock;
-
-        public InternalChannel(NIOSelect select, SelectableChannel sock) {
-            this.select = select;
-            this.sock = sock;
-        }
-
-        @Override
-        public void send(byte[] msg) {
-            select.applyChange(
-                    new SelectorCmd(
-                            sock,
-                            this,
-                            ByteBuffer.wrap(msg)));
-        }
-
-        @Override
-        public void close() {
-        }
-    }
-
-    private void finishConnection(SelectionKey key) throws IOException {
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-
-        try {
-            if (socketChannel.finishConnect()) {
-                tracer.info(String.format("finishConnect success for %s\n", key.channel()));
-                bus.post(new SocketConnectedEvent(key.channel()));
-            }
-            //tracer.log("Client Connected");
-        } catch (IOException e) {
-            key.cancel();
-            return;
-        }
-
-        key.interestOps(key.interestOps() | SelectionKey.OP_READ);
     }
 }
