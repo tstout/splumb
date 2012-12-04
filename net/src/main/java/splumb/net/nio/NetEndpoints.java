@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Provides factories for creating network connections.
+ * Provides factories for creating network endpoints.
  */
 public class NetEndpoints {
 

@@ -7,9 +7,13 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Context passed to socket state processing functions.
+ */
 class SelectorEnv {
     SelectableChannel socket;
 
@@ -38,4 +42,8 @@ class SelectorEnv {
     ByteBuffer readBuffer;
 
     NIOWorker worker;
+
+    SocketChannel socketChannel() {
+        return (SocketChannel) key.channel();
+    }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.google.common.base.Throwables.*;
 
+
 enum KeyState {
     ACCEPTABLE(1) {
         @Override
@@ -62,11 +63,11 @@ enum KeyState {
 
         @Override
         void process(SelectorEnv env) {
-            SocketChannel socketChannel = (SocketChannel) env.key.channel();
+            SocketChannel socketChannel = env.socketChannel();
 
             try {
                 if (socketChannel.finishConnect()) {
-                    env.logger.info("finishConnect success for %s\n", env.key.channel());
+                    env.logger.info("finishConnect success for %s", env.key.channel());
                     env.bus.post(new SocketConnectedEvent(env.key.channel()));
                 }
             } catch (IOException e) {
@@ -93,7 +94,7 @@ enum KeyState {
     READABLE(3) {
         @Override
         void process(SelectorEnv env) {
-            SocketChannel socketChannel = (SocketChannel) env.key.channel();
+            SocketChannel socketChannel = env.socketChannel();
 
             env.readBuffer.clear();
 
@@ -156,7 +157,7 @@ enum KeyState {
         @Override
         void process(SelectorEnv env) {
             env.logger.info("Processing write");
-            SocketChannel socketChannel = (SocketChannel) env.key.channel();
+            SocketChannel socketChannel = env.socketChannel();
 
             List<ByteBuffer> queue = env.pendingData.get(socketChannel);
 

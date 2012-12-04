@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Lists.*;
 
 class TCPClient implements Client {
@@ -69,9 +70,10 @@ class TCPClient implements Client {
 
             pendingConnect = new Reconnect();
 
+            // TODO - retry interval should be static const or configurable...
             scheduler.schedule(pendingConnect, 500, TimeUnit.MILLISECONDS);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            propagate(e);
         }
     }
 
