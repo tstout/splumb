@@ -13,7 +13,6 @@ import java.nio.channels.Selector;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -21,16 +20,15 @@ import java.util.concurrent.Executors;
 import static com.google.common.base.Throwables.*;
 import static com.google.common.collect.Maps.*;
 
+
+// TODO - this class is still too busy...way too many private fields here.
 class NIOSelect implements Runnable {
 
     private ConcurrentLinkedQueue<SelectorCmd> pendingChanges =
             new ConcurrentLinkedQueue<SelectorCmd>();
 
     private Map<SelectableChannel, MsgHandler> rspHandlers = newConcurrentMap();
-
-    private Map<SelectableChannel, List<ByteBuffer>> pendingData =
-            new ConcurrentHashMap<SelectableChannel, List<ByteBuffer>>();
-
+    private Map<SelectableChannel, List<ByteBuffer>> pendingData =  newConcurrentMap();
     private Map<SelectionKey, NetEndpoint> channelMap = newConcurrentMap();
 
     //
@@ -41,11 +39,11 @@ class NIOSelect implements Runnable {
     private Executor selectThr;
     private NIOWorker worker;
     private Selector selector;
-    private LogPublisher tracer;
+    private LogPublisher logger;
     private EventBus bus;
 
-    NIOSelect(LogPublisher tracer, EventBus bus) {
-        this.tracer = tracer;
+    NIOSelect(LogPublisher logger, EventBus bus) {
+        this.logger = logger;
         this.bus = bus;
         worker = new NIOWorker();
 
@@ -70,7 +68,7 @@ class NIOSelect implements Runnable {
     }
 
     public void applyChange(SelectorCmd cmd) {
-        tracer.info("applyChange");
+        logger.info("applyChange");
 
         if (cmd.handler != null) {
             rspHandlers.put(cmd.socket, cmd.handler);
@@ -92,7 +90,7 @@ class NIOSelect implements Runnable {
         env.rspHandlers = rspHandlers;
         env.nioSelector = this;
         env.bus = bus;
-        env.logger = tracer;
+        env.logger = logger;
         env.readBuffer = readBuffer;
         env.worker = worker;
 
@@ -122,10 +120,13 @@ class NIOSelect implements Runnable {
                     env.key = key;
 
                     if (!key.isValid()) {
-                        tracer.error("Invalid key");
+                        logger.error("Invalid key");
                         continue;
                     }
 
+                   //
+                   // process the selection key according to its current state...
+                    //
                    KeyState.current(key).process(env);
                 }
             } catch (Exception e) {

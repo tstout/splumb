@@ -50,8 +50,7 @@ enum SelectorOps {
             queue.add(env.data);
 
             keyForWrite.interestOps(
-                    keyForWrite.interestOps() |
-                            SelectionKey.OP_WRITE);
+                    keyForWrite.interestOps() | SelectionKey.OP_WRITE);
         }
     };
 

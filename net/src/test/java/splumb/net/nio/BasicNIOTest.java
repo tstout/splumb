@@ -5,8 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import splumb.common.logging.LogPublisher;
 
-import java.util.Formatter;
-import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -174,7 +172,7 @@ class ConsoleLog implements LogPublisher {
 
     @Override
     public void info(String fmt, Object... parms) {
-        System.out.printf(new Formatter(Locale.getDefault()).format(fmt, parms).toString());
+        System.out.printf(fmt, parms);
     }
 
     @Override
