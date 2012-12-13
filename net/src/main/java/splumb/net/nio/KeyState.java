@@ -100,6 +100,7 @@ enum KeyState {
 
             int numRead;
             try {
+
                 numRead = socketChannel.read(env.readBuffer);
             } catch (IOException e) {
                 //
@@ -137,7 +138,7 @@ enum KeyState {
             env.worker.processData(
                     (Client) env.channelMap.get(env.key),
                     socketChannel,
-                    env.readBuffer.array(),  // TODO - does array() make a copy?
+                    env.readBuffer.array(),
                     numRead,
                     env.rspHandlers.get(socketChannel));
         }

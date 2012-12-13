@@ -2,8 +2,11 @@ package splumb.net.framing;
 
 import com.google.common.base.Charsets;
 import com.google.common.primitives.Ints;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -16,6 +19,9 @@ public class ByteBufferTest {
     static final byte[] MAGIC_AS_ARRAY = Ints.toByteArray(MAGIC);
     static final int PAYLOAD = 0xCAFEBABE;
     static final byte[] TEST_PAYLOAD_AS_ARRAY = Ints.toByteArray(PAYLOAD);
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void appendTest()  {
@@ -60,14 +66,35 @@ public class ByteBufferTest {
         assertThat(Ints.fromByteArray(payload), is(PAYLOAD));
     }
 
+    @Test
+    public void exceedLimitTest() {
+        thrown.expect(BufferOverflowException.class);
+
+        ByteBuffer buff = createFrame();
+        buff.putInt(0xFF);
+    }
+
+    @Test
+    public void defaultLimitTest() {
+        ByteBuffer buff = ByteBuffer.allocate(10);
+        assertThat(buff.limit(), not(0));
+    }
+
+    @Test
+    public void remainingTest() {
+        ByteBuffer buff = ByteBuffer.allocate(10);
+        buff.putInt(0xFFFFEEEE);
+        //buffFromNio.mark();
+        assertThat(buff.remaining(), is(10 - 4));
+    }
+
+
     ByteBuffer createFrame() {
         ByteBuffer buff = ByteBuffer.allocate(10);
-        buff.limit(10);
         buff.put(MAGIC_AS_ARRAY);
         buff.putShort((short) (TEST_PAYLOAD_AS_ARRAY.length));
         buff.put(TEST_PAYLOAD_AS_ARRAY);
 
         return buff;
     }
-
 }
