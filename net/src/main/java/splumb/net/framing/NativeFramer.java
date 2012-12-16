@@ -25,34 +25,32 @@ public class NativeFramer implements Framer {
 }
 
 class RxContext {
-
-    RxContext() {
-        resetFrameBuff();
-        currentState = NativeFrameState.MAGIC_RX;
-    }
-
-    RxContext resetFrameBuff() {
-        frameBuff = ByteBuffer.allocate(NativeFramer.MAX_FRAME_LENGTH);
-        return this;
-    }
-
-    RxContext setState(NativeFrameState currentState) {
-        this.currentState.init(this);
-        this.currentState = currentState;
-        return this;
-    }
-
-    NativeFrameState currentState() {
-        return currentState;
-    }
-
-    ByteBuffer buffFromNio;
+    ByteBuffer buffFromNet;
     ByteBuffer frameBuff;
     NativeFrameState currentState;
     Client client;
     short payloadLength;
     short currentLength;
     FrameListener frameListener;
+
+    RxContext() {
+        frameBuff = ByteBuffer.allocate(NativeFramer.MAX_FRAME_LENGTH);
+        resetFrameBuff();
+
+    }
+
+    RxContext resetFrameBuff() {
+        frameBuff.clear();
+        currentLength = 0;
+        currentState = NativeFrameState.MAGIC_RX;
+        return this;
+    }
+
+    RxContext setState(NativeFrameState currentState) {
+        //this.currentState.init(this);
+        this.currentState = currentState;
+        return this;
+    }
 }
 
 

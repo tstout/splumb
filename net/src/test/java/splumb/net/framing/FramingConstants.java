@@ -9,8 +9,14 @@ class FramingConstants {
     static final int PAYLOAD = 0xCAFEBABE;
     static final byte[] TEST_PAYLOAD_AS_ARRAY = Ints.toByteArray(PAYLOAD);
 
-    static final ByteBuffer TEST_FRAME =
+    private static final ByteBuffer TEST_FRAME =
             new NativeFrameBuilder()
             .withPayload(TEST_PAYLOAD_AS_ARRAY, (short)(TEST_PAYLOAD_AS_ARRAY.length))
             .build();
+
+    static ByteBuffer testFrame() {
+        return new NativeFrameBuilder()
+                .withPayload(TEST_PAYLOAD_AS_ARRAY, (short)(TEST_PAYLOAD_AS_ARRAY.length))
+                .build();
+    }
 }

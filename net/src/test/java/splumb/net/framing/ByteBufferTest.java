@@ -12,6 +12,14 @@ import java.nio.ByteBuffer;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static splumb.net.framing.FramingConstants.*;
+
+//When you are done putting bytes into the buffer, you should flip it.
+// A java.nio.Buffer distinguishes between 'capacity' and 'limit'. If you don't flip it, then limit and capacity are
+// the same as the length of the array with which you initialized it. By flipping it, the limit will be set to the
+// end of the data you've encoded, capacity will still be 1024.
+// ByteBuffer#remaining looks at the delta between
+// position and limit.
+//
 //
 // Basic tests to verify my understanding of the ByteBuffer API
 //
@@ -19,6 +27,15 @@ public class ByteBufferTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void initialPropertiesTest() {
+        ByteBuffer buff = createFrame();
+        buff.rewind();
+
+        assertThat(buff.position(), is(0));
+        assertThat(buff.limit(), is(10));
+    }
 
     @Test
     public void appendTest()  {
@@ -81,7 +98,7 @@ public class ByteBufferTest {
     public void remainingTest() {
         ByteBuffer buff = ByteBuffer.allocate(10);
         buff.putInt(0xFFFFEEEE);
-        //buffFromNio.mark();
+        //buffFromNet.mark();
         assertThat(buff.remaining(), is(10 - 4));
     }
 

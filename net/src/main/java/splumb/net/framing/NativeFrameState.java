@@ -12,68 +12,72 @@ enum NativeFrameState {
     MAGIC_RX {
         @Override
         FrameStateStatus process(RxContext context) {
-            if (context.buffFromNio.remaining() < 4) {
-                context.frameBuff.put(context.buffFromNio);
+            if (context.buffFromNet.limit() < 4) {
+                context.frameBuff.put(context.buffFromNet);
                 context.setState(PARTIAL_MAGIC);
 
                 return WAIT;
             }
 
-            if (context.buffFromNio.getInt() == MAGIC) {
+            if (context.buffFromNet.getInt() == MAGIC) {
                 context.setState(SIZE_RX);
                 return FrameStateStatus.CONTINUE;
             }
 
             return WAIT;
         }
-
-        @Override
-        void init(RxContext context) {
-        }
     },
     PARTIAL_MAGIC {
         @Override
         FrameStateStatus process(RxContext context) {
+            context.frameBuff.put(context.buffFromNet);
+
+            int bytesNeeded = 4 - context.frameBuff.limit();
+
+            if (context.buffFromNet.limit() >= bytesNeeded) {
+                if (context.buffFromNet.getInt() == MAGIC) {
+                    context.setState(SIZE_RX);
+                    return FrameStateStatus.CONTINUE;
+                }
+            }
+
             return CONTINUE;
-
-        }
-
-        @Override
-        void init(RxContext context) {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
     },
     SIZE_RX {
         @Override
         FrameStateStatus process(RxContext context) {
-            if (context.buffFromNio.remaining() < 2) {
+            if (context.buffFromNet.limit() < 2) {
 
+                context.frameBuff.put(context.buffFromNet);
+                context.setState(PARTIAL_SIZE_RX);
                 return FrameStateStatus.WAIT;
             }
 
-            context.payloadLength = context.buffFromNio.getShort();
+            context.payloadLength = context.buffFromNet.getShort();
+            context.frameBuff.clear();
             context.setState(PAYLOAD_RX);
             return CONTINUE;
         }
-
+    },
+    PARTIAL_SIZE_RX {
         @Override
-        void init(RxContext context) {
-
+        FrameStateStatus process(RxContext context) {
+            context.frameBuff.put(context.buffFromNet);
+            context.payloadLength = context.buffFromNet.getShort();
+            context.frameBuff.clear();
+            context.setState(PAYLOAD_RX);
+            return WAIT;
         }
     },
     PAYLOAD_RX {
-        @Override
-        void init(RxContext context) {
-
-        }
-
         @Override
         FrameStateStatus process(RxContext context) {
 
             // TODO - does not handle partial frame after end of current frame. Do we need another state for this
             // case?
-            int bytesToRead = Math.max(context.payloadLength - context.currentLength, context.buffFromNio.remaining());
-            context.frameBuff.put(context.buffFromNio.array(), 0, bytesToRead);
+            int bytesToRead = Math.min(context.payloadLength - context.currentLength, context.buffFromNet.remaining());
+            context.frameBuff.put(context.buffFromNet.array(), context.buffFromNet.position(), bytesToRead);
             context.currentLength += bytesToRead;
 
             if (context.currentLength == context.payloadLength) {
@@ -90,19 +94,17 @@ enum NativeFrameState {
             //
             // Copy payload to a new buff to pass to the frame listener
             //
+            context.frameBuff.flip();
             ByteBuffer payload = ByteBuffer.allocate(context.payloadLength);
-            context.frameBuff.get(payload.array());
+            payload.put(context.frameBuff);
+            payload.flip();
+
             context.frameListener.frameAvailable(context.client, payload);
 
-            // TODO - need to safely copy any possible sequential frame from
-            // the buffer here.  Maybe put this copy logic into resetFrameBuff();
+            context.buffFromNet.position(context.buffFromNet.position() + context.payloadLength);
             context.resetFrameBuff();
-            return WAIT;
-        }
 
-        @Override
-        void init(RxContext context) {
-
+            return context.buffFromNet.remaining() == 0 ? WAIT : CONTINUE;
         }
     };
 
@@ -111,17 +113,10 @@ enum NativeFrameState {
         WAIT
     }
 
-    enum ParseStatus {
-        FINISHED,
-        NOT_FINISHED
-    }
-
     abstract FrameStateStatus process(RxContext context);
-    abstract void init(RxContext context);
 
     public static void parse(RxContext context) {
-        while(context.currentState.process(context) == FrameStateStatus.CONTINUE);
-        //return context.currentState == FRAME_COMPLETE ? ParseStatus.FINISHED : ParseStatus.NOT_FINISHED;
+        while(context.currentState.process(context) == CONTINUE);
     }
 
 }
