@@ -9,6 +9,7 @@ public class NativeFramer implements Framer {
 
     public static final int MAX_FRAME_LENGTH = 6 + (64 * 1024);
     public static final int MAGIC = 0xDEADBEEF;
+    public static final int MAGIC_LENGTH = 4;
 
     public NativeFramer() {
     }
@@ -27,6 +28,7 @@ class RxContext {
 
     RxContext() {
         resetFrameBuff();
+        currentState = NativeFrameState.MAGIC_RX;
     }
 
     RxContext resetFrameBuff() {
@@ -36,7 +38,7 @@ class RxContext {
 
     RxContext setState(NativeFrameState currentState) {
         this.currentState.init(this);
-        currentState = this.currentState;
+        this.currentState = currentState;
         return this;
     }
 

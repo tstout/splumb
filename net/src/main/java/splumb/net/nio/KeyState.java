@@ -136,7 +136,7 @@ enum KeyState {
             }
 
             env.worker.processData(
-                    (Client) env.channelMap.get(env.key),
+                    (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
                     socketChannel,
                     env.readBuffer.array(),
                     numRead,

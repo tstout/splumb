@@ -11,14 +11,11 @@ import java.nio.ByteBuffer;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static splumb.net.framing.FramingConstants.*;
 //
 // Basic tests to verify my understanding of the ByteBuffer API
 //
 public class ByteBufferTest {
-    static final int MAGIC = 0xDEADBEEF;
-    static final byte[] MAGIC_AS_ARRAY = Ints.toByteArray(MAGIC);
-    static final int PAYLOAD = 0xCAFEBABE;
-    static final byte[] TEST_PAYLOAD_AS_ARRAY = Ints.toByteArray(PAYLOAD);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -58,7 +55,7 @@ public class ByteBufferTest {
 
         byte[] payload = new byte[TEST_PAYLOAD_AS_ARRAY.length];
 
-        assertThat(buff.getInt(), is(MAGIC));
+        assertThat(buff.getInt(), is(NativeFrameBuilder.MAGIC));
         assertThat(buff.getShort(), is((short)TEST_PAYLOAD_AS_ARRAY.length));
 
         buff.get(payload);
@@ -91,7 +88,7 @@ public class ByteBufferTest {
 
     ByteBuffer createFrame() {
         ByteBuffer buff = ByteBuffer.allocate(10);
-        buff.put(MAGIC_AS_ARRAY);
+        buff.put(NativeFrameBuilder.MAGIC_AS_ARRAY);
         buff.putShort((short) (TEST_PAYLOAD_AS_ARRAY.length));
         buff.put(TEST_PAYLOAD_AS_ARRAY);
 

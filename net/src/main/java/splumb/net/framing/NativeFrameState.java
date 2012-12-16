@@ -2,6 +2,8 @@ package splumb.net.framing;
 
 import java.nio.ByteBuffer;
 
+import static splumb.net.framing.NativeFrameState.FrameStateStatus.*;
+import static splumb.net.framing.NativeFramer.*;
 /**
  * This provides the native splumb message framing.
  * |DEADBEEF (magic header)|Payload Length - 16 bits|Payload (64K max)|
@@ -11,30 +13,47 @@ enum NativeFrameState {
         @Override
         FrameStateStatus process(RxContext context) {
             if (context.buffFromNio.remaining() < 4) {
-                return FrameStateStatus.INCOMPLETE;
+                context.frameBuff.put(context.buffFromNio);
+                context.setState(PARTIAL_MAGIC);
+
+                return WAIT;
             }
 
-            if (context.buffFromNio.getInt() == NativeFramer.MAGIC) {
+            if (context.buffFromNio.getInt() == MAGIC) {
                 context.setState(SIZE_RX);
-                return FrameStateStatus.COMPLETE;
+                return FrameStateStatus.CONTINUE;
             }
 
-            return FrameStateStatus.INCOMPLETE;
+            return WAIT;
         }
 
         @Override
         void init(RxContext context) {
         }
     },
+    PARTIAL_MAGIC {
+        @Override
+        FrameStateStatus process(RxContext context) {
+            return CONTINUE;
+
+        }
+
+        @Override
+        void init(RxContext context) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+    },
     SIZE_RX {
         @Override
         FrameStateStatus process(RxContext context) {
             if (context.buffFromNio.remaining() < 2) {
-                return FrameStateStatus.INCOMPLETE;
+
+                return FrameStateStatus.WAIT;
             }
 
             context.payloadLength = context.buffFromNio.getShort();
-            return FrameStateStatus.COMPLETE;
+            context.setState(PAYLOAD_RX);
+            return CONTINUE;
         }
 
         @Override
@@ -59,10 +78,10 @@ enum NativeFrameState {
 
             if (context.currentLength == context.payloadLength) {
                 context.setState(FRAME_COMPLETE);
-                return FrameStateStatus.COMPLETE;
+                return CONTINUE;
             }
 
-            return FrameStateStatus.INCOMPLETE;
+            return WAIT;
         }
     },
     FRAME_COMPLETE {
@@ -76,9 +95,9 @@ enum NativeFrameState {
             context.frameListener.frameAvailable(context.client, payload);
 
             // TODO - need to safely copy any possible sequential frame from
-            // the buffer here.  Maybe put his copy logic into resetFrameBuff();
+            // the buffer here.  Maybe put this copy logic into resetFrameBuff();
             context.resetFrameBuff();
-            return FrameStateStatus.INCOMPLETE;
+            return WAIT;
         }
 
         @Override
@@ -88,8 +107,8 @@ enum NativeFrameState {
     };
 
     enum FrameStateStatus {
-        COMPLETE,
-        INCOMPLETE
+        CONTINUE,
+        WAIT
     }
 
     enum ParseStatus {
@@ -100,8 +119,8 @@ enum NativeFrameState {
     abstract FrameStateStatus process(RxContext context);
     abstract void init(RxContext context);
 
-    void parse(RxContext context) {
-        while(context.currentState.process(context) == FrameStateStatus.COMPLETE);
+    public static void parse(RxContext context) {
+        while(context.currentState.process(context) == FrameStateStatus.CONTINUE);
         //return context.currentState == FRAME_COMPLETE ? ParseStatus.FINISHED : ParseStatus.NOT_FINISHED;
     }
 
