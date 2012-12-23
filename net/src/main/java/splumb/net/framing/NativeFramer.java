@@ -15,12 +15,18 @@ public class NativeFramer implements Framer {
     }
 
     @Override
-    public boolean isFrameComplete(ByteBuffer buff) {
-        return true;
+    public ByteBuffer buffer() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public void postFrame() {
+    public boolean isFrameComplete(int bytesJustRead) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public ByteBuffer payload() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
 

@@ -18,7 +18,7 @@ class TestClient {
                     public void msgAvailable(Client sender, byte[] msg) {
                         msgRx.countDown();
                     }
-                });
+                }, new TestFramer());
     }
 
     public Client socket() {

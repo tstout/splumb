@@ -1,6 +1,7 @@
 package splumb.net.nio;
 
 import com.google.common.base.Throwables;
+import splumb.net.framing.Framer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -14,10 +15,12 @@ class TCPServer implements Server {
     private NIOSelect selector;
     private Boolean listening = false;
     private MsgHandler handler;
+    private Framer framer;
 
-    TCPServer(NIOSelect selector, MsgHandler handler) {
+    TCPServer(NIOSelect selector, MsgHandler handler, Framer framer) {
         this.selector = selector;
         this.handler = handler;
+        this.framer = framer;
 
         try {
             channel = ServerSocketChannel.open();
@@ -45,7 +48,8 @@ class TCPServer implements Server {
                     this,
                     handler,
                     SelectorOps.REGISTER,
-                    SelectionKey.OP_ACCEPT));
+                    SelectionKey.OP_ACCEPT,
+                    framer));
         } catch (IOException e) {
             Throwables.propagate(e);
         }

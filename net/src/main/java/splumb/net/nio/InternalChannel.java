@@ -1,5 +1,7 @@
 package splumb.net.nio;
 
+import splumb.net.framing.Framer;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectableChannel;
 
@@ -10,10 +12,12 @@ import java.nio.channels.SelectableChannel;
 class InternalChannel implements Client {
     NIOSelect select;
     SelectableChannel sock;
+    Framer framer;
 
-    InternalChannel(NIOSelect select, SelectableChannel sock) {
+    InternalChannel(NIOSelect select, SelectableChannel sock, Framer framer) {
         this.select = select;
         this.sock = sock;
+        this.framer = framer;
     }
 
     @Override
@@ -22,7 +26,7 @@ class InternalChannel implements Client {
                 new SelectorCmd(
                         sock,
                         this,
-                        ByteBuffer.wrap(msg)));
+                        ByteBuffer.wrap(msg), framer));
     }
 
     @Override

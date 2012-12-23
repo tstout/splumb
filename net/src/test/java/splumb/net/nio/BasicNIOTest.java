@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import splumb.common.logging.LogPublisher;
+import splumb.net.framing.Framer;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +16,7 @@ import static splumb.net.nio.NIOTestConstants.*;
 
 public class BasicNIOTest {
     Server server;
+    Framer framer = new TestFramer();
 
     @Before
     public void setup() {
@@ -38,7 +40,8 @@ public class BasicNIOTest {
                 msgRx.countDown();
                 sender.send("howdy".getBytes());
             }
-        });
+        },
+        framer);
 
         server.listen(LOCAL_HOST_PORT);
 
@@ -49,7 +52,7 @@ public class BasicNIOTest {
             public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
             }
-        });
+        }, framer);
 
         client.send("hello".getBytes());
         assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
@@ -68,7 +71,7 @@ public class BasicNIOTest {
             public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
             }
-        });
+        }, framer);
 
         client.send("hello".getBytes());
 
@@ -78,7 +81,7 @@ public class BasicNIOTest {
                 msgRx.countDown();
                 sender.send("howdy".getBytes());
             }
-        });
+        }, framer);
 
         server.listen(LOCAL_HOST_PORT);
         assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
@@ -94,7 +97,7 @@ public class BasicNIOTest {
             public void msgAvailable(Client sender, byte[] msg) {
                 sender.send(msg);
             }
-        });
+        }, framer);
 
         server.listen(LOCAL_HOST_PORT);
 
@@ -117,7 +120,7 @@ public class BasicNIOTest {
             public void msgAvailable(Client sender, byte[] msg) {
                 sender.send(msg);
             }
-        });
+        }, framer);
 
         server.listen(LOCAL_HOST_PORT);
 
@@ -148,7 +151,7 @@ public class BasicNIOTest {
                     public void msgAvailable(Client sender, byte[] msg) {
                         msgRx.countDown();
                     }
-                });
+                }, framer);
 
         client.send("hello".getBytes());
 
@@ -160,7 +163,7 @@ public class BasicNIOTest {
                 msgRx.countDown();
                 sender.send("howdy".getBytes());
             }
-        });
+        }, framer);
 
         server.listen(LOCAL_HOST_PORT);
         assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));

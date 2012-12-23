@@ -102,6 +102,7 @@ class NIOSelect implements Runnable {
                         env.socket = change.socket;
                         env.ops = change.ops;
                         env.data = change.data;
+                        env.framer = change.framer;
 
                         change.type.process(env);
                     }

@@ -2,6 +2,7 @@ package splumb.net.nio;
 
 import com.google.common.eventbus.EventBus;
 import splumb.common.logging.LogPublisher;
+import splumb.net.framing.Framer;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectableChannel;
@@ -42,6 +43,8 @@ class SelectorEnv {
     ByteBuffer readBuffer;
 
     NIOWorker worker;
+
+    Framer framer;
 
     SocketChannel socketChannel() {
         return (SocketChannel) key.channel();

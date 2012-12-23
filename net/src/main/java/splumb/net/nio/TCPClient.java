@@ -1,6 +1,7 @@
 package splumb.net.nio;
 
 import com.google.common.eventbus.Subscribe;
+import splumb.net.framing.Framer;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Throwables.propagate;
+import static com.google.common.base.Throwables.*;
 import static com.google.common.collect.Lists.*;
 
 class TCPClient implements Client {
@@ -27,18 +28,20 @@ class TCPClient implements Client {
     private Boolean connected = false;
     private SelectableChannel selectableChannel;
     private Transmitter transmitter = new QueueingTransmitter();
+    private Framer framer;
 
     TCPClient(InetAddress hostAddress,
               int port,
               MsgHandler handler,
               NIOSelect select,
-              ScheduledExecutorService scheduler) {
+              ScheduledExecutorService scheduler,
+              Framer framer) {
         this.hostAddress = hostAddress;
         this.port = port;
         this.handler = handler;
         this.select = select;
         this.scheduler = scheduler;
-
+        this.framer = framer;
         connect();
     }
 
@@ -66,7 +69,8 @@ class TCPClient implements Client {
                             this,
                             handler,
                             SelectorOps.REGISTER,
-                            SelectionKey.OP_CONNECT));
+                            SelectionKey.OP_CONNECT,
+                            framer));
 
             pendingConnect = new Reconnect();
 
@@ -150,7 +154,7 @@ class TCPClient implements Client {
                     new SelectorCmd(
                             selectableChannel,
                             TCPClient.this,
-                            ByteBuffer.wrap(msg)));
+                            ByteBuffer.wrap(msg), framer));
         }
 
         @Override

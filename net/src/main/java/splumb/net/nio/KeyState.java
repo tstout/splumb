@@ -49,7 +49,7 @@ enum KeyState {
                 propagate(e);
             }
 
-            env.channelMap.put(newKey, new InternalChannel(env.nioSelector, socketChannel));
+            env.channelMap.put(newKey, new InternalChannel(env.nioSelector, socketChannel, env.framer));
 
             env.logger.info("Server Accepted");
         }
@@ -100,7 +100,8 @@ enum KeyState {
 
             int numRead;
             try {
-                numRead = socketChannel.read(env.readBuffer);
+                //numRead = socketChannel.read(env.readBuffer);
+                numRead = socketChannel.read(env.framer.buffer());
             } catch (IOException e) {
                 //
                 // far end closed the connection, cancel the selection key and
@@ -134,12 +135,22 @@ enum KeyState {
                 return;
             }
 
-            env.worker.processData(
-                    (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
-                    socketChannel,
-                    env.readBuffer.array(),
-                    numRead,
-                    env.rspHandlers.get(socketChannel));
+            // TODO -
+            if (env.framer.isFrameComplete(numRead)) {
+                env.worker.processData(
+                        (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
+                        socketChannel,
+                        env.framer.buffer(),
+                        numRead,
+                        env.rspHandlers.get(socketChannel));
+            }
+
+//            env.worker.processData(
+//                    (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
+//                    socketChannel,
+//                    env.readBuffer.array(),
+//                    numRead,
+//                    env.rspHandlers.get(socketChannel));
         }
 
         @Override
