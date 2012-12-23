@@ -135,8 +135,8 @@ enum KeyState {
                 return;
             }
 
-            // TODO -
-            if (env.framer.isFrameComplete(numRead)) {
+
+            if (env.framer.isFrameComplete(numRead) && numRead > 0) {
                 env.worker.processData(
                         (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
                         socketChannel,

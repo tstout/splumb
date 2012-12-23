@@ -6,6 +6,7 @@ import org.junit.Test;
 import splumb.common.logging.LogPublisher;
 import splumb.net.framing.Framer;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -101,10 +102,10 @@ public class BasicNIOTest {
 
         server.listen(LOCAL_HOST_PORT);
 
-        TestClient tc1 = new TestClient(endpoints);
+        TestClient tc1 = new TestClient(endpoints, "one");
         tc1.socket().send("Howdy1".getBytes());
 
-        TestClient tc2 = new TestClient(endpoints);
+        TestClient tc2 = new TestClient(endpoints, "two");
         tc2.socket().send("Howdy2".getBytes());
 
         assertThat(tc1.waitForData(), is(true));
@@ -124,18 +125,21 @@ public class BasicNIOTest {
 
         server.listen(LOCAL_HOST_PORT);
 
-        TestClient tc1 = new TestClient(endpoints);
+        TestClient tc1 = new TestClient(endpoints, "one");
         tc1.socket().send("Howdy1".getBytes());
 
-        TestClient tc2 = new TestClient(endpoints);
+        TestClient tc2 = new TestClient(endpoints, "two");
         tc2.socket().send("Howdy2".getBytes());
 
-        TestClient tc3 = new TestClient(endpoints);
-        tc3.socket().send("Howdy2".getBytes());
+        TestClient tc3 = new TestClient(endpoints, "three");
+        tc3.socket().send("Howdy3".getBytes());
 
         assertThat(tc1.waitForData(), is(true));
+        assertThat(Arrays.equals(tc1.data(), "Howdy1".getBytes()), is(true));
         assertThat(tc2.waitForData(), is(true));
+        assertThat(Arrays.equals(tc2.data(), "Howdy2".getBytes()), is(true));
         assertThat(tc3.waitForData(), is(true));
+        assertThat(Arrays.equals(tc3.data(), "Howdy3".getBytes()), is(true));
     }
 
     @Test
