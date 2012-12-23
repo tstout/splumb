@@ -100,7 +100,6 @@ enum KeyState {
 
             int numRead;
             try {
-
                 numRead = socketChannel.read(env.readBuffer);
             } catch (IOException e) {
                 //

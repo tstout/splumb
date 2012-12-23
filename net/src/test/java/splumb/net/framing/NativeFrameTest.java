@@ -43,6 +43,32 @@ public class NativeFrameTest {
         NativeFrameState.parse(ctxt);
         assertThat(listener.frameCount, is(2));
     }
+
+    @Test
+    public void partialSingleFrameTest() {
+        RxContext ctxt = new RxContext();
+
+        ByteBuffer partialHeader = ByteBuffer.allocate(2);
+        partialHeader.putShort((short)0xDEAD);
+        partialHeader.flip();
+
+        MultiFrameListener listener = new MultiFrameListener();
+        ctxt.frameListener = listener;
+        ctxt.buffFromNet = partialHeader;
+
+
+        NativeFrameState.parse(ctxt);
+
+        ByteBuffer partialFrame = ByteBuffer.allocate(8);
+        partialFrame.putShort((short)0xBEEF);
+        partialFrame.putShort((short)4);
+        partialFrame.put(TEST_PAYLOAD_AS_ARRAY);
+        partialFrame.flip();
+
+        ctxt.buffFromNet = partialFrame;
+        NativeFrameState.parse(ctxt);
+        assertThat(listener.frameCount, is(1));
+    }
 }
 
 class MultiFrameListener implements FrameListener {

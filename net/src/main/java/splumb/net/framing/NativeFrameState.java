@@ -9,78 +9,122 @@ import static splumb.net.framing.NativeFramer.*;
  * |DEADBEEF (magic header)|Payload Length - 16 bits|Payload (64K max)|
  */
 enum NativeFrameState {
-    MAGIC_RX {
+    HEADER_RX {
         @Override
         FrameStateStatus process(RxContext context) {
-            if (context.buffFromNet.limit() < 4) {
-                context.frameBuff.put(context.buffFromNet);
-                context.setState(PARTIAL_MAGIC);
-
-                return WAIT;
+            //context.copyFromNet();
+            context.copy(6); // TODO - def const for magic 6 here...
+            context.frameBuff.flip();
+            if (context.frameBuff.remaining() >= 6) {
+                context.setState(HEADER_AVAILABLE);
+                //context.frameBuff.flip();
+                return CONTINUE;
             }
 
-            if (context.buffFromNet.getInt() == MAGIC) {
-                context.setState(SIZE_RX);
-                return FrameStateStatus.CONTINUE;
-            }
-
+            context.frameBuff.compact();
             return WAIT;
         }
     },
-    PARTIAL_MAGIC {
+    HEADER_AVAILABLE {
         @Override
         FrameStateStatus process(RxContext context) {
-            context.frameBuff.put(context.buffFromNet);
+            //context.copyFromNet();
 
-            int bytesNeeded = 4 - context.frameBuff.limit();
-
-            if (context.buffFromNet.limit() >= bytesNeeded) {
-                if (context.buffFromNet.getInt() == MAGIC) {
-                    context.setState(SIZE_RX);
-                    return FrameStateStatus.CONTINUE;
-                }
+            if (context.frameBuff.getInt() == MAGIC) {
+                context.payloadLength = context.frameBuff.getShort();
+                //context.frameBuff.flip();
+                context.frameBuff.compact();
+                context.setState(PAYLOAD_RX);
+                return CONTINUE;
             }
 
-            return CONTINUE;
-        }
-    },
-    SIZE_RX {
-        @Override
-        FrameStateStatus process(RxContext context) {
-            if (context.buffFromNet.limit() < 2) {
-
-                context.frameBuff.put(context.buffFromNet);
-                context.setState(PARTIAL_SIZE_RX);
-                return FrameStateStatus.WAIT;
-            }
-
-            context.payloadLength = context.buffFromNet.getShort();
-            context.frameBuff.clear();
-            context.setState(PAYLOAD_RX);
-            return CONTINUE;
-        }
-    },
-    PARTIAL_SIZE_RX {
-        @Override
-        FrameStateStatus process(RxContext context) {
-            context.frameBuff.put(context.buffFromNet);
-            context.payloadLength = context.buffFromNet.getShort();
-            context.frameBuff.clear();
-            context.setState(PAYLOAD_RX);
+            //context.frameBuff.clear();
+            context.setState(HEADER_RX);
             return WAIT;
         }
     },
+//    MAGIC_RX {
+//        @Override
+//        FrameStateStatus process(RxContext context) {
+//            if (context.buffFromNet.remaining() < 4) {
+//                context.copyFromNet();
+//                context.frameBuff.put(context.buffFromNet);
+//                context.setState(PARTIAL_MAGIC);
+//
+//                return WAIT;
+//            }
+//
+//            if (context.buffFromNet.getInt() == MAGIC) {
+//                context.setState(SIZE_RX);
+//                return FrameStateStatus.CONTINUE;
+//            }
+//
+//            return WAIT;
+//        }
+//    },
+//    PARTIAL_MAGIC {
+//        @Override
+//        FrameStateStatus process(RxContext context) {
+//            int bytesNeeded = 4 - context.frameBuff.position();
+//            context.frameBuff.put(context.buffFromNet);
+//
+//            if (context.frameBuff.remaining() >= bytesNeeded) {
+//                if (context.frameBuff.getInt() == MAGIC) {
+//                    context.setState(SIZE_RX);
+//                    return FrameStateStatus.CONTINUE;
+//                }
+//            }
+//
+//            return CONTINUE;
+//        }
+//    },
+//    SIZE_RX {
+//        @Override
+//        FrameStateStatus process(RxContext context) {
+//            if (context.buffFromNet.remaining() < 2) {
+//
+//                context.frameBuff.put(context.buffFromNet);
+//                context.setState(PARTIAL_SIZE_RX);
+//                return FrameStateStatus.WAIT;
+//            }
+//
+//            context.payloadLength = context.buffFromNet.getShort();
+//            context.frameBuff.clear();
+//            context.setState(PAYLOAD_RX);
+//            return CONTINUE;
+//        }
+//    },
+//    PARTIAL_SIZE_RX {
+//        @Override
+//        FrameStateStatus process(RxContext context) {
+//            context.frameBuff.put(context.buffFromNet);
+//            context.payloadLength = context.buffFromNet.getShort();
+//            context.frameBuff.clear();
+//            context.setState(PAYLOAD_RX);
+//            return WAIT;
+//        }
+//    },
     PAYLOAD_RX {
         @Override
         FrameStateStatus process(RxContext context) {
 
             // TODO - does not handle partial frame after end of current frame. Do we need another state for this
             // case?
-            int bytesToRead = Math.min(context.payloadLength - context.currentLength, context.buffFromNet.remaining());
-            context.frameBuff.put(context.buffFromNet.array(), context.buffFromNet.position(), bytesToRead);
-            context.currentLength += bytesToRead;
 
-            if (context.currentLength == context.payloadLength) {
+
+
+            int bytesToRead = Math.min(context.payloadLength, context.buffFromNet.remaining());
+            //int bytesToRead = Math.max(context.buffFromNet.remaining(), context.frameBuff.remaining());
+
+            //context.frameBuff.put(context.buffFromNet.array(), context.frameBuff.position(), bytesToRead);
+//            ByteBuffer tmpBuff = context.buffFromNet.duplicate();
+//            tmpBuff.limit (tmpBuff.position() + bytesToRead);
+//            context.frameBuff.put(tmpBuff);
+//            context.frameBuff.position(context.frameBuff.position() + bytesToRead);
+            //context.currentLength += bytesToRead;
+            context.copy(bytesToRead);
+
+            if (bytesToRead >= context.payloadLength) {
                 context.setState(FRAME_COMPLETE);
                 return CONTINUE;
             }
@@ -94,17 +138,28 @@ enum NativeFrameState {
             //
             // Copy payload to a new buff to pass to the frame listener
             //
-            context.frameBuff.flip();
+            //context.frameBuff.flip();
+
             ByteBuffer payload = ByteBuffer.allocate(context.payloadLength);
-            payload.put(context.frameBuff);
+            context.frameBuff.flip();
+            context.copy(context.frameBuff, payload, context.payloadLength);
+
+//            payload.put(context.frameBuff.array(), 6, context.payloadLength);
+//
+//            context.frameBuff.position(context.frameBuff.position() + context.payloadLength);
             payload.flip();
 
             context.frameListener.frameAvailable(context.client, payload);
 
-            context.buffFromNet.position(context.buffFromNet.position() + context.payloadLength);
-            context.resetFrameBuff();
+//            context.buffFromNet.position(context.buffFromNet.position() + context.payloadLength);
+//            context.resetFrameBuff();
 
-            return context.buffFromNet.remaining() == 0 ? WAIT : CONTINUE;
+
+
+            FrameStateStatus rVal = context.frameBuff.remaining() == 0 ? WAIT : CONTINUE;
+
+            context.frameBuff.compact();
+            return rVal;
         }
     };
 
