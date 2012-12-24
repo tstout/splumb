@@ -96,7 +96,7 @@ enum KeyState {
         void process(SelectorEnv env) {
             SocketChannel socketChannel = env.socketChannel();
 
-            env.readBuffer.clear();
+            //env.readBuffer.clear();
 
             int numRead;
             try {
@@ -135,22 +135,19 @@ enum KeyState {
                 return;
             }
 
+            if (numRead == 0) {
+                env.framer.buffer().clear();
+                return;
+            }
 
-            if (env.framer.isFrameComplete(numRead) && numRead > 0) {
+            if (env.framer.isFrameComplete(numRead)) {
                 env.worker.processData(
                         (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
                         socketChannel,
-                        env.framer.buffer(),
+                        env.framer.payload(), //.framer.buffer(),
                         numRead,
                         env.rspHandlers.get(socketChannel));
             }
-
-//            env.worker.processData(
-//                    (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
-//                    socketChannel,
-//                    env.readBuffer.array(),
-//                    numRead,
-//                    env.rspHandlers.get(socketChannel));
         }
 
         @Override

@@ -91,7 +91,7 @@ class NIOSelect implements Runnable {
         env.nioSelector = this;
         env.bus = bus;
         env.logger = logger;
-        env.readBuffer = readBuffer;
+        //env.readBuffer = readBuffer;
         env.worker = worker;
 
         for (;;) {

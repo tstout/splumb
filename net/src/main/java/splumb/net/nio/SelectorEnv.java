@@ -40,7 +40,7 @@ class SelectorEnv {
 
     EventBus bus;
 
-    ByteBuffer readBuffer;
+    //ByteBuffer readBuffer;
 
     NIOWorker worker;
 
