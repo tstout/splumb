@@ -30,6 +30,11 @@ class InternalChannel implements Client {
     }
 
     @Override
+    public void send(ByteBuffer data) {
+        send(data.array());
+    }
+
+    @Override
     public void close() {
     }
 }

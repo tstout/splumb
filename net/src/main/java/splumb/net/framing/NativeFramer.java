@@ -1,7 +1,5 @@
 package splumb.net.framing;
 
-import splumb.net.nio.Client;
-
 import java.nio.ByteBuffer;
 
 
@@ -11,86 +9,34 @@ public class NativeFramer implements Framer {
     public static final int MAGIC = 0xDEADBEEF;
     public static final int MAGIC_LENGTH = 4;
 
+    private RxContext context = new RxContext();
+
     public NativeFramer() {
+        context.setState(NativeFrameState.HEADER_RX);
     }
 
     @Override
     public ByteBuffer buffer() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+       return context.frameBuff;
     }
 
     @Override
     public boolean isFrameComplete(int bytesJustRead) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        NativeFrameState.parse(context);
+
+        if (context.currentState == NativeFrameState.FRAME_COMPLETE) {
+            context.setState(NativeFrameState.HEADER_RX);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public ByteBuffer payload() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return context.payload;
     }
 }
 
-class RxContext {
-    ByteBuffer buffFromNet;
-    ByteBuffer frameBuff;
-    NativeFrameState currentState;
-    Client client;
-    short payloadLength;
-    //short currentLength;
-    FrameListener frameListener;
-
-    RxContext() {
-        frameBuff = ByteBuffer.allocate(NativeFramer.MAX_FRAME_LENGTH);
-        resetFrameBuff();
-
-    }
-
-    RxContext copy(int max) {
-        copy(buffFromNet, frameBuff, max);
-//        int maxTransfer = Math.min(max, buffFromNet.remaining());
-//        ByteBuffer tmp = buffFromNet.duplicate();
-//        tmp.limit (tmp.position() + maxTransfer);
-//        frameBuff.put (tmp);
-//
-//        buffFromNet.position(buffFromNet.position() + maxTransfer);
-        return this;
-    }
-
-    RxContext copy(ByteBuffer src, ByteBuffer dest, int max) {
-        int maxTransfer = Math.min(max, src.remaining());
-        ByteBuffer tmp = src.duplicate();
-        tmp.limit (tmp.position() + maxTransfer);
-        dest.put (tmp);
-
-        src.position(src.position() + maxTransfer);
-        return this;
-    }
-
-
-    RxContext copyFromNet() {
-//        int sizeToCopy = buffFromNet.remaining() + frameBuff.position();
-//        int pos = frameBuff.position();
-
-        frameBuff.put(buffFromNet);
-        //frameBuff.compact();
-        frameBuff.flip();
-
-        return this;
-    }
-
-    RxContext resetFrameBuff() {
-        frameBuff.clear();
-        //currentLength = 0;
-        currentState = NativeFrameState.HEADER_RX;
-        return this;
-    }
-
-    RxContext setState(NativeFrameState currentState) {
-        //this.currentState.init(this);
-        this.currentState = currentState;
-        return this;
-    }
-}
 
 
 

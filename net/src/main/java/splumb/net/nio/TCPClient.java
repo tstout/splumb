@@ -52,6 +52,11 @@ class TCPClient implements Client {
         }
     }
 
+    @Override
+    public void send(ByteBuffer data) {
+        send(data.array());
+    }
+
     private void connect() {
         try {
 

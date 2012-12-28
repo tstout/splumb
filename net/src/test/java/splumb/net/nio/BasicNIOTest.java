@@ -3,7 +3,7 @@ package splumb.net.nio;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import splumb.common.logging.LogPublisher;
+import splumb.common.logging.ConsoleLogger;
 import splumb.net.framing.Framer;
 
 import java.util.Arrays;
@@ -31,29 +31,29 @@ public class BasicNIOTest {
 
     @Test
     public void serverBeforeClientTest() throws InterruptedException {
-        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLogger());
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
-        server = endpoints.newTCPServer(new MsgHandler() {
+        server = endpoints.newTcpServer(new MsgHandler() {
             @Override
             public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
                 sender.send("howdy".getBytes());
             }
         },
-        framer);
+                framer);
 
         server.listen(LOCAL_HOST_PORT);
 
-        Client client = endpoints.newTCPClient(LOCAL_HOST,
+        Client client = endpoints.newTcpClient(LOCAL_HOST,
                 LOCAL_HOST_PORT,
                 new MsgHandler() {
-            @Override
-            public void msgAvailable(Client sender, byte[] msg) {
-                msgRx.countDown();
-            }
-        }, framer);
+                    @Override
+                    public void msgAvailable(Client sender, byte[] msg) {
+                        msgRx.countDown();
+                    }
+                }, framer);
 
         client.send("hello".getBytes());
         assertThat(msgRx.await(10, TimeUnit.SECONDS), is(true));
@@ -61,22 +61,22 @@ public class BasicNIOTest {
 
     @Test
     public void clientBeforeServerTest() throws InterruptedException {
-        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLogger());
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
-        Client client = endpoints.newTCPClient(LOCAL_HOST,
+        Client client = endpoints.newTcpClient(LOCAL_HOST,
                 LOCAL_HOST_PORT,
                 new MsgHandler() {
-            @Override
-            public void msgAvailable(Client sender, byte[] msg) {
-                msgRx.countDown();
-            }
-        }, framer);
+                    @Override
+                    public void msgAvailable(Client sender, byte[] msg) {
+                        msgRx.countDown();
+                    }
+                }, framer);
 
         client.send("hello".getBytes());
 
-        server = endpoints.newTCPServer(new MsgHandler() {
+        server = endpoints.newTcpServer(new MsgHandler() {
             @Override
             public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
@@ -91,9 +91,9 @@ public class BasicNIOTest {
     @Test
     public void twoClientTest() throws InterruptedException {
 
-        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLogger());
 
-        server = endpoints.newTCPServer(new MsgHandler() {
+        server = endpoints.newTcpServer(new MsgHandler() {
             @Override
             public void msgAvailable(Client sender, byte[] msg) {
                 sender.send(msg);
@@ -114,9 +114,9 @@ public class BasicNIOTest {
 
     @Test
     public void threeClientTest() {
-        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLogger());
 
-        server = endpoints.newTCPServer(new MsgHandler() {
+        server = endpoints.newTcpServer(new MsgHandler() {
             @Override
             public void msgAvailable(Client sender, byte[] msg) {
                 sender.send(msg);
@@ -144,11 +144,11 @@ public class BasicNIOTest {
 
     @Test
     public void clientBeforeServerWithDelay() throws InterruptedException {
-        NetEndpoints endpoints = new NetEndpoints(new ConsoleLog());
+        NetEndpoints endpoints = new NetEndpoints(new ConsoleLogger());
 
         final CountDownLatch msgRx = new CountDownLatch(2);
 
-        Client client = endpoints.newTCPClient(LOCAL_HOST,
+        Client client = endpoints.newTcpClient(LOCAL_HOST,
                 LOCAL_HOST_PORT,
                 new MsgHandler() {
                     @Override
@@ -161,7 +161,7 @@ public class BasicNIOTest {
 
         Thread.sleep(1500);
 
-        server = endpoints.newTCPServer(new MsgHandler() {
+        server = endpoints.newTcpServer(new MsgHandler() {
             @Override
             public void msgAvailable(Client sender, byte[] msg) {
                 msgRx.countDown();
@@ -175,25 +175,3 @@ public class BasicNIOTest {
     }
 }
 
-class ConsoleLog implements LogPublisher {
-
-    @Override
-    public void info(String fmt, Object... parms) {
-        System.out.printf(fmt, parms);
-    }
-
-    @Override
-    public void info(String msg) {
-       System.out.printf("%s\n", msg);
-    }
-
-    @Override
-    public void error(String fmt, Object... parms) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void debug(String fmt, Object... parms) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-}

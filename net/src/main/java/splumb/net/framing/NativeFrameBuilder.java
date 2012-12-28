@@ -25,4 +25,10 @@ public class NativeFrameBuilder {
         this.length = length;
         return this;
     }
+
+    public NativeFrameBuilder withPayload(byte[] payload) {
+        withPayload(payload, (short)payload.length);
+        return this;
+    }
+
 }

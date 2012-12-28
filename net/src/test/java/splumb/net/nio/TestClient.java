@@ -14,7 +14,7 @@ class TestClient implements MsgHandler {
     public TestClient(NetEndpoints endpoints, String name) {
         this.name = name;
 
-        client = endpoints.newTCPClient(NIOTestConstants.LOCAL_HOST,
+        client = endpoints.newTcpClient(NIOTestConstants.LOCAL_HOST,
                 LOCAL_HOST_PORT,
                 this,
                 new TestFramer());

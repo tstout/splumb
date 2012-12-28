@@ -145,7 +145,7 @@ enum KeyState {
                         (Client) env.channelMap.get(env.key), // TODO - is this cast necessary?
                         socketChannel,
                         env.framer.payload(), //.framer.buffer(),
-                        numRead,
+                        env.framer.payload().remaining(),
                         env.rspHandlers.get(socketChannel));
             }
         }
