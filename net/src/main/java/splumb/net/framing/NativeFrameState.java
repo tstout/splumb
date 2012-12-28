@@ -78,10 +78,6 @@ enum NativeFrameState {
 
         @Override
         FrameStateStatus process(RxContext context) {
-            //
-            // Copy payload to a new buff to pass to the frame listener
-            //
-
             context.payload = ByteBuffer.allocate(context.payloadLength);
             context.copy(context.frameBuff, context.payload, context.payloadLength);
 

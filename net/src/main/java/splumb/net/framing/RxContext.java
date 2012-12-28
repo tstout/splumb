@@ -1,17 +1,12 @@
 package splumb.net.framing;
 
-import splumb.net.nio.Client;
-
 import java.nio.ByteBuffer;
 
 class RxContext {
     ByteBuffer payload;
     ByteBuffer frameBuff;
     NativeFrameState currentState;
-    Client client;
     short payloadLength;
-
-    FrameListener frameListener;
 
     RxContext() {
         frameBuff = ByteBuffer.allocate(NativeFramer.MAX_FRAME_LENGTH);

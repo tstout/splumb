@@ -24,19 +24,12 @@ import static com.google.common.collect.Maps.*;
 // TODO - this class is still too busy...way too many private fields here.
 class NIOSelect implements Runnable {
 
-    private ConcurrentLinkedQueue<SelectorCmd> pendingChanges =
+    private final ConcurrentLinkedQueue<SelectorCmd> pendingChanges =
             new ConcurrentLinkedQueue<SelectorCmd>();
 
     private Map<SelectableChannel, MsgHandler> rspHandlers = newConcurrentMap();
     private Map<SelectableChannel, List<ByteBuffer>> pendingData =  newConcurrentMap();
     private Map<SelectionKey, NetEndpoint> channelMap = newConcurrentMap();
-
-    //
-    // TODO - this buff size needs to be configurable
-    //
-    private ByteBuffer readBuffer = ByteBuffer.allocate(8192);
-    private Executor workerThr;
-    private Executor selectThr;
     private NIOWorker worker;
     private Selector selector;
     private LogPublisher logger;
@@ -53,12 +46,12 @@ class NIOSelect implements Runnable {
             Throwables.propagate(e);
         }
 
-        selectThr = Executors.newSingleThreadExecutor(
+        Executor selectThr = Executors.newSingleThreadExecutor(
                 new ThreadFactoryBuilder()
                         .setDaemon(true)
                         .build());
 
-        workerThr = Executors.newSingleThreadExecutor(
+        Executor workerThr = Executors.newSingleThreadExecutor(
                 new ThreadFactoryBuilder()
                         .setDaemon(true)
                         .build());
@@ -91,7 +84,6 @@ class NIOSelect implements Runnable {
         env.nioSelector = this;
         env.bus = bus;
         env.logger = logger;
-        //env.readBuffer = readBuffer;
         env.worker = worker;
 
         for (;;) {

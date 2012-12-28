@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.*;
 
+// TODO - have an option that starts up the host with jmx connectivity enabled for tools such as jconsole.
 public class Host {
 
     private LogPublisher logger;
