@@ -70,14 +70,14 @@ public class ByteBufferTest {
         ByteBuffer buff = createFrame();
         buff.flip();
 
-        byte[] payload = new byte[TEST_PAYLOAD.length];
+        byte[] payload = new byte[TEST_PAYLOAD_1.length];
 
         assertThat(buff.getInt(), is(NativeFrameBuilder.MAGIC));
-        assertThat(buff.getShort(), is((short) TEST_PAYLOAD.length));
+        assertThat(buff.getShort(), is((short) TEST_PAYLOAD_1.length));
 
         buff.get(payload);
 
-        assertThat(Ints.fromByteArray(payload), is(PAYLOAD));
+        assertThat(Ints.fromByteArray(payload), is(PAYLOAD1));
     }
 
     @Test
@@ -106,8 +106,8 @@ public class ByteBufferTest {
     ByteBuffer createFrame() {
         ByteBuffer buff = ByteBuffer.allocate(10);
         buff.put(NativeFrameBuilder.MAGIC_AS_ARRAY);
-        buff.putShort((short) (TEST_PAYLOAD.length));
-        buff.put(TEST_PAYLOAD);
+        buff.putShort((short) (TEST_PAYLOAD_1.length));
+        buff.put(TEST_PAYLOAD_1);
 
         return buff;
     }
