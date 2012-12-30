@@ -1,0 +1,24 @@
+dependencies {
+    compile (
+            project(':common'),
+            project(':net'),
+            'com.google.guava:guava:12.0',
+            'com.google.inject:guice:3.0',
+            'org.apache.empire-db:empire-db:2.3.0',
+            'com.google.protobuf:protobuf-java:2.4.1'
+    )
+    testCompile(
+            'org.mockito:mockito-core:1.9.0'
+    )
+}
+
+
+
+task genProtobuf(type:Exec) {
+
+    args = ["--java_out=" + file('src/main/java'),
+            "--proto_path=" + file('src/main/protobuf/'),
+            file('src/main/protobuf/broker.proto')]
+
+    executable 'protoc'
+}

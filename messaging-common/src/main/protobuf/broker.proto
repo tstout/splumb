@@ -1,0 +1,40 @@
+package splumb;
+
+option java_package = "splumb.protobuf";
+option java_outer_classname = "BrokerMsg";
+option optimize_for = SPEED;
+
+message Msg
+{
+    extensions 100 to max;
+
+    enum Type
+    {
+        Map = 1;
+        String = 2;
+    }
+
+    required Type type = 1;
+}
+
+message MapMsg
+{
+    extend Msg
+    {
+        required MapMsg msg = 100; // Unique Msg extension number
+    }
+
+    // These fields can use the full number range.
+    optional bool declawed = 1;
+}
+
+message StringMsg
+{
+    extend Msg
+    {
+        required StringMsg msg = 101; // Unique Msg extension number
+    }
+
+    // These fields can use the full number range.
+    optional uint32 bones_buried = 1;
+}
