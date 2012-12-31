@@ -4,37 +4,44 @@ option java_package = "splumb.protobuf";
 option java_outer_classname = "BrokerMsg";
 option optimize_for = SPEED;
 
-message Msg
-{
-    extensions 100 to max;
+message Msg {
 
-    enum Type
-    {
+    enum Type {
         Map = 1;
         String = 2;
+        Binary = 3;
     }
 
     required Type type = 1;
+    optional StringMsg stringMsg = 2;
+    optional BinaryMsg binaryMsg = 3;
+    optional MapMsg mapMsg = 4;
 }
 
-message MapMsg
-{
-    extend Msg
-    {
-        required MapMsg msg = 100; // Unique Msg extension number
+message StringMsg {
+    required string value = 1;
+}
+
+message BinaryMsg {
+    required bytes value = 1;
+}
+
+message KeyValue {
+
+    enum Type {
+        String = 1;
+        Int32 = 2;
+        Boolean = 3;
     }
 
-    // These fields can use the full number range.
-    optional bool declawed = 1;
+    required Type type = 1;
+    required string key = 2;
+    optional string stringValue = 3;
+    optional int32 int32Value = 4;
+    optional bool boolValue = 5;
 }
 
-message StringMsg
-{
-    extend Msg
-    {
-        required StringMsg msg = 101; // Unique Msg extension number
-    }
-
-    // These fields can use the full number range.
-    optional uint32 bones_buried = 1;
+message MapMsg {
+    repeated KeyValue items = 1;
 }
+

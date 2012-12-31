@@ -5,7 +5,7 @@ import com.google.common.util.concurrent.AbstractIdleService;
 import joptsimple.OptionSet;
 import org.h2.tools.Server;
 import splumb.common.logging.LogPublisher;
-import splumb.core.host.events.DbAvailableEvent;
+import splumb.core.events.DbAvailableEvent;
 
 import javax.inject.Inject;
 import java.sql.SQLException;

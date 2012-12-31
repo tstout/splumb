@@ -1,6 +1,7 @@
 dependencies {
     compile (
             project(':common'),
+            project(':host-common'),
             project(':net'),
             project(':messaging-common'),
             'com.google.guava:guava:12.0',

@@ -3,6 +3,7 @@ package splumb.messaging;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Injector;
 import splumb.common.logging.LogPublisher;
+import splumb.core.db.SplumbDB;
 
 import javax.inject.Inject;
 
@@ -12,7 +13,7 @@ public class MessagingService extends AbstractIdleService {
     Injector injector;
 
     @Inject
-    public MessagingService(LogPublisher logger, Injector injector) {
+    public MessagingService(LogPublisher logger, Injector injector, SplumbDB db) {
         this.logger = logger;
         this.injector = injector;
 

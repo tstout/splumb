@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import splumb.common.db.DataSet;
 import splumb.common.logging.*;
 import splumb.core.db.SplumbDB;
-import splumb.core.host.events.HostDbTablesAvailableEvent;
+import splumb.core.events.HostDbTablesAvailableEvent;
 
 import java.sql.Connection;
 import java.util.List;

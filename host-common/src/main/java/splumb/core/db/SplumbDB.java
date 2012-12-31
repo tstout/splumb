@@ -1,6 +1,7 @@
 package splumb.core.db;
 
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -15,8 +16,8 @@ import splumb.common.logging.Level;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
-import splumb.core.host.events.DbAvailableEvent;
-import splumb.core.host.events.HostDbTablesAvailableEvent;
+import splumb.core.events.DbAvailableEvent;
+import splumb.core.events.HostDbTablesAvailableEvent;
 
 import java.sql.Connection;
 
@@ -56,7 +57,7 @@ public class SplumbDB extends DBDatabase {
         Connection conn = driver.getConnection();
         DBSQLScript dropScript = new DBSQLScript();
 
-        for (DBTable table : of(Log, LogLevel, LogConfig)) {
+        for (DBTable table : ImmutableSet.of(Log, LogLevel, LogConfig)) {
             driver.getDriver().getDDLScript(DBCmdType.DROP, table, dropScript);
             dropScript.run(driver.getDriver(), conn, false);
             dropScript.clear();
@@ -107,6 +108,7 @@ public class SplumbDB extends DBDatabase {
                 "splumb.core.host.Host",
                 "splumb.core.host.plugin.PluginLoader",
                 "splumb.core.host.CoreServiceLoader")) {
+
             new DataSet()
                     .withColumns(of(LogConfig.LOGGER, LogConfig.LOG_LEVEL))
                     .withValues(of(loggerName, Level.DEBUG.ordinal()))
