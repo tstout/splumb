@@ -1,11 +1,13 @@
 package splumb.core.host;
 
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import splumb.common.logging.LogPublisher;
 import splumb.core.db.DBDevModule;
+import splumb.core.events.HostDbTablesAvailableEvent;
 import splumb.core.host.plugin.PluginLoader;
 import splumb.core.logging.DevLoggingModule;
 
@@ -17,6 +19,7 @@ import static java.util.Arrays.*;
 public class Host {
 
     private LogPublisher logger;
+    private Injector injector;
 
     public Host() {}
 
@@ -48,15 +51,10 @@ public class Host {
         injector.getInstance(Host.class).start(injector);
     }
 
-    void start(Injector injector) {
+    @Subscribe
+    public void tablesAvailable(HostDbTablesAvailableEvent event) {
         //
-        // Fire up any intrinsic services...
-        //
-        CoreServiceLoader loader =
-                injector.getInstance(CoreServiceLoader.class)
-                        .load(injector);
-        //
-        // Load up any plugins...
+        // Don't load plugins until DB is available.
         //
         injector.getInstance(PluginLoader.class)
                 .loadConfigurations()
@@ -64,6 +62,17 @@ public class Host {
                 .startServices();
 
         logger.info("host Initialization Complete");
+    }
+
+    void start(Injector injector) {
+        this.injector = injector;
+        //
+        // Fire up any intrinsic services...
+        //
+        CoreServiceLoader loader =
+                injector.getInstance(CoreServiceLoader.class)
+                        .load(injector);
+
         loader.waitForTerm();
     }
 }

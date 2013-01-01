@@ -3,6 +3,7 @@ apply plugin: 'java'
 dependencies {
     compile (
             project(':common'),
+            project(':net'),
             'net.sf.jopt-simple:jopt-simple:4.3',
             'com.google.protobuf:protobuf-java:2.4.1'
     )

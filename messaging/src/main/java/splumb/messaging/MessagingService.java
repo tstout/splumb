@@ -27,6 +27,6 @@ public class MessagingService extends AbstractIdleService {
 
     @Override
     protected void shutDown() throws Exception {
-        logger.info("Stopping messaging service");
+        logger.info("Messaging service shutdown");
     }
 }

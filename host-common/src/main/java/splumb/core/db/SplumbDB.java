@@ -16,8 +16,10 @@ import splumb.common.logging.Level;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
+import splumb.core.db.tables.MsgBrokers;
 import splumb.core.events.DbAvailableEvent;
 import splumb.core.events.HostDbTablesAvailableEvent;
+import splumb.net.nio.NetConstants;
 
 import java.sql.Connection;
 
@@ -28,6 +30,7 @@ public class SplumbDB extends DBDatabase {
     public final Log Log = new Log(this);
     public final LogLevel LogLevel = new LogLevel(this);
     public final LogConfig LogConfig = new LogConfig(this);
+    public final MsgBrokers MsgBrokers = new MsgBrokers(this);
 
     private DBDriver driver;
     private OptionSet options;
@@ -57,7 +60,7 @@ public class SplumbDB extends DBDatabase {
         Connection conn = driver.getConnection();
         DBSQLScript dropScript = new DBSQLScript();
 
-        for (DBTable table : ImmutableSet.of(Log, LogLevel, LogConfig)) {
+        for (DBTable table : ImmutableSet.of(Log, LogLevel, LogConfig, MsgBrokers)) {
             driver.getDriver().getDDLScript(DBCmdType.DROP, table, dropScript);
             dropScript.run(driver.getDriver(), conn, false);
             dropScript.clear();
@@ -95,6 +98,11 @@ public class SplumbDB extends DBDatabase {
 
     private void addDefaultData(Connection conn) {
 
+        new DataSet()
+                .withColumns(of(MsgBrokers.HOST, MsgBrokers.PORT))
+                .withValues(of(NetConstants.HOST_NAME, 8000))
+                .insertInto(MsgBrokers, conn);
+
          new DataSet()
                  .withColumns(of(LogLevel.LOG_LEVEL_ID, LogLevel.NAME))
                  .withValues(of(
@@ -114,7 +122,5 @@ public class SplumbDB extends DBDatabase {
                     .withValues(of(loggerName, Level.DEBUG.ordinal()))
                     .insertInto(LogConfig, conn);
         }
-
-
     }
 }
