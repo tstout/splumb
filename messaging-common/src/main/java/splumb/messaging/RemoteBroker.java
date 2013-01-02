@@ -1,17 +1,26 @@
 package splumb.messaging;
 
-import splumb.net.framing.NativeFrameBuilder;
+import splumb.common.logging.LogPublisher;
 import splumb.net.nio.Client;
-import splumb.protobuf.BrokerMsg;
+import splumb.net.nio.MsgHandler;
+import splumb.net.nio.NetEndpoints;
 
-import static splumb.protobuf.BrokerMsg.Msg.Type.*;
+import javax.inject.Inject;
 
-class RemoteBroker implements Broker {
+import static splumb.protobuf.BrokerMsg.*;
+
+class RemoteBroker implements Broker, MsgHandler {
+    private BrokerConfig brokerConfig;
     private Client netClient;
-    private NativeFrameBuilder frameBuilder = new NativeFrameBuilder();
+    private NetEndpoints netEndpoints;
+    private LogPublisher logger;
 
-    public RemoteBroker(Client netClient) {
-        this.netClient = netClient;
+    @Inject
+    public RemoteBroker(LogPublisher logger, BrokerConfig brokerConfig) {
+        this.brokerConfig = brokerConfig;
+        this.logger = logger;
+        netEndpoints = new NetEndpoints(logger);
+        netClient = new BrokerConnection(brokerConfig).createConnection(netEndpoints, this);
     }
 
     @Override
@@ -30,8 +39,13 @@ class RemoteBroker implements Broker {
     }
 
     @Override
-    public void send(Message message) {
-        BrokerMsg.Msg.newBuilder().setType(Map);
+    public void send(Msg message) {
+        //BrokerMsg.Msg.newBuilder().setType(Msg.Type.Map);
         //netClient.send();
+    }
+
+    @Override
+    public void msgAvailable(Client sender, byte[] msg) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -11,11 +11,16 @@ public class MessagingService extends AbstractIdleService {
 
     LogPublisher logger;
     Injector injector;
+    BrokerConfig brokerConfig;
+    LocalBroker broker;
 
     @Inject
     public MessagingService(LogPublisher logger, Injector injector, SplumbDB db) {
         this.logger = logger;
         this.injector = injector;
+        brokerConfig = new BrokerConfig(db);
+
+        broker = new LocalBroker(logger);
 
         // create a child injector here and add any modules as necessary...
     }
@@ -23,6 +28,7 @@ public class MessagingService extends AbstractIdleService {
     @Override
     protected void startUp() throws Exception {
         logger.info("Starting messaging service");
+
     }
 
     @Override

@@ -1,5 +1,7 @@
 package splumb.messaging;
 
+import static splumb.protobuf.BrokerMsg.*;
+
 class Sink implements MessageSink {
     private String destination;
 
@@ -8,7 +10,7 @@ class Sink implements MessageSink {
     }
 
     @Override
-    public void receive(Message message) {
+    public void receive(Msg message) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }

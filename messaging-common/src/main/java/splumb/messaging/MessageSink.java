@@ -1,5 +1,7 @@
 package splumb.messaging;
 
+import static splumb.protobuf.BrokerMsg.*;
+
 public interface MessageSink {
-    void receive(Message message);
+    void receive(Msg message);
 }

@@ -10,6 +10,8 @@ import splumb.net.nio.Server;
 
 import javax.inject.Inject;
 
+import static splumb.protobuf.BrokerMsg.*;
+
 class LocalBroker implements Broker, MsgHandler {
 
     private NetEndpoints endpoints;
@@ -40,7 +42,7 @@ class LocalBroker implements Broker, MsgHandler {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Msg message) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
