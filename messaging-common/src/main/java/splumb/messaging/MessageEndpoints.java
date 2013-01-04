@@ -15,6 +15,7 @@ public class MessageEndpoints {
     }
 
     public void registerSink(String destination, MessageSink sink) {
+        remoteBroker.addSink(destination, sink);
     }
 
     public MessageSource createSource(String destination) {

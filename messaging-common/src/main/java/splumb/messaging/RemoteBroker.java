@@ -1,5 +1,6 @@
 package splumb.messaging;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import splumb.common.logging.LogPublisher;
 import splumb.net.framing.NativeFrameBuilder;
 import splumb.net.nio.Client;
@@ -8,6 +9,7 @@ import splumb.net.nio.NetEndpoints;
 
 import javax.inject.Inject;
 
+import static com.google.common.base.Throwables.*;
 import static splumb.protobuf.BrokerMsg.*;
 
 class RemoteBroker implements Broker, MsgHandler {
@@ -48,7 +50,11 @@ class RemoteBroker implements Broker, MsgHandler {
 
     @Override
     public void msgAvailable(Client sender, byte[] msg) {
-        int x = 1;
-        //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            Msg m = Msg.parseFrom(msg);
+
+        } catch (InvalidProtocolBufferException e) {
+            propagate(e);
+        }
     }
 }

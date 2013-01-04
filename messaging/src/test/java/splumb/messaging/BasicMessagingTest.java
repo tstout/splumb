@@ -44,6 +44,7 @@ public class BasicMessagingTest {
         MessageSource source = endpoints.createSource(MessagingConstants.ADMIN_REQ_Q);
 
         BrokerMsg.Msg msg = new MapMsgBuilder()
+                .withDestination(MessagingConstants.ADMIN_REQ_Q)
                 .addInt32("test-key", 5)
                 .build();
 

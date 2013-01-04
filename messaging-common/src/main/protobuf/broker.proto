@@ -13,9 +13,10 @@ message Msg {
     }
 
     required Type type = 1;
-    optional StringMsg stringMsg = 2;
-    optional BinaryMsg binaryMsg = 3;
-    optional MapMsg mapMsg = 4;
+    required string destination = 2;
+    optional StringMsg stringMsg = 3;
+    optional BinaryMsg binaryMsg = 4;
+    optional MapMsg mapMsg = 5;
 }
 
 message StringMsg {

@@ -2,10 +2,13 @@ package splumb.messaging;
 
 import splumb.protobuf.BrokerMsg;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static splumb.protobuf.BrokerMsg.*;
 
 public class MapMsgBuilder {
     private BrokerMsg.MapMsg.Builder mapMsgBuilder = BrokerMsg.MapMsg.newBuilder();
+    private BrokerMsg.Msg.Builder msgBuilder = BrokerMsg.Msg.newBuilder();
+    private String destination;
 
     public MapMsgBuilder addInt32(String key, int value) {
 
@@ -34,11 +37,19 @@ public class MapMsgBuilder {
         return this;
     }
 
+    public MapMsgBuilder withDestination(String destination) {
+        this.destination = destination;
+        msgBuilder.setDestination(destination);
+        return this;
+    }
+
     public Msg build() {
-        return Msg.newBuilder()
+        checkNotNull(destination, "Destination is required");
+
+        return msgBuilder
+                .setDestination(destination)
                 .setType(Msg.Type.Map)
                 .setMapMsg(mapMsgBuilder)
                 .build();
     }
-
 }
