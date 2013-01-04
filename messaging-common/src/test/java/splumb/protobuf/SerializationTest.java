@@ -13,18 +13,18 @@ public class SerializationTest {
 
     @Test
     public void MapMsgEncodeTest() throws InvalidProtocolBufferException {
-        MapMsg msg = new MapMsgBuilder()
+        Msg msg = new MapMsgBuilder()
                 .addInt32("int-key", 1)
                 .addString("string-key", "string-value")
                 .build();
 
         byte[] serializedMsg = msg.toByteArray();
 
-        MapMsg decodedMap = MapMsg.parseFrom(serializedMsg);
-
-        assertThat(decodedMap.getItemsCount(), is(2));
-        assertThat(MapMessages.getInt32(decodedMap, "int-key"), is(1));
-        assertThat(MapMessages.getString(decodedMap, "string-key"), is("string-value"));
+        Msg decodedMap = Msg.parseFrom(serializedMsg);
+        MapMsg map = decodedMap.getMapMsg();
+        assertThat(map.getItemsCount(), is(2));
+        assertThat(MapMessages.getInt32(map, "int-key"), is(1));
+        assertThat(MapMessages.getString(map, "string-key"), is("string-value"));
     }
 
 }

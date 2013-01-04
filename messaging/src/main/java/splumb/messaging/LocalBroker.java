@@ -49,5 +49,6 @@ class LocalBroker implements Broker, MsgHandler {
     @Override
     public void msgAvailable(Client sender, byte[] msg) {
         //To change body of implemented methods use File | Settings | File Templates.
+        int x = 1;
     }
 }

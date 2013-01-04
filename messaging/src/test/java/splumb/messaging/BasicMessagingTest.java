@@ -11,6 +11,8 @@ import splumb.protobuf.BrokerMsg;
 
 import javax.inject.Inject;
 
+import static com.google.common.base.Throwables.propagate;
+
 @RunWith(GuiceJUnitRunner.class)
 @GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingInjectModule.class, TestLogModule.class})
 public class BasicMessagingTest {
@@ -41,9 +43,17 @@ public class BasicMessagingTest {
     public void sendTest() {
         MessageSource source = endpoints.createSource(MessagingConstants.ADMIN_REQ_Q);
 
-        BrokerMsg.MapMsg msg = new MapMsgBuilder()
+        BrokerMsg.Msg msg = new MapMsgBuilder()
                 .addInt32("test-key", 5)
                 .build();
+
+        source.send(msg);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            propagate(e);
+        }
     }
 }
 

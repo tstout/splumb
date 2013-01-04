@@ -34,8 +34,11 @@ public class MapMsgBuilder {
         return this;
     }
 
-    public MapMsg build() {
-        return mapMsgBuilder.build();
+    public Msg build() {
+        return Msg.newBuilder()
+                .setType(Msg.Type.Map)
+                .setMapMsg(mapMsgBuilder)
+                .build();
     }
 
 }

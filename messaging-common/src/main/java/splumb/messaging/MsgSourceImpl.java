@@ -11,6 +11,6 @@ class MsgSourceImpl implements MessageSource {
 
     @Override
     public void send(Msg message) {
-
+        broker.send(message);
     }
 }

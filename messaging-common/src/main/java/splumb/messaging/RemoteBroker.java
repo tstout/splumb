@@ -1,6 +1,7 @@
 package splumb.messaging;
 
 import splumb.common.logging.LogPublisher;
+import splumb.net.framing.NativeFrameBuilder;
 import splumb.net.nio.Client;
 import splumb.net.nio.MsgHandler;
 import splumb.net.nio.NetEndpoints;
@@ -40,12 +41,14 @@ class RemoteBroker implements Broker, MsgHandler {
 
     @Override
     public void send(Msg message) {
-        //BrokerMsg.Msg.newBuilder().setType(Msg.Type.Map);
-        //netClient.send();
+        netClient.send(new NativeFrameBuilder()
+                .withPayload(message.toByteArray())
+                .build());
     }
 
     @Override
     public void msgAvailable(Client sender, byte[] msg) {
+        int x = 1;
         //To change body of implemented methods use File | Settings | File Templates.
     }
 }
