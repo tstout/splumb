@@ -2,14 +2,17 @@ package splumb.messaging;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import splumb.common.logging.LogPublisher;
+import splumb.messaging.commands.AddQueue;
 import splumb.net.framing.NativeFrameBuilder;
 import splumb.net.nio.Client;
 import splumb.net.nio.MsgHandler;
 import splumb.net.nio.NetEndpoints;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 import static com.google.common.base.Throwables.*;
+import static com.google.common.collect.Maps.newHashMap;
 import static splumb.protobuf.BrokerMsg.*;
 
 class RemoteBroker implements Broker, MsgHandler {
@@ -17,6 +20,7 @@ class RemoteBroker implements Broker, MsgHandler {
     private Client netClient;
     private NetEndpoints netEndpoints;
     private LogPublisher logger;
+    private Map<String, MessageSink> queues = newHashMap();
 
     @Inject
     public RemoteBroker(LogPublisher logger, BrokerConfig brokerConfig) {
@@ -38,7 +42,11 @@ class RemoteBroker implements Broker, MsgHandler {
 
     @Override
     public void addSink(String destination, MessageSink sink) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        queues.put(destination, sink);
+
+        new AddQueue()
+                .withDestination(destination)
+                .send(netClient);
     }
 
     @Override
@@ -52,9 +60,16 @@ class RemoteBroker implements Broker, MsgHandler {
     public void msgAvailable(Client sender, byte[] msg) {
         try {
             Msg m = Msg.parseFrom(msg);
+            String destination = m.getDestination();
+
+
 
         } catch (InvalidProtocolBufferException e) {
             propagate(e);
         }
     }
+
+    class Fn {
+    }
+
 }

@@ -15,6 +15,7 @@ public class SerializationTest {
     public void MapMsgEncodeTest() throws InvalidProtocolBufferException {
         Msg msg = new MapMsgBuilder()
                 .addInt32("int-key", 1)
+                .withDestination("test.q")
                 .addString("string-key", "string-value")
                 .build();
 
