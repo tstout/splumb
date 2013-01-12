@@ -12,16 +12,23 @@ import splumb.net.nio.Server;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.google.common.base.Functions.*;
 import static com.google.common.base.Throwables.*;
 import static com.google.common.collect.Maps.*;
+import static splumb.messaging.commands.AdminQueues.*;
 import static splumb.protobuf.BrokerMsg.*;
 
+//
+// Not sure I like the broker implementing MsgHandler and MessageSink...
+//
 class LocalBroker implements Broker, MsgHandler, MessageSink {
 
     private NetEndpoints endpoints;
     private LogPublisher logger;
     private Server server;
     private Map<String, MessageSink> listeners = newHashMap();
+    private DeadLetterHandler deadLetterHandler = new DeadLetterHandler();
+
 
     //
     // TODO - need to maintain a list of connections to all borkers (except this one)
@@ -34,8 +41,9 @@ class LocalBroker implements Broker, MsgHandler, MessageSink {
     //
     @Inject
     LocalBroker(LogPublisher logger) {
-        listeners.put(MessagingConstants.ADMIN_REQ_Q, this);
         this.logger = logger;
+
+        listeners.put(ADMIN_REQ_Q.qName(), this);
         endpoints = new NetEndpoints(logger);
         server = endpoints.newTcpServer(this, new NativeFramer());
         server.listen(8000);
@@ -65,23 +73,38 @@ class LocalBroker implements Broker, MsgHandler, MessageSink {
     public void msgAvailable(Client sender, byte[] msg) {
         try {
             Msg m = Msg.parseFrom(msg);
-            listeners.get(m.getDestination()).receive(m);
+
+            forMap(listeners, deadLetterHandler)
+                    .apply(m.getDestination())
+                    .receive(m);
+
         } catch (InvalidProtocolBufferException e) {
             propagate(e);
         }
     }
 
-    class ForwardingHandler implements MessageSink {
+    class DeadLetterHandler implements MessageSink {
 
         @Override
         public void receive(Msg message) {
-            //To change body of implemented methods use File | Settings | File Templates.
+            // /dev/null for the moment...later
+            // this should probably put messages in a
+            // queue (probably a map of queues) to be drained when
+            // an appropriate remote q comes online.
         }
     }
 
-
     @Override
     public void receive(Msg message) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //
+        // Process Admin Q requests...
+        //
+        MapMsg map = message.getMapMsg();
+
+        //switch (MapMessages.getString(map, MapFields.COMMAND.name())) {
+
+        //}
+
+
     }
 }

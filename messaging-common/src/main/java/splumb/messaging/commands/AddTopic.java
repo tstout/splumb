@@ -5,7 +5,7 @@ import splumb.net.nio.Client;
 public class AddTopic implements BrokerCommand {
 
     @Override
-    public void send(Client netClient) {
+    public void sendTo(Client netClient) {
 //        new MapMsgBuilder()
 //                .withDestination()
     }

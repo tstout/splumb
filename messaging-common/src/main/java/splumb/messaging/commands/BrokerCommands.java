@@ -1,16 +1,9 @@
 package splumb.messaging.commands;
 
+// how about putting behaviour here to handle command impl instead of
+// a map within the borker (similar to framing and nio impl)?
+//
 public enum BrokerCommands {
-    ADD_QUEUE("addQueue"),
-    ADD_TOPIC("addTopic");
-
-    private String cmd;
-
-    BrokerCommands(String cmd) {
-        this.cmd = cmd;
-    }
-
-    public String strVal() {
-        return this.cmd;
-    }
+    ADD_QUEUE,
+    ADD_TOPIC;
 }

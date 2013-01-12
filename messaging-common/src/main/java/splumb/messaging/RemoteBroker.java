@@ -11,23 +11,24 @@ import splumb.net.nio.NetEndpoints;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.google.common.base.Functions.*;
 import static com.google.common.base.Throwables.*;
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Maps.*;
 import static splumb.protobuf.BrokerMsg.*;
 
 class RemoteBroker implements Broker, MsgHandler {
     private BrokerConfig brokerConfig;
-    private Client netClient;
+    private Client brokerConn;
     private NetEndpoints netEndpoints;
     private LogPublisher logger;
-    private Map<String, MessageSink> queues = newHashMap();
+    private Map<String, MessageSink> sinks = newHashMap();
 
     @Inject
     public RemoteBroker(LogPublisher logger, BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.logger = logger;
         netEndpoints = new NetEndpoints(logger);
-        netClient = new BrokerConnection(brokerConfig).createConnection(netEndpoints, this);
+        brokerConn = new BrokerConnection(brokerConfig).createConnection(netEndpoints, this);
     }
 
     @Override
@@ -42,16 +43,16 @@ class RemoteBroker implements Broker, MsgHandler {
 
     @Override
     public void addSink(String destination, MessageSink sink) {
-        queues.put(destination, sink);
+        sinks.put(destination, sink);
 
         new AddQueue()
                 .withDestination(destination)
-                .send(netClient);
+                .sendTo(brokerConn);
     }
 
     @Override
     public void send(Msg message) {
-        netClient.send(new NativeFrameBuilder()
+        brokerConn.send(new NativeFrameBuilder()
                 .withPayload(message.toByteArray())
                 .build());
     }
@@ -62,12 +63,23 @@ class RemoteBroker implements Broker, MsgHandler {
             Msg m = Msg.parseFrom(msg);
             String destination = m.getDestination();
 
-
+            forMap(sinks, new DeadLetterSink())
+                    .apply(destination)
+                    .receive(m);
 
         } catch (InvalidProtocolBufferException e) {
             propagate(e);
         }
     }
+
+    class DeadLetterSink implements MessageSink {
+
+        @Override
+        public void receive(Msg message) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+
 
     class Fn {
     }

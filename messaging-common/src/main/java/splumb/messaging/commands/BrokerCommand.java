@@ -4,7 +4,7 @@ import splumb.net.nio.Client;
 
 public interface BrokerCommand {
 
-    void send(Client netClient);
+    void sendTo(Client netClient);
 }
 
 

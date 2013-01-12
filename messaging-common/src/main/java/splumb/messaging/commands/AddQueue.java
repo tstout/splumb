@@ -5,6 +5,7 @@ import splumb.net.nio.Client;
 
 import static splumb.messaging.commands.BrokerCommands.*;
 import static splumb.messaging.commands.MapFields.*;
+import static splumb.messaging.commands.AdminQueues.*;
 
 public class AddQueue implements BrokerCommand {
 
@@ -16,11 +17,11 @@ public class AddQueue implements BrokerCommand {
     }
 
     @Override
-    public void send(Client netClient) {
+    public void sendTo(Client netClient) {
         netClient.send(new MapMsgBuilder()
-                .withDestination(qName)
-                .addString(COMMAND.strVal(), ADD_QUEUE.strVal())
-                .addString(DESTINATION.strVal(), qName)
+                .withDestination(ADMIN_REQ_Q.name())
+                .addString(COMMAND.name(), ADD_QUEUE.name())
+                .addString(DESTINATION.name(), qName)
                 .build()
                 .toByteArray());
     }
