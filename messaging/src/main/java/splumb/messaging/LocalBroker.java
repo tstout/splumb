@@ -60,16 +60,6 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
     }
 
     @Override
-    public void addQueue(String qName) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void addTopic(String topicName) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public void addSink(String destination, MessageSink sink) {
         //listeners.put(destination, sink);
     }

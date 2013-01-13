@@ -32,16 +32,6 @@ class RemoteBroker implements Broker, MsgHandler {
     }
 
     @Override
-    public void addQueue(String qName) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void addTopic(String topicName) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public void addSink(String destination, MessageSink sink) {
         sinks.put(destination, sink);
 
@@ -76,12 +66,7 @@ class RemoteBroker implements Broker, MsgHandler {
 
         @Override
         public void receive(Msg message) {
-            //To change body of implemented methods use File | Settings | File Templates.
+            // TODO - is this possible???
         }
     }
-
-
-    class Fn {
-    }
-
 }
