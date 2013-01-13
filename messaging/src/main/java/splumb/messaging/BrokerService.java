@@ -27,7 +27,7 @@ import static splumb.protobuf.BrokerMsg.*;
 //
 // Not sure I like the broker implementing MsgHandler and MessageSink...
 //
-class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
+class BrokerService implements Broker, MsgHandler, InternalMessageSink {
 
     private NetEndpoints endpoints;
     private LogPublisher logger;
@@ -47,7 +47,7 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
     // queue or topic type.
     //
     @Inject
-    LocalBroker(LogPublisher logger, EventBus bus) {
+    BrokerService(LogPublisher logger, EventBus bus) {
         this.logger = logger;
         this.bus = bus;
 

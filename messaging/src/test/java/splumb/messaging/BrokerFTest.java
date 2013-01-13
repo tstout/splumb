@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 public class BrokerFTest {
 
     RemoteBroker remoteBroker;
-    LocalBroker localBroker;
+    BrokerService localBroker;
     MessageEndpoints endpoints;
 
     @Inject
@@ -41,7 +41,7 @@ public class BrokerFTest {
         db.create();
 
         remoteBroker = new RemoteBroker(logger, new BrokerConfig(db));
-        localBroker = new LocalBroker(logger, bus);
+        localBroker = new BrokerService(logger, bus);
         endpoints = new MessageEndpoints(logger, remoteBroker);
     }
 

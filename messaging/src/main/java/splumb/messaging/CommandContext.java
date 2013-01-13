@@ -17,13 +17,13 @@ class CommandContext {
     EventBus bus;
 
     private CommandContext(BrokerMsg.MapMsg msg, Client src, Multimap<String, Client> endPoints, String destination,
-                           EventBus bus, Map<String, InternalMessageSink> lisenters) {
+                           EventBus bus, Map<String, InternalMessageSink> listeners) {
         this.msg = msg;
         this.src = src;
         this.destination = destination;
         this.endPoints = endPoints;
         this.bus = bus;
-        this.listeners = lisenters;
+        this.listeners = listeners;
     }
 
     static Builder builder() {

@@ -13,7 +13,7 @@ public class MessagingService extends AbstractIdleService {
     LogPublisher logger;
     Injector injector;
     BrokerConfig brokerConfig;
-    LocalBroker broker;
+    BrokerService broker;
 
     @Inject
     public MessagingService(LogPublisher logger, Injector injector, SplumbDB db, EventBus bus) {
@@ -21,7 +21,7 @@ public class MessagingService extends AbstractIdleService {
         this.injector = injector;
         brokerConfig = new BrokerConfig(db);
 
-        broker = new LocalBroker(logger, bus);
+        broker = new BrokerService(logger, bus);
 
         // create a child injector here and add any modules as necessary...
     }
