@@ -14,8 +14,9 @@ public class MessageEndpoints {
         this.remoteBroker = remoteBroker;
     }
 
-    public void registerSink(String destination, MessageSink sink) {
+    public MessageEndpoints registerSink(String destination, MessageSink sink) {
         remoteBroker.addSink(destination, sink);
+        return this;
     }
 
     public MessageSource createSource(String destination) {

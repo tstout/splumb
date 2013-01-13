@@ -1,6 +1,8 @@
 package splumb.messaging;
 
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.protobuf.InvalidProtocolBufferException;
 import splumb.common.logging.LogPublisher;
 import splumb.net.framing.NativeFramer;
@@ -21,14 +23,14 @@ import static splumb.protobuf.BrokerMsg.*;
 //
 // Not sure I like the broker implementing MsgHandler and MessageSink...
 //
-class LocalBroker implements Broker, MsgHandler, MessageSink {
+class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
 
     private NetEndpoints endpoints;
     private LogPublisher logger;
     private Server server;
-    private Map<String, MessageSink> listeners = newHashMap();
+    private Map<String, InternalMessageSink> listeners = newHashMap();
     private DeadLetterHandler deadLetterHandler = new DeadLetterHandler();
-
+    private Multimap<String, Client> endPoints = ArrayListMultimap.create();
 
     //
     // TODO - need to maintain a list of connections to all borkers (except this one)
@@ -61,7 +63,7 @@ class LocalBroker implements Broker, MsgHandler, MessageSink {
 
     @Override
     public void addSink(String destination, MessageSink sink) {
-        listeners.put(destination, sink);
+        //listeners.put(destination, sink);
     }
 
     @Override
@@ -76,35 +78,33 @@ class LocalBroker implements Broker, MsgHandler, MessageSink {
 
             forMap(listeners, deadLetterHandler)
                     .apply(m.getDestination())
-                    .receive(m);
+                    .receive(m, sender);
 
         } catch (InvalidProtocolBufferException e) {
             propagate(e);
         }
     }
 
-    class DeadLetterHandler implements MessageSink {
-
-        @Override
-        public void receive(Msg message) {
-            // /dev/null for the moment...later
-            // this should probably put messages in a
-            // queue (probably a map of queues) to be drained when
-            // an appropriate remote q comes online.
-        }
-    }
-
     @Override
-    public void receive(Msg message) {
+    public void receive(Msg message, Client src) {
         //
         // Process Admin Q requests...
         //
-        MapMsg map = message.getMapMsg();
+        new CommandProcessor(endPoints).process(message, src);
+    }
 
-        //switch (MapMessages.getString(map, MapFields.COMMAND.name())) {
+    class DeadLetterHandler implements InternalMessageSink {
+        Multimap<String, Msg> pending = ArrayListMultimap.create();
 
-        //}
+        void sinkAvailable(String destination, Client dest) {
+            for (Msg msg : pending.get(destination)) {
+                dest.send(msg.toByteArray());
+            }
+        }
 
-
+        @Override
+        public void receive(Msg message, Client src) {
+            pending.put(message.getDestination(), message);
+        }
     }
 }

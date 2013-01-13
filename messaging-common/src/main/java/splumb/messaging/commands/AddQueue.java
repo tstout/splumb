@@ -19,7 +19,7 @@ public class AddQueue implements BrokerCommand {
     @Override
     public void sendTo(Client netClient) {
         netClient.send(new MapMsgBuilder()
-                .withDestination(ADMIN_REQ_Q.name())
+                .withDestination(ADMIN_REQ_Q.qName())
                 .addString(COMMAND.name(), ADD_QUEUE.name())
                 .addString(DESTINATION.name(), qName)
                 .build()

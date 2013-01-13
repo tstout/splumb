@@ -10,12 +10,15 @@ import splumb.core.db.SplumbDB;
 import splumb.protobuf.BrokerMsg;
 
 import javax.inject.Inject;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Throwables.propagate;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceJUnitRunner.class)
 @GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingInjectModule.class, TestLogModule.class})
-public class BasicMessagingTest {
+public class BrokerFTest {
 
     RemoteBroker remoteBroker;
     LocalBroker localBroker;
@@ -40,20 +43,35 @@ public class BasicMessagingTest {
     }
 
     @Test
-    public void sendTest() {
-        MessageSource source = endpoints.createSource(MessagingConstants.ADMIN_REQ_Q);
+    public void sendTest() throws InterruptedException {
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        MessageSource source = endpoints
+                .registerSink("test.q", new Sink(latch))
+                .createSource("test.q");
 
         BrokerMsg.Msg msg = new MapMsgBuilder()
-                .withDestination(MessagingConstants.ADMIN_REQ_Q)
+                .withDestination("test.q")
                 .addInt32("test-key", 5)
                 .build();
 
         source.send(msg);
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            propagate(e);
+        assertThat(latch.await(5, TimeUnit.SECONDS), is(true));
+    }
+
+    class Sink implements MessageSink {
+
+        private final CountDownLatch latch;
+
+        Sink(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        @Override
+        public void receive(BrokerMsg.Msg message) {
+            latch.countDown();
         }
     }
 }
