@@ -46,12 +46,11 @@ public class BrokerFTest {
     }
 
     @Test
-    public void sendTest() throws InterruptedException {
+    public void singleMsgTest() throws InterruptedException {
 
         CountDownLatch latch = new CountDownLatch(1);
 
         MessageSource source = endpoints
-//                .registerSink("test.q", new Sink(latch))
                 .createSource("test.q");
 
         BrokerMsg.Msg msg = new MapMsgBuilder()
@@ -76,6 +75,9 @@ public class BrokerFTest {
 
         @Override
         public void receive(BrokerMsg.Msg message) {
+            BrokerMsg.MapMsg msg = message.getMapMsg();
+
+            assertThat(MapMessages.getInt32(msg, "test-key"), is(5));
             latch.countDown();
         }
     }
