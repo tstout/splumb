@@ -1,6 +1,7 @@
 package splumb.messaging.commands;
 
 import splumb.messaging.MapMsgBuilder;
+import splumb.net.framing.NativeFrameBuilder;
 import splumb.net.nio.Client;
 
 import static splumb.messaging.commands.BrokerCommands.*;
@@ -18,11 +19,13 @@ public class AddQueue implements BrokerCommand {
 
     @Override
     public void sendTo(Client netClient) {
-        netClient.send(new MapMsgBuilder()
-                .withDestination(ADMIN_REQ_Q.qName())
-                .addString(COMMAND.name(), ADD_QUEUE.name())
-                .addString(DESTINATION.name(), qName)
-                .build()
-                .toByteArray());
+        netClient.send(new NativeFrameBuilder()
+                .withPayload(new MapMsgBuilder()
+                        .withDestination(ADMIN_REQ_Q.qName())
+                        .addString(COMMAND.name(), ADD_QUEUE.name())
+                        .addString(DESTINATION.name(), qName)
+                        .build()
+                        .toByteArray())
+                .build());
     }
 }

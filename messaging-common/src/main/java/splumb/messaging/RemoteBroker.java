@@ -24,7 +24,7 @@ class RemoteBroker implements Broker, MsgHandler {
     private Map<String, MessageSink> sinks = newHashMap();
 
     @Inject
-    public RemoteBroker(LogPublisher logger, BrokerConfig brokerConfig) {
+    RemoteBroker(LogPublisher logger, BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.logger = logger;
         netEndpoints = new NetEndpoints(logger);

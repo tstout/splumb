@@ -1,5 +1,6 @@
 package splumb.messaging;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Injector;
 import splumb.common.logging.LogPublisher;
@@ -15,12 +16,12 @@ public class MessagingService extends AbstractIdleService {
     LocalBroker broker;
 
     @Inject
-    public MessagingService(LogPublisher logger, Injector injector, SplumbDB db) {
+    public MessagingService(LogPublisher logger, Injector injector, SplumbDB db, EventBus bus) {
         this.logger = logger;
         this.injector = injector;
         brokerConfig = new BrokerConfig(db);
 
-        broker = new LocalBroker(logger);
+        broker = new LocalBroker(logger, bus);
 
         // create a child injector here and add any modules as necessary...
     }

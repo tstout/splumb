@@ -1,5 +1,6 @@
 package splumb.messaging;
 
+import com.google.common.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +14,8 @@ import javax.inject.Inject;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
 
 @RunWith(GuiceJUnitRunner.class)
 @GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingInjectModule.class, TestLogModule.class})
@@ -28,6 +29,8 @@ public class BrokerFTest {
     LogPublisher logger;
     @Inject
     SplumbDB db;
+    @Inject
+    EventBus bus;
 
     @Before
     public void setup() {
@@ -38,7 +41,7 @@ public class BrokerFTest {
         db.create();
 
         remoteBroker = new RemoteBroker(logger, new BrokerConfig(db));
-        localBroker = new LocalBroker(logger);
+        localBroker = new LocalBroker(logger, bus);
         endpoints = new MessageEndpoints(logger, remoteBroker);
     }
 

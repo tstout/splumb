@@ -2,7 +2,11 @@ package splumb.messaging;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
+import com.google.common.eventbus.EventBus;
+import splumb.messaging.commands.MapFields;
 import splumb.net.nio.Client;
+
+import java.util.Map;
 
 import static com.google.common.base.Functions.*;
 import static com.google.common.collect.ImmutableMap.*;
@@ -15,19 +19,26 @@ class CommandProcessor {
                ADD_TOPIC.name(), AddTopicSink.newSink());
 
     private Multimap<String, Client> endpoints;
+    private EventBus bus;
+    private Map<String, InternalMessageSink> listeners;
 
-    CommandProcessor(Multimap<String, Client> endpoints) {
+    CommandProcessor(Multimap<String, Client> endpoints, EventBus bus, Map<String, InternalMessageSink> listeners) {
         this.endpoints = endpoints;
+        this.bus = bus;
+        this.listeners = listeners;
     }
 
     void process(Msg msg, Client src) {
         forMap(sinks)
-                .apply(msg.getDestination())
-                .receive(CommandContext.builder()
-                        .withEndpoints(endpoints)
-                        .withMsg(msg.getMapMsg())
-                        .withSrc(src)
-                        .build());
+                .apply(MapMessages.getString(msg.getMapMsg(), MapFields.COMMAND.name()))
+                        .receive(CommandContext.builder()
+                                .withEndpoints(endpoints)
+                                .withMsg(msg.getMapMsg())
+                                .withSrc(src)
+                                .withListeners(listeners)
+                                .withBus(bus)
+                                .withDestination(msg.getDestination())
+                                .build());
     }
 }
 
@@ -43,7 +54,10 @@ class AddQueueSink implements CommandSink {
 
     @Override
     public void receive(CommandContext context) {
-
+        String destination  = MapMessages.getString(context.msg, MapFields.DESTINATION.name());
+        context.listeners.put(destination, new SinkProxy(context.src));
+        context.endPoints.put(destination, context.src);
+        context.bus.post(new QueueAvailableEvent(destination, context.src));
     }
 }
 

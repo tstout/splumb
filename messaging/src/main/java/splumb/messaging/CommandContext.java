@@ -1,18 +1,29 @@
 package splumb.messaging;
 
 import com.google.common.collect.Multimap;
+import com.google.common.eventbus.EventBus;
 import splumb.net.nio.Client;
 import splumb.protobuf.BrokerMsg;
+
+import java.util.Map;
 
 class CommandContext {
     BrokerMsg.MapMsg msg;
     Client src;
+    String destination;
+    // TODO - not sure endpoints is necessary...
     Multimap<String, Client> endPoints;
+    Map<String, InternalMessageSink> listeners;
+    EventBus bus;
 
-    private CommandContext(BrokerMsg.MapMsg msg, Client src, Multimap<String, Client> endPoints) {
+    private CommandContext(BrokerMsg.MapMsg msg, Client src, Multimap<String, Client> endPoints, String destination,
+                           EventBus bus, Map<String, InternalMessageSink> lisenters) {
         this.msg = msg;
         this.src = src;
+        this.destination = destination;
         this.endPoints = endPoints;
+        this.bus = bus;
+        this.listeners = lisenters;
     }
 
     static Builder builder() {
@@ -23,6 +34,24 @@ class CommandContext {
         private BrokerMsg.MapMsg msg;
         private Client src;
         private Multimap<String, Client> endPoints;
+        private String destination;
+        private EventBus bus;
+        private Map<String, InternalMessageSink> listeners;
+
+        Builder withListeners(Map<String, InternalMessageSink> listeners) {
+            this.listeners = listeners;
+            return this;
+        }
+
+        Builder withBus(EventBus bus) {
+            this.bus = bus;
+            return this;
+        }
+
+        Builder withDestination(String destination) {
+            this.destination = destination;
+            return this;
+        }
 
         Builder withMsg(BrokerMsg.MapMsg msg) {
             this.msg = msg;
@@ -40,7 +69,7 @@ class CommandContext {
         }
 
         CommandContext build() {
-            return new CommandContext(msg, src, endPoints);
+            return new CommandContext(msg, src, endPoints, destination, bus, listeners);
         }
     }
 }

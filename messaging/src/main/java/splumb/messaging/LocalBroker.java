@@ -3,8 +3,11 @@ package splumb.messaging;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.protobuf.InvalidProtocolBufferException;
 import splumb.common.logging.LogPublisher;
+import splumb.net.framing.NativeFrameBuilder;
 import splumb.net.framing.NativeFramer;
 import splumb.net.nio.Client;
 import splumb.net.nio.MsgHandler;
@@ -31,6 +34,7 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
     private Map<String, InternalMessageSink> listeners = newHashMap();
     private DeadLetterHandler deadLetterHandler = new DeadLetterHandler();
     private Multimap<String, Client> endPoints = ArrayListMultimap.create();
+    private EventBus bus;
 
     //
     // TODO - need to maintain a list of connections to all borkers (except this one)
@@ -42,12 +46,16 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
     // queue or topic type.
     //
     @Inject
-    LocalBroker(LogPublisher logger) {
+    LocalBroker(LogPublisher logger, EventBus bus) {
         this.logger = logger;
+        this.bus = bus;
 
+        bus.register(deadLetterHandler);
         listeners.put(ADMIN_REQ_Q.qName(), this);
         endpoints = new NetEndpoints(logger);
         server = endpoints.newTcpServer(this, new NativeFramer());
+
+        // TODO - this needs to come from config...
         server.listen(8000);
     }
 
@@ -90,15 +98,21 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
         //
         // Process Admin Q requests...
         //
-        new CommandProcessor(endPoints).process(message, src);
+        new CommandProcessor(endPoints, bus, listeners).process(message, src);
     }
 
     class DeadLetterHandler implements InternalMessageSink {
         Multimap<String, Msg> pending = ArrayListMultimap.create();
 
-        void sinkAvailable(String destination, Client dest) {
-            for (Msg msg : pending.get(destination)) {
-                dest.send(msg.toByteArray());
+        @Subscribe
+        public void sinkAvailable(QueueAvailableEvent event) {
+            // TODO - need to remove - safe while iterating?
+
+            for (Msg msg : pending.get(event.getDestination())) {
+                event.getNetConn()
+                        .send(new NativeFrameBuilder()
+                                .withPayload(msg.toByteArray())
+                                .build());
             }
         }
 
