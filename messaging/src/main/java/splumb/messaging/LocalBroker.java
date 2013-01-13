@@ -15,6 +15,7 @@ import splumb.net.nio.NetEndpoints;
 import splumb.net.nio.Server;
 
 import javax.inject.Inject;
+import java.util.Iterator;
 import java.util.Map;
 
 import static com.google.common.base.Functions.*;
@@ -96,18 +97,15 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
 
         @Subscribe
         public void sinkAvailable(QueueAvailableEvent event) {
-
-            for (Msg msg : pending.get(event.getDestination())) {
-
-                //pending.remove(event.getDestination(), msg);
-                // TODO - need to modify such that pending queues are emptied...
-                // probably need to use an explicit iterator as in the TaxChain..
-                //
-
+            //
+            // New queue available...send any pending messages.
+            //
+            for (Iterator<Msg> it = pending.get(event.getDestination()).iterator(); it.hasNext();) {
                 event.getNetConn()
                         .send(new NativeFrameBuilder()
-                                .withPayload(msg.toByteArray())
+                                .withPayload(it.next().toByteArray())
                                 .build());
+                it.remove();
             }
         }
 
