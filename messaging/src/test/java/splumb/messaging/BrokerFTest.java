@@ -21,8 +21,8 @@ import static org.junit.Assert.*;
 @GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingInjectModule.class, TestLogModule.class})
 public class BrokerFTest {
 
-    RemoteBroker remoteBroker;
-    BrokerService localBroker;
+    BrokerClient brokerClient;
+    BrokerService brokerService;
     MessageEndpoints endpoints;
 
     @Inject
@@ -40,9 +40,9 @@ public class BrokerFTest {
         db.init(null);
         db.create();
 
-        remoteBroker = new RemoteBroker(logger, new BrokerConfig(db));
-        localBroker = new BrokerService(logger, bus);
-        endpoints = new MessageEndpoints(logger, remoteBroker);
+        brokerClient = new BrokerClient(logger, new BrokerConfig(db));
+        brokerService = new BrokerService(logger, bus);
+        endpoints = new MessageEndpoints(logger, brokerClient);
     }
 
     @Test

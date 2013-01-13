@@ -6,10 +6,10 @@ import javax.inject.Inject;
 
 public class MessageEndpoints {
     private LogPublisher logger;
-    private RemoteBroker remoteBroker;
+    private BrokerClient remoteBroker;
 
     @Inject
-    public MessageEndpoints(LogPublisher logger, RemoteBroker remoteBroker) {
+    public MessageEndpoints(LogPublisher logger, BrokerClient remoteBroker) {
         this.logger = logger;
         this.remoteBroker = remoteBroker;
     }

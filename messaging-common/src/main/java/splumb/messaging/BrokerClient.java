@@ -16,7 +16,7 @@ import static com.google.common.base.Throwables.*;
 import static com.google.common.collect.Maps.*;
 import static splumb.protobuf.BrokerMsg.*;
 
-class RemoteBroker implements Broker, MsgHandler {
+class BrokerClient implements Broker, MsgHandler {
     private BrokerConfig brokerConfig;
     private Client brokerConn;
     private NetEndpoints netEndpoints;
@@ -24,7 +24,7 @@ class RemoteBroker implements Broker, MsgHandler {
     private Map<String, MessageSink> sinks = newHashMap();
 
     @Inject
-    RemoteBroker(LogPublisher logger, BrokerConfig brokerConfig) {
+    BrokerClient(LogPublisher logger, BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
         this.logger = logger;
         netEndpoints = new NetEndpoints(logger);

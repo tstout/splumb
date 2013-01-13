@@ -3,9 +3,9 @@ package splumb.messaging;
 import static splumb.protobuf.BrokerMsg.*;
 
 class MsgSourceImpl implements MessageSource {
-    private RemoteBroker broker;
+    private BrokerClient broker;
 
-    MsgSourceImpl(RemoteBroker broker) {
+    MsgSourceImpl(BrokerClient broker) {
         this.broker = broker;
     }
 
