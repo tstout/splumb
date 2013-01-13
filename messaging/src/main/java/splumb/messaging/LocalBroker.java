@@ -96,9 +96,14 @@ class LocalBroker implements Broker, MsgHandler, InternalMessageSink {
 
         @Subscribe
         public void sinkAvailable(QueueAvailableEvent event) {
-            // TODO - need to remove - safe while iterating?
 
             for (Msg msg : pending.get(event.getDestination())) {
+
+                //pending.remove(event.getDestination(), msg);
+                // TODO - need to modify such that pending queues are emptied...
+                // probably need to use an explicit iterator as in the TaxChain..
+                //
+
                 event.getNetConn()
                         .send(new NativeFrameBuilder()
                                 .withPayload(msg.toByteArray())

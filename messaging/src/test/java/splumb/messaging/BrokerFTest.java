@@ -51,7 +51,7 @@ public class BrokerFTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         MessageSource source = endpoints
-                .registerSink("test.q", new Sink(latch))
+//                .registerSink("test.q", new Sink(latch))
                 .createSource("test.q");
 
         BrokerMsg.Msg msg = new MapMsgBuilder()
@@ -60,6 +60,8 @@ public class BrokerFTest {
                 .build();
 
         source.send(msg);
+
+        endpoints.registerSink("test.q", new Sink(latch));
 
         assertThat(latch.await(5, TimeUnit.SECONDS), is(true));
     }
