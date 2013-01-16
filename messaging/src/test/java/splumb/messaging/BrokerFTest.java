@@ -75,9 +75,9 @@ public class BrokerFTest {
 
         @Override
         public void receive(BrokerMsg.Msg message) {
-            BrokerMsg.MapMsg msg = message.getMapMsg();
+            MapMsgParser mp = new MapMsgParser(message.getMapMsg());
 
-            assertThat(MapMessages.getInt32(msg, "test-key"), is(5));
+            assertThat(mp.getInt32("test-key"), is(5));
             latch.countDown();
         }
     }

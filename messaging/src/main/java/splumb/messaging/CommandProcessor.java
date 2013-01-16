@@ -29,8 +29,10 @@ class CommandProcessor {
     }
 
     void process(Msg msg, Client src) {
+        MapMsgParser mp = new MapMsgParser(msg.getMapMsg());
+
         forMap(sinks)
-                .apply(MapMessages.getString(msg.getMapMsg(), MapFields.COMMAND.name()))
+                .apply(mp.getString(MapFields.COMMAND.name()))
                         .receive(CommandContext.builder()
                                 .withEndpoints(endpoints)
                                 .withMsg(msg.getMapMsg())
@@ -54,7 +56,8 @@ class AddQueueSink implements CommandSink {
 
     @Override
     public void receive(CommandContext context) {
-        String destination  = MapMessages.getString(context.msg, MapFields.DESTINATION.name());
+        MapMsgParser mp = new MapMsgParser(context.msg);
+        String destination  = mp.getString(MapFields.DESTINATION.name());
         context.listeners.put(destination, new SinkProxy(context.src));
         context.endPoints.put(destination, context.src);
         context.bus.post(new QueueAvailableEvent(destination, context.src));

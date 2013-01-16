@@ -3,11 +3,17 @@ package splumb.messaging;
 import com.google.common.base.Predicate;
 import splumb.protobuf.BrokerMsg;
 
-import static com.google.common.collect.FluentIterable.*;
+import static com.google.common.collect.FluentIterable.from;
+import static splumb.protobuf.BrokerMsg.*;
 
-public class MapMessages {
+public class MapMsgParser {
+    private MapMsg msg;
 
-    public static int getInt32(BrokerMsg.MapMsg msg,  String key) {
+    public MapMsgParser(MapMsg msg) {
+        this.msg = msg;
+    }
+
+    public int getInt32(String key) {
         return from(msg.getItemsList())
                 .filter(Fn.keyMatches(key))
                 .first()
@@ -15,7 +21,7 @@ public class MapMessages {
                 .getInt32Value();
     }
 
-    public static String getString(BrokerMsg.MapMsg msg, String key) {
+    public String getString(String key) {
         return from(msg.getItemsList())
                 .filter(Fn.keyMatches(key))
                 .first()
@@ -23,7 +29,7 @@ public class MapMessages {
                 .getStringValue();
     }
 
-    public static Boolean getBool(BrokerMsg.MapMsg msg, String key) {
+    public Boolean getBool(String key) {
         return from(msg.getItemsList())
                 .filter(Fn.keyMatches(key))
                 .first()
@@ -34,7 +40,7 @@ public class MapMessages {
     //Optional<BrokerMsg.KeyValue> getValue(BrokerMsg)
 
     static class Fn {
-        static Predicate<BrokerMsg.KeyValue> keyMatches(final String key) {
+        static Predicate<KeyValue> keyMatches(final String key) {
             return new Predicate<BrokerMsg.KeyValue>() {
                 @Override
                 public boolean apply(BrokerMsg.KeyValue input) {

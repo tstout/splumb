@@ -3,7 +3,7 @@ package splumb.protobuf;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.junit.Test;
 import splumb.messaging.MapMsgBuilder;
-import splumb.messaging.MapMessages;
+import splumb.messaging.MapMsgParser;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -23,9 +23,12 @@ public class SerializationTest {
 
         Msg decodedMap = Msg.parseFrom(serializedMsg);
         MapMsg map = decodedMap.getMapMsg();
+
+        MapMsgParser mp = new MapMsgParser(map);
+
         assertThat(map.getItemsCount(), is(2));
-        assertThat(MapMessages.getInt32(map, "int-key"), is(1));
-        assertThat(MapMessages.getString(map, "string-key"), is("string-value"));
+        assertThat(mp.getInt32("int-key"), is(1));
+        assertThat(mp.getString("string-key"), is("string-value"));
     }
 
 }
