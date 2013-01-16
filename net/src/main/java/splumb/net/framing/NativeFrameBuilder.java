@@ -14,7 +14,7 @@ public class NativeFrameBuilder {
     public ByteBuffer build() {
         ByteBuffer buff = ByteBuffer.allocate(MAGIC_AS_ARRAY.length + length + 2);
         buff.put(MAGIC_AS_ARRAY);
-        buff.putShort((short)length);
+        buff.putShort(length);
         buff.put(payload);
         buff.flip();
         return buff;
