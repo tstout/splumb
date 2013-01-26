@@ -9,18 +9,20 @@ import java.net.UnknownHostException;
 
 import static com.google.common.base.Throwables.propagate;
 
-public class BrokerConnection {
+class BrokerConnection {
     private BrokerConfig brokerConfig;
     private BrokerLocation brokerLocation;
 
     public BrokerConnection(BrokerConfig brokerConfig) {
         this.brokerConfig = brokerConfig;
 
+        // TODO...need to decide what to do about multiple brokers here...
+        // Should probably
         brokerLocation = brokerConfig.brokers().size() == 0 ? new BrokerLocation("127.0.0.1", 8000) :
                 brokerConfig.brokers().get(0);
     }
 
-    public Client createConnection(NetEndpoints endpoints, MsgHandler handler) {
+    Client createConnection(NetEndpoints endpoints, MsgHandler handler) {
         Client client = null;
         try {
             client = endpoints.clientBuilder()
@@ -29,7 +31,7 @@ public class BrokerConnection {
                     .withServerAddress(InetAddress.getByName(brokerLocation.host()))
                     .build();
         } catch (UnknownHostException e) {
-           propagate(e);
+           throw propagate(e);
         }
         return client;
     }

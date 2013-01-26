@@ -55,7 +55,8 @@ public class BrokerFTest {
 
         BrokerMsg.Msg msg = new MapMsgBuilder()
                 .withDestination("test.q")
-                .addInt32("test-key", 5)
+                .add("test-key2", 8)
+                .add("test-key", 5)
                 .build();
 
         source.send(msg);

@@ -6,7 +6,13 @@ public enum AdminQueues {
     ADMIN_RESP_Q,
     DEAD_LETTER_Q;
 
+    private String qName;
+
+    AdminQueues() {
+        qName = String.format("splumb.%s", this.name().replace('_', '.').toLowerCase());
+    }
+
     public String qName() {
-        return String.format("SPLUMB_%s", this.name());
+        return qName;
     }
 }

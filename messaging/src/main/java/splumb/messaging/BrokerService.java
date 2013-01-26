@@ -80,7 +80,7 @@ class BrokerService implements Broker, MsgHandler, InternalMessageSink {
                     .receive(m, sender);
 
         } catch (InvalidProtocolBufferException e) {
-            propagate(e);
+            throw propagate(e);
         }
     }
 

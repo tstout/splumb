@@ -22,8 +22,8 @@ public class AddQueue implements BrokerCommand {
         netClient.send(new NativeFrameBuilder()
                 .withPayload(new MapMsgBuilder()
                         .withDestination(ADMIN_REQ_Q.qName())
-                        .addString(COMMAND.name(), ADD_QUEUE.name())
-                        .addString(DESTINATION.name(), qName)
+                        .add(COMMAND.name(), ADD_QUEUE.name())
+                        .add(DESTINATION.name(), qName)
                         .build()
                         .toByteArray())
                 .build());

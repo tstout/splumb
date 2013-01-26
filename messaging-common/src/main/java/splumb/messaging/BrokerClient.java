@@ -58,7 +58,7 @@ class BrokerClient implements Broker, MsgHandler {
                     .receive(m);
 
         } catch (InvalidProtocolBufferException e) {
-            propagate(e);
+            throw propagate(e);
         }
     }
 
