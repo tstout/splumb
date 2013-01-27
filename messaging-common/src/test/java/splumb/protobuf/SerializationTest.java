@@ -27,8 +27,8 @@ public class SerializationTest {
         MapMsgParser mp = new MapMsgParser(map);
 
         assertThat(map.getItemsCount(), is(2));
-        assertThat(mp.getInt32("int-key"), is(1));
-        assertThat(mp.getString("string-key"), is("string-value"));
+        assertThat(mp.get("int-key", Integer.class), is(1));
+        assertThat(mp.get("string-key", String.class), is("string-value"));
     }
 
 }

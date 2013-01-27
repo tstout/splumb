@@ -1,27 +1,28 @@
 package splumb.messaging;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.MapMaker;
 import splumb.protobuf.BrokerMsg;
 
-import static com.google.common.base.Preconditions.*;
-import static com.google.common.collect.ImmutableMap.*;
+import java.util.Map;
+
 import static splumb.protobuf.BrokerMsg.*;
 
 public class MapMsgBuilder {
 
-    private final ImmutableMap<?, Function<Pair, KeyValue.Builder>> TYPE_MAP =
-            of(Integer.class, Fn.assignInt32(),
-                    String.class, Fn.assignString(),
-                    Boolean.class, Fn.assignBool());
+    private final Map<Class<?>, Function<Pair, KeyValue.Builder>> typeMap = new MapMaker().weakKeys().makeMap();
+    private final BrokerMsg.MapMsg.Builder mapMsgBuilder = BrokerMsg.MapMsg.newBuilder();
+    private final BrokerMsg.Msg.Builder msgBuilder = BrokerMsg.Msg.newBuilder();
 
-    private BrokerMsg.MapMsg.Builder mapMsgBuilder = BrokerMsg.MapMsg.newBuilder();
-    private BrokerMsg.Msg.Builder msgBuilder = BrokerMsg.Msg.newBuilder();
-    private String destination;
+    public MapMsgBuilder() {
+        typeMap.put(Integer.class, Fn.assignInt32());
+        typeMap.put(String.class, Fn.assignString());
+        typeMap.put(Boolean.class, Fn.assignBool());
+    }
 
     public <T> MapMsgBuilder add(String key, T value) {
 
-        Function<Pair, KeyValue.Builder> f = TYPE_MAP.get(value.getClass());
+        Function<Pair, KeyValue.Builder> f = typeMap.get(value.getClass());
 
         if (f == null) {
             throw new RuntimeException(String.format("MapMsg does not support the type %s", value.getClass()));
@@ -35,16 +36,12 @@ public class MapMsgBuilder {
     }
 
     public MapMsgBuilder withDestination(String destination) {
-        this.destination = destination;
         msgBuilder.setDestination(destination);
         return this;
     }
 
     public Msg build() {
-        checkNotNull(destination, "Destination is required");
-
         return msgBuilder
-                .setDestination(destination)
                 .setType(Msg.Type.Map)
                 .setMapMsg(mapMsgBuilder)
                 .build();

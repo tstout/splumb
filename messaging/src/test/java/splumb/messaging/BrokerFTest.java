@@ -56,7 +56,7 @@ public class BrokerFTest {
         BrokerMsg.Msg msg = new MapMsgBuilder()
                 .withDestination("test.q")
                 .add("test-key2", 8)
-                .add("test-key", 5)
+                .add("test-key", "hello")
                 .build();
 
         source.send(msg);
@@ -78,7 +78,8 @@ public class BrokerFTest {
         public void receive(BrokerMsg.Msg message) {
             MapMsgParser mp = new MapMsgParser(message.getMapMsg());
 
-            assertThat(mp.getInt32("test-key"), is(5));
+            assertThat(mp.get("test-key", String.class), is("hello"));
+            assertThat(mp.get("test-key2", Integer.class), is(8));
             latch.countDown();
         }
     }
