@@ -76,7 +76,7 @@ public class BrokerFTest {
 
         @Override
         public void receive(BrokerMsg.Msg message) {
-            MapMsgParser mp = new MapMsgParser(message.getMapMsg());
+            MapMsgSelector mp = new MapMsgSelector(message.getMapMsg());
 
             assertThat(mp.get("test-key", String.class), is("hello"));
             assertThat(mp.get("test-key2", Integer.class), is(8));

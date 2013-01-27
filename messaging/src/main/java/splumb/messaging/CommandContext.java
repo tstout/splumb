@@ -13,6 +13,12 @@ class CommandContext {
     String destination;
     // TODO - not sure endpoints is necessary...
     Multimap<String, Client> endPoints;
+
+
+    //
+    // Consider using an event bus event to trigger a chain invocation instead of
+    // maintaining a listener map.
+    //
     Map<String, InternalMessageSink> listeners;
     EventBus bus;
 

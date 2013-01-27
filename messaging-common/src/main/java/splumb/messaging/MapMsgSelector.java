@@ -11,17 +11,17 @@ import java.util.Map;
 import static com.google.common.collect.FluentIterable.*;
 import static splumb.protobuf.BrokerMsg.*;
 
-public class MapMsgParser {
+public class MapMsgSelector {
     private MapMsg msg;
     //private java.lang.reflect.Type genericReturnType;
 
     private final Map<Class<?>, Function<KeyValue, ?>> typeMap = new MapMaker().weakKeys().makeMap();
 
-    interface Action {
-        void apply(KeyValue keyValue);
-    }
+//    interface Action {
+//        void apply(KeyValue keyValue);
+//    }
 
-    public MapMsgParser(MapMsg msg) {
+    public MapMsgSelector(MapMsg msg) {
         this.msg = msg;
         typeMap.put(Integer.class, Fn.getInt32());
         typeMap.put(String.class, Fn.getString());
