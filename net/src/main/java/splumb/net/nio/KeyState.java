@@ -34,7 +34,7 @@ enum KeyState {
                 socketChannel = serverSocketChannel.accept();
                 socketChannel.configureBlocking(false);
             } catch (Exception e) {
-                propagate(e);
+                throw propagate(e);
             }
 
             env.rspHandlers.put(socketChannel, env.rspHandlers.get(serverSocketChannel));
@@ -46,7 +46,7 @@ enum KeyState {
             try {
                 newKey = socketChannel.register(env.selector, SelectionKey.OP_READ);
             } catch (ClosedChannelException e) {
-                propagate(e);
+                throw propagate(e);
             }
 
             env.channelMap.put(newKey, new InternalChannel(env.nioSelector, socketChannel, env.framer));
@@ -177,7 +177,7 @@ enum KeyState {
                 try {
                     socketChannel.write(buf);
                 } catch (IOException e) {
-                    propagate(e);
+                    throw propagate(e);
                 }
 
                 if (buf.remaining() > 0) {

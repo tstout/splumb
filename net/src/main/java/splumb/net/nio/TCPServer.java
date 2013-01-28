@@ -1,6 +1,5 @@
 package splumb.net.nio;
 
-import com.google.common.base.Throwables;
 import splumb.net.framing.Framer;
 
 import java.io.IOException;
@@ -9,11 +8,13 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 
 import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Throwables.*;
 
 class TCPServer implements Server {
     private ServerSocketChannel channel;
     private NIOSelect selector;
     private Boolean listening = false;
+    private final Object listenLock = new Object();
     private MsgHandler handler;
     private Framer framer;
 
@@ -31,7 +32,7 @@ class TCPServer implements Server {
 
     @Override
     public void listen(int port) {
-        synchronized (listening) {
+        synchronized (listenLock) {
             checkState(!listening, "Server already listening");
             listenOnPort(port, handler);
             listening = true;
@@ -51,7 +52,7 @@ class TCPServer implements Server {
                     SelectionKey.OP_ACCEPT,
                     framer));
         } catch (IOException e) {
-            Throwables.propagate(e);
+            throw propagate(e);
         }
     }
 
@@ -60,7 +61,7 @@ class TCPServer implements Server {
         try {
             channel.close();
         } catch (IOException e) {
-            Throwables.propagate(e);
+            throw propagate(e);
         }
     }
 }

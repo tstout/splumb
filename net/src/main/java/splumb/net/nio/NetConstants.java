@@ -12,6 +12,7 @@ public final class NetConstants {
 
     public static String HOST_NAME;
 
+    // TODO - get rid of this static block....
     static {
         try {
             HOST_NAME = InetAddress.getLocalHost().getHostName();
