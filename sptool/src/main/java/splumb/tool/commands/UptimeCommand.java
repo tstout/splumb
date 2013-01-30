@@ -5,15 +5,15 @@ import joptsimple.OptionSpec;
 
 import java.io.Writer;
 
-class UptimeCommand implements TerminalCommand<Void> {
+class UptimeCommand implements TerminalCommand<Integer> {
 
     @Override
-    public OptionSpec<Void> optSpec(OptionParser optionParser) {
-        return optionParser.accepts("uptime").withOptionalArg().ofType(Void.class);
+    public OptionSpec<Integer> optSpec(OptionParser optionParser) {
+        return optionParser.accepts("uptime").withOptionalArg().ofType(Integer.class);
     }
 
     @Override
-    public TerminalCommand<Void> exec(Void arg, Writer writer) {
+    public TerminalCommand<Integer> exec(Integer arg, Writer writer) {
         return this;
     }
 

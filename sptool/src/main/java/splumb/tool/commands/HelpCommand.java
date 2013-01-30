@@ -8,17 +8,17 @@ import java.io.Writer;
 
 import static com.google.common.base.Throwables.*;
 
-class HelpCommand implements TerminalCommand<Void> {
+class HelpCommand implements TerminalCommand<Integer> {
     private OptionParser optionParser;
 
     @Override
-    public OptionSpec<Void> optSpec(OptionParser optionParser) {
+    public OptionSpec<Integer> optSpec(OptionParser optionParser) {
         this.optionParser = optionParser;
-        return optionParser.accepts("help").withOptionalArg().ofType(Void.class);
+        return optionParser.accepts("help").withOptionalArg().ofType(Integer.class);
     }
 
     @Override
-    public TerminalCommand<Void> exec(Void arg, Writer writer) {
+    public TerminalCommand<Integer> exec(Integer arg, Writer writer) {
         try {
             optionParser.printHelpOn(writer);
         } catch (IOException e) {

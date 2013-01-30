@@ -5,14 +5,14 @@ import joptsimple.OptionSpec;
 
 import java.io.Writer;
 
-class QuitCommand implements TerminalCommand<Void> {
+class QuitCommand implements TerminalCommand<Integer> {
     @Override
-    public OptionSpec<Void> optSpec(OptionParser optionParser) {
-        return optionParser.accepts("quite").withOptionalArg().ofType(Void.class);
+    public OptionSpec<Integer> optSpec(OptionParser optionParser) {
+        return optionParser.accepts("quite").withOptionalArg().ofType(Integer.class);
     }
 
     @Override
-    public TerminalCommand<Void> exec(Void arg, Writer writer) {
+    public TerminalCommand<Integer> exec(Integer arg, Writer writer) {
         return this;
     }
 

@@ -1,5 +1,6 @@
 package splumb.tool;
 
+import com.google.common.base.Splitter;
 import jline.console.ConsoleReader;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.*;
 
 public class Main {
@@ -37,7 +39,10 @@ public class Main {
 
             while ((line = reader.readLine()) != null) {
 
-                OptionSet optionSet = parser.parse(line);
+                String[] cmd = newArrayList(Splitter.on(' ').split(line)).toArray(new String[]{});
+
+
+                OptionSet optionSet = parser.parse(cmd);
                 for (OptionSpec<?> optionSpec : commands) {
                     if (optionSet.has(optionSpec)) {
                         // need a map of optionSpec to TerminalCommands...
