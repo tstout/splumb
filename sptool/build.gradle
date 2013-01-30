@@ -1,11 +1,21 @@
 dependencies {
-    compile (
+    compile(
             project(':common'),
             'com.google.guava:guava:12.0',
             'com.google.inject:guice:3.0',
-            'net.sf.jopt-simple:jopt-simple:4.3'
+            'net.sf.jopt-simple:jopt-simple:4.3',
+            'jline:jline:2.10'
     )
     testCompile(
             'org.mockito:mockito-core:1.9.0'
     )
+
+    //
+    // This creates an uberjar
+    //
+    jar {
+        baseName = 'sptool'
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+        manifest { attributes 'Main-Class': 'splumb.tool.Main' }
+    }
 }
