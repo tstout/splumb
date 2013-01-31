@@ -9,7 +9,7 @@ public interface TerminalCommand<T> {
 
     OptionSpec<T> optSpec(OptionParser optionParser);
 
-    TerminalCommand<T> exec(T arg, Writer writer);
+    TerminalCommand<T> exec(Object arg, Writer writer);
 
     boolean shouldTerminate();
 }

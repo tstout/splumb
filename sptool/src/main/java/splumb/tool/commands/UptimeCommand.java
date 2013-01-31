@@ -13,7 +13,7 @@ class UptimeCommand implements TerminalCommand<Integer> {
     }
 
     @Override
-    public TerminalCommand<Integer> exec(Integer arg, Writer writer) {
+    public TerminalCommand<Integer> exec(Object arg, Writer writer) {
         return this;
     }
 

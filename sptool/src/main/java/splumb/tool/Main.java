@@ -5,15 +5,12 @@ import jline.console.ConsoleReader;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
-import splumb.tool.commands.TerminalCommand;
 import splumb.tool.commands.TerminalCommands;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Set;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Sets.*;
+import static com.google.common.collect.Lists.*;
 
 public class Main {
 
@@ -25,12 +22,8 @@ public class Main {
             reader.setPrompt("sptool>");
 
             OptionParser parser = new OptionParser();
+            TerminalCommands terminalCommands = new TerminalCommands(parser);
 
-            Set<OptionSpec<?>> commands = newHashSet();
-
-            for (TerminalCommand<?> command : TerminalCommands.commandSet()) {
-                commands.add(command.optSpec(parser));
-            }
 
             String line;
             PrintWriter out = new PrintWriter(reader.getOutput());
@@ -41,21 +34,18 @@ public class Main {
 
                 String[] cmd = newArrayList(Splitter.on(' ').split(line)).toArray(new String[]{});
 
-
                 OptionSet optionSet = parser.parse(cmd);
-                for (OptionSpec<?> optionSpec : commands) {
-                    if (optionSet.has(optionSpec)) {
-                        // need a map of optionSpec to TerminalCommands...
-                        // do a lookup, then exec and check if terminate set
-                        //
+
+                for (OptionSpec<?> optionSpec : optionSet.specs()) {
+                    if (terminalCommands.lookup(optionSpec)
+                            .exec(optionSet.valueOf(optionSpec), out)
+                            .shouldTerminate()) {
+                        System.exit(0);
                     }
                 }
 
                 out.flush();
 
-                if (line.equalsIgnoreCase("quit")) {
-                    break;
-                }
             }
 
         } catch (IOException e) {
