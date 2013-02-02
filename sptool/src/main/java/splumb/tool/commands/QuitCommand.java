@@ -1,21 +1,16 @@
 package splumb.tool.commands;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSpec;
-
 import java.io.Writer;
+import java.util.List;
 
-class QuitCommand implements TerminalCommand<Integer> {
+class QuitCommand implements TerminalCommand {
     @Override
-    public OptionSpec<Integer> optSpec(OptionParser optionParser) {
-        return optionParser
-                .accepts("quit")
-                .withOptionalArg()
-                .ofType(Integer.class);
+    public String command() {
+        return "quit";
     }
 
     @Override
-    public TerminalCommand<Integer> exec(Object arg, Writer writer) {
+    public TerminalCommand exec(List<String> args, Writer writer) {
         return this;
     }
 

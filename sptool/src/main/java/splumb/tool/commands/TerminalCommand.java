@@ -1,15 +1,12 @@
 package splumb.tool.commands;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSpec;
-
 import java.io.Writer;
+import java.util.List;
 
-public interface TerminalCommand<T> {
+public interface TerminalCommand {
+    String command();
 
-    OptionSpec<T> optSpec(OptionParser optionParser);
-
-    TerminalCommand<T> exec(Object arg, Writer writer);
+    TerminalCommand exec(List<String> args, Writer writer);
 
     boolean shouldTerminate();
 }

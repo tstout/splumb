@@ -1,29 +1,23 @@
 package splumb.tool.commands;
 
-import joptsimple.OptionParser;
-import joptsimple.OptionSpec;
-
-import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
-import static com.google.common.base.Throwables.*;
+class HelpCommand implements TerminalCommand {
+    private TerminalCommands terminalCommands;
 
-class HelpCommand implements TerminalCommand<Integer> {
-    private OptionParser optionParser;
-
-    @Override
-    public OptionSpec<Integer> optSpec(OptionParser optionParser) {
-        this.optionParser = optionParser;
-        return optionParser.accepts("help").withOptionalArg().ofType(Integer.class);
+    HelpCommand(TerminalCommands terminalCommands) {
+        this.terminalCommands = terminalCommands;
     }
 
     @Override
-    public TerminalCommand<Integer> exec(Object arg, Writer writer) {
-        try {
-            optionParser.printHelpOn(writer);
-        } catch (IOException e) {
-            throw propagate(e);
-        }
+    public String command() {
+        return "help";
+    }
+
+    @Override
+    public TerminalCommand exec(List<String> arg, Writer writer) {
+        terminalCommands.printHelp(writer);
         return this;
     }
 

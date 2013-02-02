@@ -3,12 +3,16 @@ package splumb.tool.commands;
 import java.io.Writer;
 import java.util.List;
 
-class UptimeCommand implements TerminalCommand {
-
+class NullTerminalCommand implements TerminalCommand {
     @Override
     public String command() {
-        return "uptime";
+        return "";
     }
+
+//    @Override
+//    public OptionSpec<Void> optSpec(OptionParser optionParser) {
+//        return new NullOptionSpec<Void>();
+//    }
 
     @Override
     public TerminalCommand exec(List<String> args, Writer writer) {
