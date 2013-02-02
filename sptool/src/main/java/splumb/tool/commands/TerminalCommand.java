@@ -8,5 +8,6 @@ public interface TerminalCommand {
 
     TerminalCommand exec(List<String> args, Writer writer);
 
+    // TODO - get rid of this method...
     boolean shouldTerminate();
 }

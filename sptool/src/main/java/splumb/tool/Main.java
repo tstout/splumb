@@ -23,9 +23,8 @@ public class Main {
             reader.setHistoryEnabled(true);
 
             while ((line = reader.readLine()) != null) {
-
                 new CommandProcessor().process(line, out);
-                //out.flush();
+                out.flush();
             }
 
         } catch (IOException e) {

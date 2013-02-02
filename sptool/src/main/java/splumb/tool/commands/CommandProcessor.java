@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import java.io.Writer;
 import java.util.List;
 
+import static com.google.common.base.Strings.*;
 import static com.google.common.collect.Lists.*;
 
 public class CommandProcessor {
@@ -29,12 +30,12 @@ public class CommandProcessor {
         List<String> tokensFromTerminal = newArrayList(Splitter
                 .on(' ')
                 .split(lineFromTerminal));
+        tokens = tokensFromTerminal;
 
-        if (tokensFromTerminal.size() > 0) {
-            tokens = tokensFromTerminal;
-            return terminalCommands.lookup(tokens.get(0));
-        }
+        return commandAvailable(tokensFromTerminal) ? terminalCommands.lookup(tokens.get(0)) : NULL_CMD;
+    }
 
-        return NULL_CMD;
+    private boolean commandAvailable(List<String> tokensFromTerminal) {
+        return (tokensFromTerminal.size() > 0) && (!isNullOrEmpty(tokensFromTerminal.get(0)));
     }
 }

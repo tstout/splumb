@@ -12,11 +12,6 @@ class UnrecognizedCommand implements TerminalCommand {
         return "";  // TODO -  find suitable String.EMPTY;
     }
 
-//    @Override
-//    public OptionSpec<Integer> optSpec(OptionParser optionParser) {
-//        return new NullOptionSpec<Integer>();
-//    }
-
     @Override
     public TerminalCommand exec(List<String> args, Writer writer) {
         try {
