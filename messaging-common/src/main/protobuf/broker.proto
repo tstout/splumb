@@ -4,12 +4,17 @@ option java_package = "splumb.protobuf";
 option java_outer_classname = "BrokerMsg";
 option optimize_for = SPEED;
 
+//
+// Define the basic message container
+//
 message Msg {
 
     enum Type {
         Map = 1;
         String = 2;
         Binary = 3;
+        ListQueuesReq = 4;
+        ListQueuesResp = 5;
     }
 
     required Type type = 1;
@@ -17,7 +22,22 @@ message Msg {
     optional StringMsg stringMsg = 3;
     optional BinaryMsg binaryMsg = 4;
     optional MapMsg mapMsg = 5;
+    optional ListQueuesReq listQReq = 6;
+    optional ListQueuesResp listQResp = 7;
 }
+
+message ListQueuesReq {
+
+}
+
+message ListQueuesResp {
+    repeated ListDescr queues = 1;
+}
+
+message ListDescr {
+    optional string qName = 1;
+}
+
 
 message StringMsg {
     required string value = 1;

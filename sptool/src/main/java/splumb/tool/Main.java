@@ -1,6 +1,9 @@
 package splumb.tool;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import jline.console.ConsoleReader;
+import splumb.messaging.MessagingInjectModule;
 import splumb.tool.commands.CommandProcessor;
 
 import java.io.IOException;
@@ -12,6 +15,10 @@ public class Main {
 
 
     public static void main(String[] args) {
+
+        Injector injector = Guice.createInjector(
+                new MessagingInjectModule(),
+                new SpToolInjectModule());
 
         try {
             ConsoleReader reader = new ConsoleReader();

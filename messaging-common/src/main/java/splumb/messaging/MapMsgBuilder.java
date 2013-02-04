@@ -6,6 +6,7 @@ import splumb.protobuf.BrokerMsg;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static splumb.protobuf.BrokerMsg.*;
 
 public class MapMsgBuilder {
@@ -24,9 +25,7 @@ public class MapMsgBuilder {
 
         Function<Pair, KeyValue.Builder> f = typeMap.get(value.getClass());
 
-        if (f == null) {
-            throw new RuntimeException(String.format("MapMsg does not support the type %s", value.getClass()));
-        }
+        checkNotNull(f, "MapMsg does not support the type %s", value.getClass());
 
         mapMsgBuilder.addItems(f.apply(new Pair(KeyValue.newBuilder(), value))
                 .setKey(key)

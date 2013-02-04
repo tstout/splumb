@@ -7,6 +7,9 @@ import splumb.protobuf.BrokerMsg;
 
 import java.util.Map;
 
+// TODO - consider injecting these objects as needed instead of passing this
+// around.
+//
 class CommandContext {
     BrokerMsg.MapMsg msg;
     Client src;

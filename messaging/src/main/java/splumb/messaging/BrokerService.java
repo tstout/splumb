@@ -67,7 +67,6 @@ class BrokerService implements Broker, MsgHandler, InternalMessageSink {
 
     @Override
     public void send(Msg message) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

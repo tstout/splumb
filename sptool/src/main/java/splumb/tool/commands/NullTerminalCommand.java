@@ -9,11 +9,6 @@ class NullTerminalCommand implements TerminalCommand {
         return "";
     }
 
-//    @Override
-//    public OptionSpec<Void> optSpec(OptionParser optionParser) {
-//        return new NullOptionSpec<Void>();
-//    }
-
     @Override
     public TerminalCommand exec(List<String> args, Writer writer) {
         return this;

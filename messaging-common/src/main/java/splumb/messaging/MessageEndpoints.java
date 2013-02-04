@@ -22,4 +22,8 @@ public class MessageEndpoints {
     public MessageSource createSource(String destination) {
         return new MsgSourceImpl(remoteBroker);
     }
+
+//    public MessageCombo createCombo(String srcQName, String destQName) {
+//        return new MsgComboImpl();
+//    }
 }
