@@ -18,13 +18,12 @@ import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
 
 @RunWith(GuiceJUnitRunner.class)
-@GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingInjectModule.class, TestLogModule.class})
+@GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingServerModule.class, TestLogModule.class})
 public class BrokerFTest {
 
     BrokerClient brokerClient;
     BrokerService brokerService;
     MessageEndpoints endpoints;
-
     @Inject
     LogPublisher logger;
     @Inject
@@ -40,7 +39,7 @@ public class BrokerFTest {
         db.init(null);
         db.create();
 
-        brokerClient = new BrokerClient(logger, new BrokerConfig(db));
+        brokerClient = new BrokerClient(logger, new DbBrokerConfig(db));
         brokerService = new BrokerService(logger, bus);
         endpoints = new MessageEndpoints(logger, brokerClient);
     }

@@ -1,6 +1,5 @@
 package splumb.net.nio;
 
-import com.google.common.base.Throwables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import splumb.common.logging.LogPublisher;
@@ -43,7 +42,7 @@ class NIOSelect implements Runnable {
         try {
             selector = Selector.open();
         } catch (IOException e) {
-            Throwables.propagate(e);
+            throw propagate(e);
         }
 
         Executor selectThr = Executors.newSingleThreadExecutor(
@@ -121,10 +120,11 @@ class NIOSelect implements Runnable {
                    //
                    // process the selection key according to its current state...
                     //
-                   KeyState.current(key).process(env);
+                   KeyState.current(key)
+                           .process(env);
                 }
             } catch (Exception e) {
-                propagate(e);
+                throw propagate(e);
             }
         }
     }

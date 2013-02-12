@@ -13,8 +13,6 @@ message Msg {
         Map = 1;
         String = 2;
         Binary = 3;
-        ListQueuesReq = 4;
-        ListQueuesResp = 5;
     }
 
     required Type type = 1;
@@ -22,12 +20,32 @@ message Msg {
     optional StringMsg stringMsg = 3;
     optional BinaryMsg binaryMsg = 4;
     optional MapMsg mapMsg = 5;
-    optional ListQueuesReq listQReq = 6;
-    optional ListQueuesResp listQResp = 7;
+}
+
+message AdminMsg {
+    enum Type {
+        ListQueuesReq = 1;
+        ListQueuesResp = 2;
+        ListBrokersReq = 3;
+        ListBrokersResp = 4;
+    }
+
+    required Type type = 1;
+    optional string senderId = 2;
+    optional ListQueuesReq listQueueReq = 3;
+    optional ListQueuesResp listQueueResp = 4;
+    optional ListBrokersReq listBrokersReq = 5;
+    optional ListBrokersResp listBrokersResp= 6;
+}
+
+message ListBrokersReq {
+}
+
+message ListBrokersResp {
+    repeated string brokers = 1;
 }
 
 message ListQueuesReq {
-
 }
 
 message ListQueuesResp {

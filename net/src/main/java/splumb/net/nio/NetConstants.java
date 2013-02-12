@@ -17,7 +17,7 @@ public final class NetConstants {
         try {
             HOST_NAME = InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
-            propagate(e);
+            throw propagate(e);
         }
     }
 }

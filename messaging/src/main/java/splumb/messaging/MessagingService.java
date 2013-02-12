@@ -19,7 +19,7 @@ public class MessagingService extends AbstractIdleService {
     public MessagingService(LogPublisher logger, Injector injector, SplumbDB db, EventBus bus) {
         this.logger = logger;
         this.injector = injector;
-        brokerConfig = new BrokerConfig(db);
+        brokerConfig = new DbBrokerConfig(db);
 
         broker = new BrokerService(logger, bus);
 
