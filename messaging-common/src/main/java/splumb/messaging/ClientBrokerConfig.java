@@ -11,6 +11,7 @@ class ClientBrokerConfig implements BrokerConfig {
     private final int port;
     private final String host;
 
+
     @Inject
     ClientBrokerConfig(@Named("brokerHost") String host,
                        @Named("brokerPort") int port) {

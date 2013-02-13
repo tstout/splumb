@@ -2,7 +2,6 @@ package splumb.messaging;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractIdleService;
-import com.google.inject.Injector;
 import splumb.common.logging.LogPublisher;
 import splumb.core.db.SplumbDB;
 
@@ -11,16 +10,15 @@ import javax.inject.Inject;
 public class MessagingService extends AbstractIdleService {
 
     LogPublisher logger;
-    Injector injector;
+    //Injector injector;
     BrokerConfig brokerConfig;
     BrokerService broker;
 
     @Inject
-    public MessagingService(LogPublisher logger, Injector injector, SplumbDB db, EventBus bus) {
+    public MessagingService(LogPublisher logger, SplumbDB db, EventBus bus) {
         this.logger = logger;
-        this.injector = injector;
+        //this.injector = injector;
         brokerConfig = new DbBrokerConfig(db);
-
         broker = new BrokerService(logger, bus);
 
         // create a child injector here and add any modules as necessary...
@@ -29,7 +27,6 @@ public class MessagingService extends AbstractIdleService {
     @Override
     protected void startUp() throws Exception {
         logger.info("Starting messaging service");
-
     }
 
     @Override

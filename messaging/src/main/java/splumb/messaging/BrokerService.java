@@ -5,7 +5,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.google.protobuf.InvalidProtocolBufferException;
 import splumb.common.logging.LogPublisher;
 import splumb.net.framing.NativeFrameBuilder;
 import splumb.net.framing.NativeFramer;
@@ -38,7 +37,7 @@ class BrokerService implements Broker, MsgHandler, InternalMessageSink {
     private EventBus bus;
 
     //
-    // TODO - need to maintain a list of connections to all borkers (except this one)
+    // TODO - need to maintain a list of connections to all brokers (except this one)
     // listed in the MsgBrokers table.  If there is not a handler for the destination,
     // the message needs to be forwarded to the other brokers if the destination is a queue.
     // If the destination is a topic, then the message should be forwarded to all other brokers,
@@ -77,8 +76,8 @@ class BrokerService implements Broker, MsgHandler, InternalMessageSink {
             forMap(listeners, deadLetterHandler)
                     .apply(m.getDestination())
                     .receive(m, sender);
-
-        } catch (InvalidProtocolBufferException e) {
+        }
+        catch (Exception e) {
             throw propagate(e);
         }
     }

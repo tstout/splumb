@@ -10,6 +10,10 @@ import splumb.core.logging.LogService;
 
 import static com.google.common.collect.ImmutableSet.*;
 
+/**
+ * Loads the core services that are intrinsic to splumb host. This includes Logging, Database, and
+ * soon Messaging.
+ */
 class CoreServiceLoader {
     private ShutdownActions shutdownActions;
     private LogPublisher logger;

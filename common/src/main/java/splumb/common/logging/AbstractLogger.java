@@ -3,10 +3,6 @@ package splumb.common.logging;
 
 public abstract class AbstractLogger implements LogPublisher {
 
-
-    public AbstractLogger() {
-    }
-
     protected abstract LogBus getLogBus();
 
     protected abstract String getSource();

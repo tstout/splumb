@@ -1,12 +1,8 @@
 package splumb.messaging;
 
-import com.google.common.eventbus.EventBus;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import splumb.common.logging.LogPublisher;
 import splumb.common.test.GuiceJUnitRunner;
-import splumb.core.db.DBTestModule;
 import splumb.core.db.SplumbDB;
 import splumb.protobuf.BrokerMsg;
 
@@ -18,31 +14,13 @@ import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
 
 @RunWith(GuiceJUnitRunner.class)
-@GuiceJUnitRunner.GuiceModules({DBTestModule.class, MessagingServerModule.class, TestLogModule.class})
+@GuiceJUnitRunner.GuiceModules({BrokerTestModule.class})
 public class BrokerFTest {
 
-    BrokerClient brokerClient;
-    BrokerService brokerService;
-    MessageEndpoints endpoints;
-    @Inject
-    LogPublisher logger;
-    @Inject
-    SplumbDB db;
-    @Inject
-    EventBus bus;
-
-    @Before
-    public void setup() {
-        //
-        // TODO - develop a cleaner way to init the SPlumbDB...
-        //
-        db.init(null);
-        db.create();
-
-        brokerClient = new BrokerClient(logger, new DbBrokerConfig(db));
-        brokerService = new BrokerService(logger, bus);
-        endpoints = new MessageEndpoints(logger, brokerClient);
-    }
+    @Inject BrokerClient brokerClient;
+    @Inject BrokerService brokerService;
+    @Inject MessageEndpoints endpoints;
+    @Inject SplumbDB db;
 
     @Test
     public void singleMsgTest() throws InterruptedException {

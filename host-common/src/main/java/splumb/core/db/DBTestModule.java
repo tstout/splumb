@@ -16,7 +16,6 @@ public class DBTestModule extends AbstractModule {
     @Override
     protected void configure() {
 
-
         OptionParser parser = new OptionParser();
         parser.accepts("nodb", "Run without DB");
         //optionSet = parser.parse(new String[] {"-nodb"});
