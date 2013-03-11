@@ -1,7 +1,12 @@
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
+
+    group = 'splumb'
+    version = '0.1-SNAPSHOT'
 
     repositories {
+        mavenLocal()
         mavenCentral()
     }
 

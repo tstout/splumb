@@ -113,7 +113,7 @@ enum KeyState {
                     env.channelMap.remove(env.key);
                     socketChannel.close();
                 } catch (IOException e1) {
-                    throw new RuntimeException(e1);
+                    throw propagate(e1);
                 }
 
                 return;
@@ -128,7 +128,7 @@ enum KeyState {
                     env.key.channel().close();
                     env.logger.info("Read detected remote shutdown");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw propagate(e);
                 }
 
                 env.key.cancel();
