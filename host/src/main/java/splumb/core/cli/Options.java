@@ -29,7 +29,10 @@ class Options {
         parser.acceptsAll(DROP_TABLES.aliases, "drop and recreate tables at startup");
         parser.acceptsAll(HELP.aliases, "Show help");
         parser.acceptsAll(VERBOSE.aliases, "Dump log to stdout");
-        parser.acceptsAll(JMX.aliases, "Enable JMX connectivity").withOptionalArg().ofType(Integer.class);
+
+        parser.acceptsAll(JMX.aliases, "Enable JMX connectivity")
+                .withOptionalArg()
+                .ofType(Integer.class);
     }
 
     Options register(Args arg, OptAction action) {

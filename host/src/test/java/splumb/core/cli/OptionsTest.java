@@ -15,12 +15,13 @@ public class OptionsTest {
 
     @Test
     public void parseTest() {
-        String[] args = new String[] {"-h", "-nodb", "-jmx 5000"};
+        String[] args = new String[] {"-h", "--nodb", "-jmx", "5000"};
 
         Injector injector = Guice.createInjector(new CliModule(args));
         injector.injectMembers(this);
 
         assertFalse(values.dropTables());
         assertTrue(values.jmxPort() == 5000);
+        assertTrue(values.noDB());
     }
 }
