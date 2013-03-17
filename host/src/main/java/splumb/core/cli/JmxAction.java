@@ -1,8 +1,7 @@
 package splumb.core.cli;
 
+import com.google.common.collect.ImmutableMap;
 import joptsimple.OptionParser;
-
-import java.util.Properties;
 
 import static com.google.common.collect.ImmutableMap.*;
 
@@ -11,16 +10,15 @@ class JmxAction implements OptAction {
     public void execute(OptionParser parser, Object arg, Values.Builder valueBuilder) {
         valueBuilder.withJmxPort((Integer) arg);
 
-        Properties jmxProps = new Properties();
-        jmxProps.putAll(of(
-                "com.sun.management.jmxremote", true,
-                "com.sun.management.jmxremote.port", (Integer)arg,
-                "com.sun.management.jmxremote.authenticate", false,
-                "com.sun.managementjmxremote.ssl", false));
+        ImmutableMap<String, String> props = new ImmutableMap.Builder<String, String>()
+                .put("com.sun.management.jmxremote", "true")
+                .put("com.sun.management.jmxremote.port", arg.toString())
+                .put("com.sun.management.jmxremote.authenticate", "false")
+                .put("com.sun.managementjmxremote.ssl", "false")
+                .build();
 
-
-
-
-        //System.setProperties(jmxProps);
+        for (Entry<String, String> entry : props.entrySet()) {
+            System.setProperty(entry.getKey(), entry.getValue());
+        }
     }
 }
