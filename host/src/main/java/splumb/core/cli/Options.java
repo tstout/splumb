@@ -17,6 +17,7 @@ class Options {
     private OptionSet optionSet;
     private final Map<Args, OptAction> actions = newHashMap();
     private final OptionParser parser;
+
     private final static OptAction NULL_ACTION = new OptAction() {
         @Override
         public void execute(OptionParser parser, Object arg, Values.Builder builder) {
@@ -32,7 +33,8 @@ class Options {
 
         parser.acceptsAll(JMX.aliases, "Enable JMX connectivity")
                 .withOptionalArg()
-                .ofType(Integer.class);
+                .ofType(Integer.class)
+                .defaultsTo(8004);
     }
 
     Options register(Args arg, OptAction action) {

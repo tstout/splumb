@@ -8,23 +8,24 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import joptsimple.OptionSet;
 import splumb.core.db.SplumbDB;
 
 class HostInjectModule extends AbstractModule {
 
     private String[] args;
-    private OptionSet optionSet;
+    //private OptionSet optionSet;
     private EventBus eventBus;
 
-    public HostInjectModule(OptionSet optionSet) {
-        this.optionSet = optionSet;
+    //@Inject
+    //public HostInjectModule(OptValues optValues) {
+    public HostInjectModule() {
+        //this.optionSet = optionSet;
         eventBus = new EventBus();
     }
 
     @Override
     protected void configure() {
-        bind(OptionSet.class).toInstance(optionSet);
+        //bind(OptionSet.class).toInstance(optionSet);
         bind(EventBus.class).toInstance(eventBus);
         bind(SplumbDB.class).in(Scopes.SINGLETON);
         bind(ShutdownActions.class).in(Scopes.SINGLETON);

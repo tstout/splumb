@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 
 public class CliModule extends AbstractModule {
     private String[] args = new String[]{};
+    //private Options options;
 
     public CliModule(String[] args) {
         this.args = args;
@@ -13,6 +14,7 @@ public class CliModule extends AbstractModule {
     protected void configure() {
         Values.Builder builder = Values.builder();
 
+        // TODO - this mapping could be moved into the Args enum....
         new Options()
                 .register(Options.Args.HELP, new HelpAction())
                 .register(Options.Args.NO_DB, new NoDbAction())
@@ -21,4 +23,5 @@ public class CliModule extends AbstractModule {
 
         bind(OptValues.class).toInstance(builder.build());
     }
+
 }

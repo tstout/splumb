@@ -2,9 +2,9 @@ package splumb.core.db;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.AbstractIdleService;
-import joptsimple.OptionSet;
 import org.h2.tools.Server;
 import splumb.common.logging.LogPublisher;
+import splumb.core.cli.OptValues;
 import splumb.core.events.DbAvailableEvent;
 
 import javax.inject.Inject;
@@ -18,10 +18,10 @@ public class H2DBService extends AbstractIdleService {
     private EventBus eventBus;
 
     @Inject
-    public H2DBService(LogPublisher logger, OptionSet optionSet, EventBus eventBus) {
+    public H2DBService(LogPublisher logger, OptValues optionSet, EventBus eventBus) {
         this.logger = logger;
         this.eventBus = eventBus;
-        implementation = optionSet.has("nodb") ? new Impl() : new ActiveImpl();
+        implementation = optionSet.noDB() ? new Impl() : new ActiveImpl();
     }
 
     @Override

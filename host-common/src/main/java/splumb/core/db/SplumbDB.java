@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import joptsimple.OptionSet;
 import org.apache.empire.db.DBCmdType;
 import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
@@ -13,6 +12,7 @@ import org.apache.empire.db.DBTable;
 import splumb.common.db.DBDriver;
 import splumb.common.db.DataSet;
 import splumb.common.logging.Level;
+import splumb.core.cli.OptValues;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
 import splumb.core.db.tables.LogLevel;
@@ -33,11 +33,11 @@ public class SplumbDB extends DBDatabase {
     public final MsgBrokers MsgBrokers = new MsgBrokers(this);
 
     private DBDriver driver;
-    private OptionSet options;
+    private OptValues options;
     private EventBus eventBus;
 
     @Inject
-    public SplumbDB(DBDriver driver, OptionSet options, EventBus eventBus) {
+    public SplumbDB(DBDriver driver, OptValues options, EventBus eventBus) {
         // TODO - need to investigate using schema names.
         //super("SPLUMB");
         this.driver = driver;
@@ -71,7 +71,7 @@ public class SplumbDB extends DBDatabase {
 
     public SplumbDB create() {
 
-        if (options.has("droptables")) {
+        if (options.dropTables()) {
             dropAllTables();
         }
 
@@ -87,7 +87,7 @@ public class SplumbDB extends DBDatabase {
             addDefaultData(conn);
             commit(conn);
         } catch (Exception e) {
-            if (options.has("droptables")) {
+            if (options.dropTables()) {
                 System.out.printf("Exception: %s\n Caused by: %s\n", e.getMessage(), e.getCause().getMessage());
             }
         }

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class OptionsTest {
@@ -20,8 +21,8 @@ public class OptionsTest {
         Injector injector = Guice.createInjector(new CliModule(args));
         injector.injectMembers(this);
 
-        assertFalse(values.dropTables());
-        assertTrue(values.jmxPort() == 5000);
-        assertTrue(values.noDB());
+        assertThat(values.dropTables(), is(false));
+        assertThat(values.jmxPort(), is(5000));
+        assertThat(values.noDB(), is(true));
     }
 }

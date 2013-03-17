@@ -15,7 +15,6 @@ public class H2Driver implements DBDriver {
 
     public H2Driver() {
         pool.setMaxConnections(5);
-        //System.out.printf("%s\n", getClass().getProtectionDomain().getCodeSource().getLocation().toString());
     }
 
 
