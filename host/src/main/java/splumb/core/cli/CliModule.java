@@ -19,6 +19,7 @@ public class CliModule extends AbstractModule {
                 .register(Options.Args.HELP, new HelpAction())
                 .register(Options.Args.NO_DB, new NoDbAction())
                 .register(Options.Args.JMX, new JmxAction())
+                .register(Options.Args.DROP_TABLES, new DroptablesAction())
                 .process(args, builder);
 
         bind(OptValues.class).toInstance(builder.build());

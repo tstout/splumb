@@ -39,7 +39,7 @@ public class SplumbDB extends DBDatabase {
     @Inject
     public SplumbDB(DBDriver driver, OptValues options, EventBus eventBus) {
         // TODO - need to investigate using schema names.
-        //super("SPLUMB");
+        super("SPLUMB");
         this.driver = driver;
         this.options = options;
         this.eventBus = eventBus;
@@ -83,6 +83,7 @@ public class SplumbDB extends DBDatabase {
             //
             DBSQLScript script = new DBSQLScript();
             getCreateDDLScript(driver.getDriver(), script);
+
             script.run(driver.getDriver(), conn, false);
             addDefaultData(conn);
             commit(conn);

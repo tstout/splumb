@@ -69,6 +69,7 @@ import static com.google.common.collect.Lists.*;
 
     @Subscribe
     public void dbAvailable(HostDbTablesAvailableEvent hostDbTablesAvailableEvent) {
+        // TODO - might need some syncronization here...
         logImpl = new LogImpl();
 
         for (LogRecord log : logQueue) {

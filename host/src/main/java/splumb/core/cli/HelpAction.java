@@ -11,6 +11,7 @@ class HelpAction implements OptAction {
     public void execute(OptionParser parser, Object arg, Values.Builder valuesBuilder) {
         try {
             parser.printHelpOn(System.out);
+            System.exit(0);
         } catch (IOException e) {
             throw propagate(e);
         }
