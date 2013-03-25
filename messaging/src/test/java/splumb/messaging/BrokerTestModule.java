@@ -42,7 +42,7 @@ public class BrokerTestModule extends AbstractModule {
         bind(EventBus.class).toInstance(bus);
         bind(LogPublisher.class).to(NullLogger.class).in(Scopes.SINGLETON);
 
-        SplumbDB db = new SplumbDB(driver, optValues, bus);
+        SplumbDB db = new SplumbDB(driver, optValues, bus, new NullLogger());
         db.init(new DbAvailableEvent());
         db.create();
 

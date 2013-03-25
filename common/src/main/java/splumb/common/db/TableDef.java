@@ -7,6 +7,7 @@ import org.apache.empire.db.DBTable;
 
 import java.lang.reflect.Field;
 
+// TODO - this should probably go to the idea graveyard.
 public class TableDef<T> extends DBTable {
 
     public TableDef(String name, DBDatabase db, T inst) {

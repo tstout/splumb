@@ -9,14 +9,14 @@ import java.sql.SQLException;
 
 public class H2Driver implements DBDriver {
 
-    String url = "jdbc:h2:tcp://127.0.0.1/~/.splumb/db/splumb;INIT=CREATE SCHEMA IF NOT EXISTS SPLUMB";
+    private String url = "jdbc:h2:tcp://127.0.0.1/~/.splumb/db/splumb;INIT=CREATE SCHEMA IF NOT EXISTS SPLUMB";
+    //private String url = "jdbc:h2:tcp://127.0.0.1/~/.splumb/db/splumb";
     private JdbcConnectionPool pool = JdbcConnectionPool.create(url, "sa", "");
     private DBDatabaseDriverH2 driver = new DBDatabaseDriverH2();
 
     public H2Driver() {
         pool.setMaxConnections(5);
     }
-
 
     @Override
     public DBDatabaseDriver getDriver() {

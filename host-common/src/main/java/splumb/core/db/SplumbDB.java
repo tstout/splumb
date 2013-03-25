@@ -12,6 +12,7 @@ import org.apache.empire.db.DBTable;
 import splumb.common.db.DBDriver;
 import splumb.common.db.DataSet;
 import splumb.common.logging.Level;
+import splumb.common.logging.LogPublisher;
 import splumb.core.cli.OptValues;
 import splumb.core.db.tables.Log;
 import splumb.core.db.tables.LogConfig;
@@ -32,17 +33,18 @@ public class SplumbDB extends DBDatabase {
     public final LogConfig LogConfig = new LogConfig(this);
     public final MsgBrokers MsgBrokers = new MsgBrokers(this);
 
-    private DBDriver driver;
-    private OptValues options;
-    private EventBus eventBus;
+    private final DBDriver driver;
+    private final OptValues options;
+    private final EventBus eventBus;
+    private final LogPublisher logger;
 
     @Inject
-    public SplumbDB(DBDriver driver, OptValues options, EventBus eventBus) {
-        // TODO - need to investigate using schema names.
+    public SplumbDB(DBDriver driver, OptValues options, EventBus eventBus, LogPublisher logger) {
         super("SPLUMB");
         this.driver = driver;
         this.options = options;
         this.eventBus = eventBus;
+        this.logger = logger;
     }
 
     @Subscribe
@@ -72,6 +74,7 @@ public class SplumbDB extends DBDatabase {
     public SplumbDB create() {
 
         if (options.dropTables()) {
+            logger.info("Dropping all SPLUMB tables");
             dropAllTables();
         }
 
@@ -87,6 +90,7 @@ public class SplumbDB extends DBDatabase {
             script.run(driver.getDriver(), conn, false);
             addDefaultData(conn);
             commit(conn);
+            logger.info("Created all SPLUMB Database objects");
         } catch (Exception e) {
             if (options.dropTables()) {
                 System.out.printf("Exception: %s\n Caused by: %s\n", e.getMessage(), e.getCause().getMessage());
@@ -116,7 +120,8 @@ public class SplumbDB extends DBDatabase {
                 "splumb.core.db.H2DBService$ActiveImpl",
                 "splumb.core.host.Host",
                 "splumb.core.host.plugin.PluginLoader",
-                "splumb.core.host.CoreServiceLoader")) {
+                "splumb.core.host.CoreServiceLoader",
+                "splumb.core.db.SplumbDB")) {
 
             new DataSet()
                     .withColumns(of(LogConfig.LOGGER, LogConfig.LOG_LEVEL))

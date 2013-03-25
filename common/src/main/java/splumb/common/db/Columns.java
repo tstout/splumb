@@ -5,13 +5,15 @@ import org.apache.empire.db.DBColumn;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 
-public class Columns {
+public final class Columns {
+
+    private Columns() {}
 
     public static DBTableColumn nullableCharCol(DBTable table, String name, int length) {
         return table.addColumn(name, DataType.TEXT, length, false);
     }
 
-    public static DBTableColumn charCol(DBTable table, String name, int length) {
+    public static DBTableColumn varchar(DBTable table, String name, int length) {
         return table.addColumn(name, DataType.TEXT, length, true);
     }
 
@@ -19,7 +21,7 @@ public class Columns {
         return table.addColumn(name, DataType.INTEGER, 0, false);
     }
 
-    public static DBTableColumn autoIncCol(DBTable table, String name) {
+    public static DBTableColumn autoInc(DBTable table, String name) {
         return table.addColumn(name, DataType.AUTOINC, 0, true);
     }
 
@@ -27,7 +29,7 @@ public class Columns {
         return table.addColumn(name, DataType.INTEGER, 0, true);
     }
 
-    public static DBTableColumn dateTimeCol(DBTable table, String name) {
+    public static DBTableColumn dateTime(DBTable table, String name) {
         return table.addColumn(name, DataType.DATETIME, 0, true);
     }
 

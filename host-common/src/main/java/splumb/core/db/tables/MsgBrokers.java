@@ -9,7 +9,7 @@ import static splumb.common.db.Columns.*;
 
 public class MsgBrokers extends DBTable implements Schema {
 
-    public final DBTableColumn HOST = charCol(this, "HOST", 128);
+    public final DBTableColumn HOST = varchar(this, "HOST", 128);
     public final DBTableColumn PORT = intCol(this, "PORT");
     public final DBTableColumn DESCR = nullableCharCol(this, "DESCR", 256);
 

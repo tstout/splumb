@@ -9,7 +9,7 @@ import static splumb.common.db.Columns.*;
 
 public class LogSource extends DBTable {
 
-    public final DBTableColumn LOG_SOURCE_ID = autoIncCol(this, "LOGGER");
+    public final DBTableColumn LOG_SOURCE_ID = autoInc(this, "LOGGER");
     public final DBTableColumn SOURCE = addColumn("SOURCE", DataType.TEXT, 256, true);
 
     public LogSource(DBDatabase db) {
