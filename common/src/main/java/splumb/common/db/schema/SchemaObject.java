@@ -7,7 +7,7 @@ import org.apache.empire.db.DBTableColumn;
 import static splumb.common.db.Columns.*;
 
 public class SchemaObject extends DBTable {
-    private final static String TABLE_NAME = "SCHEMA_OBJECT";
+    public final static String TABLE_NAME = "SCHEMA_OBJECT";
 
     public final DBTableColumn SCHEMA_OBJECT_ID = autoInc("SCHEMA_OBJECT_ID");
     public final DBTableColumn SCHEMA_OBJECT_TYPE = varchar("SCHEMA_OBJECT_TYPE", 100);
@@ -21,6 +21,6 @@ public class SchemaObject extends DBTable {
 
     public SchemaObject(DBDatabase db) {
         super(TABLE_NAME, db);
-        setPrimaryKey(SCHEMA_OBJECT_ID);
+        //setPrimaryKey(SCHEMA_OBJECT_ID);
     }
 }

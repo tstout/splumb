@@ -14,17 +14,18 @@ import static splumb.common.db.Columns.*;
  * Contains all Database Object types that can be tracked using Splumb's schema versioning.
  */
 public class SchemaObjectType extends DBTable implements HasDefaults {
+    public final static String TABLE_NAME = "SCHEMA_OBJECT_TYPE";
 
     public final DBTableColumn TYPE = varchar("TYPE", 100);
     public final DBTableColumn DESCRIPTION = varchar("DESCRIPTION", 1000);
 
     public SchemaObjectType() {
-        super(SchemaObject.class.getName(), null);
+        super(TABLE_NAME, null);
     }
 
     public SchemaObjectType(DBDatabase db) {
-        super(SchemaObjectType.class.getName(), db);
-        setPrimaryKey(TYPE);
+        super(TABLE_NAME, db);
+        //setPrimaryKey(TYPE);
     }
 
     @Override

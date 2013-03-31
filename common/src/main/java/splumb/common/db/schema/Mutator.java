@@ -14,17 +14,17 @@ class Mutator implements SchemaMutator {
     }
 
     @Override
-    public SchemaMutator addTables(DBTable... tables) {
-        for (DBTable table : tables) {
-            commands.add(new AddTableCommand(table));
+    public SchemaMutator addTables(String... tableNames) {
+        for (String tableName : tableNames) {
+            commands.add(new AddTableCommand(tableName));
         }
         return this;
     }
 
     @Override
-    public SchemaMutator addColumns(DBTable table, DBTableColumn... columns) {
+    public SchemaMutator addColumns(String tableName, DBTableColumn... columns) {
         for (DBTableColumn col : columns) {
-            commands.add(new AddColumnCommand(table, col));
+            commands.add(new AddColumnCommand(tableName, col));
         }
         return this;
     }

@@ -11,6 +11,7 @@ import static splumb.common.db.Columns.*;
  * Table representing a list of all schema versions
  */
 public class SchemaChanges extends DBTable {
+    public static final String TABLE_NAME = "SCHEMA_CHANGES";
 
     public final DBTableColumn VERSION = varchar("VERSION", 25);
     public final DBTableColumn DATABASE_NAME = varchar("DATABASE_NAME", 100);
@@ -18,12 +19,12 @@ public class SchemaChanges extends DBTable {
     public final DBTableColumn DATE_TM = dateTime(this, "DATE_TM");
 
     public SchemaChanges() {
-        super(SchemaChanges.class.getName(), null);
+        super(TABLE_NAME, null);
 
     }
 
     public SchemaChanges(DBDatabase db) {
-        super(SchemaChanges.class.getName(), db);
-        setPrimaryKey(VERSION, DATABASE_NAME);
+        super(TABLE_NAME, db);
+        //setPrimaryKey(VERSION, DATABASE_NAME);
     }
 }

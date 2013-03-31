@@ -9,12 +9,13 @@ import java.sql.SQLException;
 
 public class H2InMemDriver implements DBDriver {
 
-    String url = "jdbc:h2:mem:splumb";
+    String url = "jdbc:h2:mem:splumb;INIT=CREATE SCHEMA IF NOT EXISTS SPLUMB";
     private JdbcConnectionPool pool = JdbcConnectionPool.create(url, "sa", "");
     private DBDatabaseDriverH2 driver = new DBDatabaseDriverH2();
 
     @Override
     public DBDatabaseDriver getDriver() {
+
         return driver;
     }
 

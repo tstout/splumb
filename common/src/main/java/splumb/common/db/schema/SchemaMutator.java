@@ -3,10 +3,10 @@ package splumb.common.db.schema;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 
-public interface SchemaMutator {
-    SchemaMutator addTables(DBTable... tables);
+interface SchemaMutator {
+    SchemaMutator addTables(String... tableNames);
 
-    SchemaMutator addColumns(DBTable table, DBTableColumn... columns);
+    SchemaMutator addColumns(String tableName, DBTableColumn... columns);
 
     SchemaMutator dropColumns(DBTable table, DBTableColumn... columns);
 

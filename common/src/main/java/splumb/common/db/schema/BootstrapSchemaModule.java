@@ -14,24 +14,24 @@ public class BootstrapSchemaModule extends AbstractSchemaModule {
 
     @Override
     protected void configure() {
-        addTables(new SchemaObject(),
-                new SchemaChanges(),
-                new SchemaObjectType());
+        addTables(SchemaObject.TABLE_NAME,
+                SchemaChanges.TABLE_NAME,
+                SchemaObjectType.TABLE_NAME);
 
-        addColumns(new SchemaObject(),
+        addColumns(SchemaObject.TABLE_NAME,
                 autoInc("SCHEMA_OBJECT_ID"),
                 varchar("SCHEMA_OBJECT_TYPE", 100),
                 varchar("SCHEMA_VERSION", 100),
                 dateTime("CREATION_DATE"),
                 dateTime("REMOVED_DATE"));
 
-        addColumns(new SchemaChanges(),
+        addColumns(SchemaChanges.TABLE_NAME,
                 varchar("VERSION", 25),
                 varchar("DATABASE_NAME", 100),
                 varchar("DESCRIPTION", 1024),
                 dateTime("DATE_TM"));
 
-        addColumns(new SchemaObjectType(),
+        addColumns(SchemaObjectType.TABLE_NAME,
                 varchar("TYPE", 100),
                 varchar("DESCRIPTION", 1000));
     }

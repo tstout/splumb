@@ -17,12 +17,12 @@ public abstract class AbstractSchemaModule implements SchemaModule {
 
     protected abstract void configure();
 
-    protected void addTables(DBTable... tables) {
-        mutator.addTables(tables);
+    protected void addTables(String... tableNames) {
+        mutator.addTables(tableNames);
     }
 
-    protected void addColumns(DBTable table, DBTableColumn... columns) {
-        mutator.addColumns(table, columns);
+    protected void addColumns(String tableName, DBTableColumn... columns) {
+        mutator.addColumns(tableName, columns);
     }
 
     protected void dropColumns(DBTable table, DBTableColumn... columns) {

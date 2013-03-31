@@ -11,7 +11,7 @@ public class SchemaMgmtDB extends DBDatabase {
     public final DBTable SCHEMA_OBJECT_TYPE = new SchemaObjectType(this);
     public final DBTable SCHEMA_VERSION = new SchemaChanges(this);
 
-    private final DBDriver driver;
+    private DBDriver driver;
 
     @Inject
     public SchemaMgmtDB(DBDriver driver) {
@@ -19,6 +19,6 @@ public class SchemaMgmtDB extends DBDatabase {
         this.driver = driver;
     }
 
-
-
+    public SchemaMgmtDB() {
+    }
 }
