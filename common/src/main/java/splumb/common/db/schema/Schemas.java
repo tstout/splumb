@@ -6,9 +6,18 @@ import splumb.common.db.DBDriver;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.google.common.base.Throwables.propagate;
+import static com.google.common.base.Throwables.*;
 
 public class Schemas {
+
+    public static boolean tableExists(DBDriver driver, String tableName, String schema) {
+        return new TableListBuilder()
+                .driver(driver)
+                .schemaPattern(schema)
+                .tablePattern(tableName)
+                .build()
+                .size() != 0;
+    }
 
     public static void create(DBDriver driver, String schemaName, SchemaModule... modules) {
         Connection conn = null;

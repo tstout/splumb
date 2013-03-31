@@ -2,6 +2,7 @@ package splumb.common.db.schema;
 
 import org.apache.empire.db.DBSQLScript;
 import org.junit.Test;
+import splumb.common.db.DBDriver;
 import splumb.common.db.H2InMemDriver;
 
 import java.util.List;
@@ -26,7 +27,11 @@ public class SchemaMgmtTest {
 
     @Test
     public void moduleRunDDLTest() {
-        Schemas.create(new H2InMemDriver(), "splumb", new BootstrapSchemaModule());
+        DBDriver driver = new H2InMemDriver();
+
+        Schemas.create(driver, "splumb", new BootstrapSchemaModule());
+        //assertThat(Schemas.tableExists(driver, "SCHEMA_VERSION", "splumb"), is(true));
+        assertThat(Schemas.tableExists(driver, "SCHEMA_CHANGES", "SPLUMB"), is(true));
     }
 
 }
