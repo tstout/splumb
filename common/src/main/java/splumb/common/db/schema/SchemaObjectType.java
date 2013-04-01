@@ -19,6 +19,13 @@ public class SchemaObjectType extends DBTable implements HasDefaults {
     public final DBTableColumn TYPE = varchar("TYPE", 100);
     public final DBTableColumn DESCRIPTION = varchar("DESCRIPTION", 1000);
 
+    public enum ObjectType {
+        INDEX,
+        FOREIGN_KEY,
+        TABLE,
+        COLUMN
+    }
+
     public SchemaObjectType() {
         super(TABLE_NAME, null);
     }

@@ -18,23 +18,23 @@ public abstract class AbstractSchemaModule implements SchemaModule {
     protected abstract void configure();
 
     protected void addTables(String... tableNames) {
-        mutator.addTables(tableNames);
+        mutator.addTables(version(), tableNames);
     }
 
     protected void addColumns(String tableName, DBTableColumn... columns) {
-        mutator.addColumns(tableName, columns);
+        mutator.addColumns(version(), tableName, columns);
     }
 
     protected void dropColumns(DBTable table, DBTableColumn... columns) {
-        mutator.dropColumns(table, columns);
+        mutator.dropColumns(version(), table, columns);
     }
 
     protected void addIndex(DBTable table, DBTableColumn... columns) {
-        mutator.addIndex(table, columns);
+        mutator.addIndex(version(), table, columns);
     }
 
     protected void addFK(DBTableColumn src, DBTableColumn dest) {
-        mutator.addFK(src, dest);
+        mutator.addFK(version(), src, dest);
     }
 }
 

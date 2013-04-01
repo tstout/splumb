@@ -1,7 +1,6 @@
 package splumb.common.db;
 
 import org.apache.empire.data.DataType;
-import org.apache.empire.db.DBColumn;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 import splumb.common.db.schema.ColumnBuilder;
@@ -62,6 +61,13 @@ public final class Columns {
         return table.addColumn(name, DataType.INTEGER, 0, true);
     }
 
+    public static DBTableColumn intCol(String name) {
+        return col()
+                .ofInt()
+                .withName(name)
+                .build();
+    }
+
     public static DBTableColumn dateTime(DBTable table, String name) {
         return table.addColumn(name, DataType.DATETIME, 0, true);
     }
@@ -71,12 +77,5 @@ public final class Columns {
                 .ofDateTime()
                 .withName(name)
                 .build();
-    }
-
-    public static class Builder {
-        public DBColumn build() {
-            return null;
-        }
-
     }
 }

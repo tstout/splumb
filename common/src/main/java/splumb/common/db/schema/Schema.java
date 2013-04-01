@@ -8,9 +8,20 @@ import java.sql.SQLException;
 
 import static com.google.common.base.Throwables.*;
 
-public class Schemas {
+public class Schema {
+    private final DBDriver driver;
 
-    public static boolean tableExists(DBDriver driver, String tableName, String schema) {
+    public Schema(DBDriver driver) {
+        this.driver = driver;
+    }
+
+    public void createMgmtTables() {
+        if (!tableExists("SCHEMA_CHANGES", "SPLUMB")) {
+            create("SPLUMB", new BootstrapSchemaModule());
+        }
+    }
+
+    public boolean tableExists(String tableName, String schema) {
         return new TableListBuilder()
                 .driver(driver)
                 .schemaPattern(schema)
@@ -19,7 +30,7 @@ public class Schemas {
                 .size() != 0;
     }
 
-    public static void create(DBDriver driver, String schemaName, SchemaModule... modules) {
+    public void create(String schemaName, SchemaModule... modules) {
         Connection conn = null;
         try {
             conn = driver.getConnection();
@@ -41,4 +52,20 @@ public class Schemas {
             }
         }
     }
+//
+//    interface SchemaFilter {
+//        boolean shouldCreate();
+//    }
+//
+//    class CheckIfExists implements SchemaFilter {
+//
+//        @Override
+//        public boolean shouldCreate() {
+//            DBDriver driver = Schema.this.driver;
+//            ResultSetdriver.getConnection().getMetaData().getTable()
+//        }
+//    }
+
+
+
 }

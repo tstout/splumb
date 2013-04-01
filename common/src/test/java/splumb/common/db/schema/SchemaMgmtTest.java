@@ -11,11 +11,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class SchemaMgmtTest {
-    H2InMemDriver memDB;
 
     @Test
     public void moduleCreateDDLTest() {
-
         List<DBSQLScript> commands = new InternalSchemaCommandBuilder()
                 .driver(new H2InMemDriver())
                 .schemaName("splumb")
@@ -28,10 +26,10 @@ public class SchemaMgmtTest {
     @Test
     public void moduleRunDDLTest() {
         DBDriver driver = new H2InMemDriver();
+        Schema schema = new Schema(driver);
 
-        Schemas.create(driver, "splumb", new BootstrapSchemaModule());
-        //assertThat(Schemas.tableExists(driver, "SCHEMA_VERSION", "splumb"), is(true));
-        assertThat(Schemas.tableExists(driver, "SCHEMA_CHANGES", "SPLUMB"), is(true));
+        schema.create("splumb", new BootstrapSchemaModule());
+
+        assertThat(schema.tableExists("SCHEMA_CHANGES", "SPLUMB"), is(true));
     }
-
 }

@@ -51,7 +51,7 @@ class InternalSchemaCommandBuilder {
 
     private List<SchemaCommand> buildCommands() {
         List<SchemaCommand> commands = newArrayList();
-        Mutator mutator = new Mutator(commands);
+        Mutator mutator = new Mutator(commands, driver);
 
         for (SchemaModule module : modules) {
             module.configure(mutator);

@@ -19,9 +19,13 @@ public class BootstrapSchemaModule extends AbstractSchemaModule {
                 SchemaObjectType.TABLE_NAME);
 
         addColumns(SchemaObject.TABLE_NAME,
-                autoInc("SCHEMA_OBJECT_ID"),
-                varchar("SCHEMA_OBJECT_TYPE", 100),
-                varchar("SCHEMA_VERSION", 100),
+                autoInc("OBJECT_ID"),
+                varchar("OBJECT_TYPE", 100),
+                varchar("OBJECT_NAME", 100),
+                varchar("PARENT_OBJECT_NAME", 100),
+                intCol("VERSION_MAJOR"),
+                intCol("VERSION_MINOR"),
+                intCol("VERSION_POINT"),
                 dateTime("CREATION_DATE"),
                 dateTime("REMOVED_DATE"));
 
