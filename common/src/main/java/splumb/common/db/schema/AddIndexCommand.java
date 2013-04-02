@@ -24,7 +24,7 @@ class AddIndexCommand implements SchemaCommand {
     }
 
     @Override
-    public DBSQLScript createDDL(DBDriver driver, DBDatabase database) {
+    public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
         DBSQLScript script = new DBSQLScript();
 
         //columns.get(0).set

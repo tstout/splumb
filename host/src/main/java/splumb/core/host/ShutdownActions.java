@@ -47,7 +47,7 @@ public class ShutdownActions implements Runnable {
 //            r.action.run();
 //
 //            if (con != null) {
-//                con.printf("Shutdown of %s complete\n", r.name);
+//                con.printf("Shutdown of %s complete\n", r.schemaName);
 //            }
 //        }
 //

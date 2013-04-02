@@ -13,7 +13,7 @@ class AddTableCommand implements SchemaCommand {
     }
 
     @Override
-    public DBSQLScript createDDL(DBDriver driver, DBDatabase database) {
+    public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
         TableDef tbl = new TableDef(tableName, database);
         DBSQLScript script = new DBSQLScript();
         driver.getDriver().getDDLScript(DBCmdType.CREATE, tbl, script);

@@ -55,7 +55,7 @@ public class ColumnBuilder {
 
     public DBTableColumn build() {
         checkNotNull(dataType, "Column dataType is required");
-        checkNotNull(name, "Column name is required");
+        checkNotNull(name, "Column schemaName is required");
         return new DBTableColumn(null, dataType, name, size, dataMode, defValue);
     }
 }

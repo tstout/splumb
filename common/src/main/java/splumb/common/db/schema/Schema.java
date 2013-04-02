@@ -50,7 +50,14 @@ public class Schema {
             } catch (SQLException e1) {
                 throw propagate(e1);
             }
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
+
     }
 //
 //    interface SchemaFilter {

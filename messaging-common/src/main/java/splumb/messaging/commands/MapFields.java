@@ -6,7 +6,7 @@ public enum MapFields {
      */
     COMMAND,
     /**
-     * Queue or topic name
+     * Queue or topic schemaName
      */
     DESTINATION,
 }

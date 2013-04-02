@@ -17,7 +17,7 @@ class DropColumnCommand implements SchemaCommand {
     }
 
     @Override
-    public DBSQLScript createDDL(DBDriver driver, DBDatabase database) {
+    public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
         DBSQLScript dropScript = new DBSQLScript();
         driver.getDriver().getDDLScript(DBCmdType.DROP, col, dropScript);
         return dropScript;

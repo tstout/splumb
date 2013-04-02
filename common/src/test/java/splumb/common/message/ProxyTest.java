@@ -41,7 +41,7 @@ public class ProxyTest
     {
         ModelX m = new PropFactory().newProp(ModelX.class);
 
-        m.names().set(newArrayList("first name", "second name", "third name"));
+        m.names().set(newArrayList("first schemaName", "second schemaName", "third schemaName"));
 
         assertTrue(m.names().get().size() == 3);
     }

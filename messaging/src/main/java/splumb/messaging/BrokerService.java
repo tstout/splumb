@@ -42,7 +42,7 @@ class BrokerService implements Broker, MsgHandler, InternalMessageSink {
     // the message needs to be forwarded to the other brokers if the destination is a queue.
     // If the destination is a topic, then the message should be forwarded to all other brokers,
     // even if this broker had a matching listener.
-    // In addition, addSink needs to accept a Destination class that specifies a name and a
+    // In addition, addSink needs to accept a Destination class that specifies a schemaName and a
     // queue or topic type.
     //
     @Inject

@@ -1,10 +1,13 @@
 package splumb.common.db.schema;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
 import splumb.common.db.DBDriver;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.*;
@@ -33,7 +36,7 @@ class InternalSchemaCommandBuilder {
     }
 
     List<DBSQLScript> build() {
-        checkNotNull(schemaName, "schema name is required");
+        checkNotNull(schemaName, "schema schemaName is required");
 
         List<DBSQLScript> commands = newArrayList();
 
@@ -43,18 +46,20 @@ class InternalSchemaCommandBuilder {
             }
         };
 
-        for (SchemaCommand cmd : buildCommands()) {
-            commands.add(cmd.createDDL(driver, db));
+        for (Map.Entry<SchemaVersion, SchemaCommand> cmdEntry : buildCommands().entries()) {
+            commands.add(cmdEntry.getValue().createDDL(driver, db, cmdEntry.getKey()));
         }
         return commands;
     }
 
-    private List<SchemaCommand> buildCommands() {
-        List<SchemaCommand> commands = newArrayList();
-        Mutator mutator = new Mutator(commands, driver);
+    private Multimap<SchemaVersion, SchemaCommand> buildCommands() {
+        Multimap<SchemaVersion, SchemaCommand> commands = ArrayListMultimap.create();
+
+        SchemaMgmtDb smDB = new SchemaMgmtDb(driver);
+        smDB.open(driver.getDriver(), driver.getConnection());
 
         for (SchemaModule module : modules) {
-            module.configure(mutator);
+            module.configure(new Mutator(smDB, commands, driver));
         }
         return commands;
     }

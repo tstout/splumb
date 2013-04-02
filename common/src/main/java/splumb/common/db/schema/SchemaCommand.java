@@ -5,5 +5,5 @@ import org.apache.empire.db.DBSQLScript;
 import splumb.common.db.DBDriver;
 
 public interface SchemaCommand {
-    DBSQLScript createDDL(DBDriver driver, DBDatabase database);
+    DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version);
 }

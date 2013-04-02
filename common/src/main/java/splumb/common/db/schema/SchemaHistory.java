@@ -7,19 +7,32 @@ import splumb.common.db.RowMapper;
 
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 class SchemaHistory {
     private DBDriver driver;
     private SchemaMgmtDb db;
-    private SchemaVersion version;
 
-    SchemaHistory(DBDriver driver, SchemaVersion version) {
+    SchemaHistory(DBDriver driver, SchemaMgmtDb db) {
         this.driver = driver;
-        this.db = new SchemaMgmtDb();
-        //db.open(driver.getDriver(), driver.getConnection());
+        this.db = db;
     }
 
-    List<SchemaHistoryRow> forTable(String tableName) {
-        return new Query(db)
+    public boolean tableExists(String tableName, String schema) {
+        return new TableListBuilder()
+                .driver(driver)
+                .schemaPattern(schema)
+                .tablePattern(tableName)
+                .build()
+                .size() != 0;
+    }
+
+    List<SchemaHistoryRow> forTable(String tableName, SchemaVersion version) {
+        if (!tableExists(tableName, version.schemaName())) {
+            return newArrayList();
+        }
+
+        return new Query(db, driver)
                 .select(db.SCHEMA_OBJECT.OBJECT_ID,
                         db.SCHEMA_OBJECT.OBJECT_NAME,
                         db.SCHEMA_OBJECT.OBJECT_TYPE,

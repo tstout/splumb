@@ -14,7 +14,7 @@ public class SchemaMgmtDb extends DBDatabase {
 
     @Inject
     public SchemaMgmtDb(DBDriver driver) {
-        super("SPLUMB");    // SCHEMA name
+        super("SPLUMB");    // SCHEMA schemaName
         this.driver = driver;
     }
 

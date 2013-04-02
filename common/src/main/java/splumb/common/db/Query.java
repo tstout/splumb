@@ -16,15 +16,16 @@ public class Query {
     private DBDatabase db;
     private DBDriver driver;
 
-    public Query(DBDatabase db) {
+    public Query(DBDatabase db, DBDriver driver) {
         this.db = db;
+        this.driver = driver;
         cmd = db.createCommand();
     }
 
-    public Query withDriver(DBDriver driver) {
-        this.driver = driver;
-        return this;
-    }
+//    public Query withDriver(DBDriver driver) {
+//        this.driver = driver;
+//        return this;
+//    }
 
     public Query select(DBColumnExpr... cols) {
         cmd.select(cols);

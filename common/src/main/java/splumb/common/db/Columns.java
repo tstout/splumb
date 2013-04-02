@@ -34,12 +34,12 @@ public final class Columns {
         return new ColumnBuilder();
     }
 
-//    public static DBTableColumn varchar(String name, int length) {
+//    public static DBTableColumn varchar(String schemaName, int length) {
 //        DataMode dm = (required ? DataMode.NotNull : DataMode.Nullable);
 //        return new DBTableColumn(this, type, columnName, size, dm, defValue);
 //
 //
-//        return new DBTableColumn(null, name, DataType.TEXT, length, DataMode.Nullable, null);
+//        return new DBTableColumn(null, schemaName, DataType.TEXT, length, DataMode.Nullable, null);
 //    }
 
     public static DBTableColumn nullableIntCol(DBTable table, String name) {

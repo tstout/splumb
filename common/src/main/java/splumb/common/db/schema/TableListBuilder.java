@@ -3,14 +3,15 @@ package splumb.common.db.schema;
 import com.google.common.base.Optional;
 import splumb.common.db.DBDriver;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import static com.google.common.base.Optional.*;
 import static com.google.common.base.Preconditions.*;
-import static com.google.common.base.Throwables.propagate;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.base.Throwables.*;
+import static com.google.common.collect.Lists.*;
 
 public class TableListBuilder {
     private Optional<String> schema = absent();
@@ -42,9 +43,10 @@ public class TableListBuilder {
         checkNotNull(driver, "DB Driver is required");
 
         List<String> tables = newArrayList();
+        Connection conn = driver.getConnection();
 
         try {
-            ResultSet rs = driver.getConnection()
+            ResultSet rs = conn
                     .getMetaData()
                     .getTables(catalog.orNull(),
                             schema.orNull(),
@@ -57,8 +59,13 @@ public class TableListBuilder {
 
         } catch (SQLException e) {
             throw propagate(e);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                propagate(e);
+            }
         }
-
         return tables;
     }
 

@@ -9,6 +9,7 @@ public class BootstrapSchemaModule extends AbstractSchemaModule {
                 .withMajor(1)
                 .withMinor(0)
                 .withPoint(0)
+                .withSchemaName("SPLUMB")
                 .build();
     }
 
