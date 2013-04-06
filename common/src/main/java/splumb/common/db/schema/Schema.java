@@ -2,11 +2,10 @@ package splumb.common.db.schema;
 
 import org.apache.empire.db.DBSQLScript;
 import splumb.common.db.DBDriver;
+import splumb.common.db.WithConnection;
+import splumb.common.func.Action;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-
-import static com.google.common.base.Throwables.*;
 
 public class Schema {
     private final DBDriver driver;
@@ -30,34 +29,19 @@ public class Schema {
                 .size() != 0;
     }
 
-    public void create(String schemaName, SchemaModule... modules) {
-        Connection conn = null;
-        try {
-            conn = driver.getConnection();
+    public void create(final String schemaName, final SchemaModule... modules) {
 
-            for (DBSQLScript script : new InternalSchemaCommandBuilder()
-                    .driver(driver)
-                    .schemaName(schemaName)
-                    .modules(modules)
-                    .build()) {
-                script.run(driver.getDriver(), conn, false);
-                conn.commit();
+        new WithConnection().exec(driver, new Action<Connection>() {
+            @Override public void invoke(Connection input) {
+                for (DBSQLScript script : new InternalSchemaCommandBuilder()
+                        .driver(driver)
+                        .schemaName(schemaName)
+                        .modules(modules)
+                        .build()) {
+                    script.run(driver.getDriver(), input, false);
+                }
             }
-        } catch (Exception e) {
-            // YUCK...investigate a better way here...
-            try {
-                conn.rollback();
-            } catch (SQLException e1) {
-                throw propagate(e1);
-            }
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-
+        });
     }
 //
 //    interface SchemaFilter {

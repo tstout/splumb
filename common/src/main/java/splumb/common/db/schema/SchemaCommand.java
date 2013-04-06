@@ -6,4 +6,6 @@ import splumb.common.db.DBDriver;
 
 public interface SchemaCommand {
     DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version);
+
+    void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version);
 }

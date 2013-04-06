@@ -18,4 +18,8 @@ class AddFKCommand implements SchemaCommand {
     public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
         throw new UnsupportedOperationException();
     }
+
+    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

@@ -7,7 +7,7 @@ import splumb.common.db.RowMapper;
 
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.*;
 
 class SchemaHistory {
     private DBDriver driver;
@@ -28,6 +28,9 @@ class SchemaHistory {
     }
 
     List<SchemaHistoryRow> forTable(String tableName, SchemaVersion version) {
+        // TODO - need to cache the results of tableExists...this gets
+        // very chatty with the DB...
+        //
         if (!tableExists(tableName, version.schemaName())) {
             return newArrayList();
         }
@@ -38,9 +41,9 @@ class SchemaHistory {
                         db.SCHEMA_OBJECT.OBJECT_TYPE,
                         db.SCHEMA_OBJECT.PARENT_OBJECT_NAME)
                 .where(db.SCHEMA_OBJECT.VERSION_MAJOR.is(version.major())
-                    .and(db.SCHEMA_OBJECT.VERSION_MINOR.is(version.minor())
-                    .and(db.SCHEMA_OBJECT.VERSION_POINT.is(version.point())
-                    .and(db.SCHEMA_OBJECT.PARENT_OBJECT_NAME.is(tableName)))))
+                       .and(db.SCHEMA_OBJECT.VERSION_MINOR.is(version.minor())
+                       .and(db.SCHEMA_OBJECT.VERSION_POINT.is(version.point())
+                       .and(db.SCHEMA_OBJECT.PARENT_OBJECT_NAME.is(tableName)))))
                 .run(new SchemaHistoryRowMapper());
     }
 

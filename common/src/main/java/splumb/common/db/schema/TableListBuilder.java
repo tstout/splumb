@@ -2,6 +2,8 @@ package splumb.common.db.schema;
 
 import com.google.common.base.Optional;
 import splumb.common.db.DBDriver;
+import splumb.common.db.WithConnection;
+import splumb.common.func.Action;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,32 +44,29 @@ public class TableListBuilder {
     public List<String> build() {
         checkNotNull(driver, "DB Driver is required");
 
-        List<String> tables = newArrayList();
-        Connection conn = driver.getConnection();
+        final List<String> tables = newArrayList();
 
-        try {
-            ResultSet rs = conn
-                    .getMetaData()
-                    .getTables(catalog.orNull(),
-                            schema.orNull(),
-                            table.orNull(),
-                            new String[]{"TABLE"});
+        new WithConnection().exec(driver, new Action<Connection>() {
 
-            while (rs.next()) {
-                tables.add(rs.getString("TABLE_NAME"));
+            @Override public void invoke(Connection input) {
+                try {
+                    ResultSet rs = input
+                            .getMetaData()
+                            .getTables(catalog.orNull(),
+                                    schema.orNull(),
+                                    table.orNull(),
+                                    new String[]{"TABLE"});
+
+                    while (rs.next()) {
+                        tables.add(rs.getString("TABLE_NAME"));
+                    }
+
+                } catch (SQLException e) {
+                    throw propagate(e);
+                }
             }
+        });
 
-        } catch (SQLException e) {
-            throw propagate(e);
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                propagate(e);
-            }
-        }
         return tables;
     }
-
-
 }

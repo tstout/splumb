@@ -5,19 +5,18 @@ import org.apache.empire.db.DBCommand;
 import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBReader;
 import org.apache.empire.db.expr.compare.DBCompareExpr;
+import splumb.common.func.Action;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.*;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.*;
 
 public class Query {
     private DBCommand cmd;
-    private DBDatabase db;
     private DBDriver driver;
 
     public Query(DBDatabase db, DBDriver driver) {
-        this.db = db;
         this.driver = driver;
         cmd = db.createCommand();
     }
@@ -42,16 +41,19 @@ public class Query {
         return this;
     }
 
-    public <T> List<T> run(RowMapper<T> mapper) {
+    public <T> List<T> run(final RowMapper<T> mapper) {
         checkNotNull(driver, "DB driver is required");
 
-        DBReader reader = new DBReader();
-        reader.open(cmd, driver.getConnection());
+        final List<T> result = newArrayList();
 
-        List<T> result = newArrayList();
-        while (reader.moveNext()) {
-            result.add(mapper.mapRow(reader));
-        }
+        new WithReader().exec(driver, cmd, new Action<DBReader>() {
+            @Override
+            public void invoke(DBReader input) {
+                while (input.moveNext()) {
+                    result.add(mapper.mapRow(input));
+                }
+            }
+        });
 
         return result;
     }

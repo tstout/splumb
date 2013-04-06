@@ -24,6 +24,7 @@ public class BootstrapSchemaModule extends AbstractSchemaModule {
                 varchar("OBJECT_TYPE", 100),
                 varchar("OBJECT_NAME", 100),
                 varchar("PARENT_OBJECT_NAME", 100),
+                varchar("SCHEMA_NAME", 100),
                 intCol("VERSION_MAJOR"),
                 intCol("VERSION_MINOR"),
                 intCol("VERSION_POINT"),

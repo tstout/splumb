@@ -16,8 +16,8 @@ public class SchemaObject extends DBTable {
     public final DBTableColumn VERSION_MAJOR = intCol(this, "VERSION_MAJOR");
     public final DBTableColumn VERSION_MINOR = intCol(this, "VERSION_MINOR");
     public final DBTableColumn VERSION_POINT = intCol(this, "VERSION_POINT");
-    public final DBTableColumn CREATION_DATE = dateTime("CREATION_DATE");
-    public final DBTableColumn REMOVED_DATE = dateTime("REMOVED_DATE");
+    public final DBTableColumn CREATION_DATE = dateTime(this, "CREATION_DATE");
+    public final DBTableColumn REMOVED_DATE = dateTime(this, "REMOVED_DATE");
 
     public SchemaObject() {
         super(TABLE_NAME, null);

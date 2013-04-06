@@ -9,7 +9,7 @@ import splumb.common.db.DBDriver;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import static com.google.common.collect.Lists.*;
 
 /**
@@ -40,11 +40,10 @@ class InternalSchemaCommandBuilder {
 
         List<DBSQLScript> commands = newArrayList();
 
-        DBDatabase db = new DBDatabase(schemaName) { {
-              open(InternalSchemaCommandBuilder.this.driver.getDriver(),
-                      InternalSchemaCommandBuilder.this.driver.getConnection());
-            }
-        };
+        DBDatabase db = new DBDatabase(schemaName) {{
+            open(InternalSchemaCommandBuilder.this.driver.getDriver(),
+                    InternalSchemaCommandBuilder.this.driver.getConnection());
+        }};
 
         for (Map.Entry<SchemaVersion, SchemaCommand> cmdEntry : buildCommands().entries()) {
             commands.add(cmdEntry.getValue().createDDL(driver, db, cmdEntry.getKey()));

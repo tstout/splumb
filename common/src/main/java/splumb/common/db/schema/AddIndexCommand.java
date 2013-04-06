@@ -36,6 +36,10 @@ class AddIndexCommand implements SchemaCommand {
         return script;
     }
 
+    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private String indexName() {
         List<String> colNames = newArrayList();
 

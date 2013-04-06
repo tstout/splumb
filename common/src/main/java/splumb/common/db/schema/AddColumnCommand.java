@@ -11,9 +11,10 @@ import splumb.common.db.DBDriver;
 import static com.google.common.collect.FluentIterable.*;
 
 class AddColumnCommand implements SchemaCommand {
-    final String tableName;
-    final DBTableColumn col;
-    final SchemaMgmtDb smDb;
+    private final String tableName;
+    private final DBTableColumn col;
+    private final SchemaMgmtDb smDb;
+    private DBSQLScript ddlScript;
 
     public AddColumnCommand(String tableName, DBTableColumn col, SchemaMgmtDb smDb) {
         this.tableName = tableName;
@@ -26,15 +27,27 @@ class AddColumnCommand implements SchemaCommand {
         DBTable tbl = database.getTable(tableName);
         tbl = tbl == null ? new TableDef(tableName, database) : tbl;
 
-        DBSQLScript script = new DBSQLScript();
+        ddlScript = new DBSQLScript();
 
         if (!from(new SchemaHistory(driver, smDb).forTable(tableName, version))
                 .firstMatch(Fn.colExists(col))
                 .isPresent()) {
-            driver.getDriver().getDDLScript(DBCmdType.CREATE, ((TableDef)tbl).addCol(col), script);
+            driver.getDriver()
+                    .getDDLScript(DBCmdType.CREATE, ((TableDef) tbl)
+                            .addCol(col), ddlScript);
         }
 
-        return script;
+        return ddlScript;
+    }
+
+    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+//        if (ddlScript.getCount() > 0) {
+//            ddlScript.run(driver.getDriver(), driver.getConnection(), false);
+//            new DataSet()
+//
+//
+//        }
+
     }
 
     static class Fn {

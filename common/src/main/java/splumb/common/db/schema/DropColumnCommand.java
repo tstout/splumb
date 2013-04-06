@@ -22,4 +22,8 @@ class DropColumnCommand implements SchemaCommand {
         driver.getDriver().getDDLScript(DBCmdType.DROP, col, dropScript);
         return dropScript;
     }
+
+    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

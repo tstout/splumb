@@ -8,4 +8,6 @@ public interface DBDriver {
     DBDatabaseDriver getDriver();
 
     Connection getConnection();
+
+    void shutdown();
 }

@@ -19,4 +19,8 @@ class AddTableCommand implements SchemaCommand {
         driver.getDriver().getDDLScript(DBCmdType.CREATE, tbl, script);
         return script;
     }
+
+    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+
+    }
 }
