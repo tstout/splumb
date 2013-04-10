@@ -49,12 +49,13 @@ public class SchemaVersion {
         SchemaVersion other = (SchemaVersion) o;
         return Objects.equal(major, other.major) &&
                 Objects.equal(minor, other.minor) &&
-                Objects.equal(point, other.point);
+                Objects.equal(point, other.point) &&
+                Objects.equal(name, other.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(major, minor, point);
+        return Objects.hashCode(major, minor, point, name);
     }
 
     public static class Builder {

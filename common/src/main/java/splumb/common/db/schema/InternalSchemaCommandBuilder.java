@@ -48,6 +48,8 @@ class InternalSchemaCommandBuilder {
         for (Map.Entry<SchemaVersion, SchemaCommand> cmdEntry : buildCommands().entries()) {
             commands.add(cmdEntry.getValue().createDDL(driver, db, cmdEntry.getKey()));
         }
+
+        //return buildCommands();
         return commands;
     }
 

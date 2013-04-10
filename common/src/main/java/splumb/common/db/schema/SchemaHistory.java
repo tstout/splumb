@@ -35,15 +35,22 @@ class SchemaHistory {
             return newArrayList();
         }
 
+        return forObject(tableName,  version);
+    }
+
+    //public void addColumn()
+
+    private List<SchemaHistoryRow> forObject(String objectName, SchemaVersion version) {
         return new Query(db, driver)
                 .select(db.SCHEMA_OBJECT.OBJECT_ID,
                         db.SCHEMA_OBJECT.OBJECT_NAME,
                         db.SCHEMA_OBJECT.OBJECT_TYPE,
                         db.SCHEMA_OBJECT.PARENT_OBJECT_NAME)
                 .where(db.SCHEMA_OBJECT.VERSION_MAJOR.is(version.major())
-                       .and(db.SCHEMA_OBJECT.VERSION_MINOR.is(version.minor())
-                       .and(db.SCHEMA_OBJECT.VERSION_POINT.is(version.point())
-                       .and(db.SCHEMA_OBJECT.PARENT_OBJECT_NAME.is(tableName)))))
+                        .and(db.SCHEMA_OBJECT.VERSION_MINOR.is(version.minor())
+                        .and(db.SCHEMA_OBJECT.VERSION_POINT.is(version.point())
+                        .and(db.SCHEMA_OBJECT.PARENT_OBJECT_NAME.is(objectName))
+                        .and(db.SCHEMA_OBJECT.SCHEMA_NAME.is(version.schemaName())))))
                 .run(new SchemaHistoryRowMapper());
     }
 

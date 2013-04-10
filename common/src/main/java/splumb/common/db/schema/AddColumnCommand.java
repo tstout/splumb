@@ -8,7 +8,8 @@ import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 import splumb.common.db.DBDriver;
 
-import static com.google.common.collect.FluentIterable.*;
+
+import static com.google.common.collect.FluentIterable.from;
 
 class AddColumnCommand implements SchemaCommand {
     private final String tableName;
@@ -25,11 +26,13 @@ class AddColumnCommand implements SchemaCommand {
     @Override
     public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
         DBTable tbl = database.getTable(tableName);
+
         tbl = tbl == null ? new TableDef(tableName, database) : tbl;
 
         ddlScript = new DBSQLScript();
 
-        if (!from(new SchemaHistory(driver, smDb).forTable(tableName, version))
+        if (!from(new SchemaHistory(driver, smDb)
+                .forTable(tableName, version))
                 .firstMatch(Fn.colExists(col))
                 .isPresent()) {
             driver.getDriver()
