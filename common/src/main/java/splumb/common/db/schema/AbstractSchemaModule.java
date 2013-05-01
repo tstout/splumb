@@ -1,7 +1,6 @@
 package splumb.common.db.schema;
 
-import org.apache.empire.db.DBTable;
-import org.apache.empire.db.DBTableColumn;
+import splumb.common.db.schema.definition.ColumnDef;
 
 public abstract class AbstractSchemaModule implements SchemaModule {
     private SchemaMutator mutator; // NO-op mutator that throws?
@@ -21,19 +20,19 @@ public abstract class AbstractSchemaModule implements SchemaModule {
         mutator.addTables(version(), tableNames);
     }
 
-    protected void addColumns(String tableName, DBTableColumn... columns) {
+    protected void addColumns(String tableName, ColumnDef... columns) {
         mutator.addColumns(version(), tableName, columns);
     }
 
-    protected void dropColumns(DBTable table, DBTableColumn... columns) {
+    protected void dropColumns(TableDef table, ColumnDef... columns) {
         mutator.dropColumns(version(), table, columns);
     }
 
-    protected void addIndex(DBTable table, DBTableColumn... columns) {
+    protected void addIndex(TableDef table, ColumnDef... columns) {
         mutator.addIndex(version(), table, columns);
     }
 
-    protected void addFK(DBTableColumn src, DBTableColumn dest) {
+    protected void addFK(ColumnDef src, ColumnDef dest) {
         mutator.addFK(version(), src, dest);
     }
 }

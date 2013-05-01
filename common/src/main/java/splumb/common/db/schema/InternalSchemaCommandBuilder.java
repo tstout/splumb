@@ -2,14 +2,12 @@ package splumb.common.db.schema;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
 import splumb.common.db.DBDriver;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Preconditions.*;
 import static com.google.common.collect.Lists.*;
 
 /**
@@ -18,17 +16,21 @@ import static com.google.common.collect.Lists.*;
 class InternalSchemaCommandBuilder {
     private DBDriver driver;
     private SchemaModule[] modules;
-    private String schemaName;
+    private final DBDefImpl db;
+
+    InternalSchemaCommandBuilder(DBDefImpl db) {
+        this.db = db;
+    }
 
     InternalSchemaCommandBuilder driver(DBDriver driver) {
         this.driver = driver;
         return this;
     }
 
-    InternalSchemaCommandBuilder schemaName(String schemaName) {
-        this.schemaName = schemaName;
-        return this;
-    }
+//    InternalSchemaCommandBuilder dbSupplier(Supplier<DBDatabase> dbSupplier) {
+//        this.dbSupplier = dbSupplier;
+//        return this;
+//    }
 
     InternalSchemaCommandBuilder modules(SchemaModule... modules) {
         this.modules = modules;
@@ -36,14 +38,7 @@ class InternalSchemaCommandBuilder {
     }
 
     List<DBSQLScript> build() {
-        checkNotNull(schemaName, "schema schemaName is required");
-
         List<DBSQLScript> commands = newArrayList();
-
-        DBDatabase db = new DBDatabase(schemaName) {{
-            open(InternalSchemaCommandBuilder.this.driver.getDriver(),
-                    InternalSchemaCommandBuilder.this.driver.getConnection());
-        }};
 
         for (Map.Entry<SchemaVersion, SchemaCommand> cmdEntry : buildCommands().entries()) {
             commands.add(cmdEntry.getValue().createDDL(driver, db, cmdEntry.getKey()));

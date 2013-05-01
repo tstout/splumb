@@ -1,16 +1,15 @@
 package splumb.common.db.schema;
 
-import org.apache.empire.db.DBTable;
-import org.apache.empire.db.DBTableColumn;
+import splumb.common.db.schema.definition.ColumnDef;
 
 interface SchemaMutator {
     SchemaMutator addTables(SchemaVersion version, String... tableNames);
 
-    SchemaMutator addColumns(SchemaVersion version, String tableName, DBTableColumn... columns);
+    SchemaMutator addColumns(SchemaVersion version, String tableName, ColumnDef... columns);
 
-    SchemaMutator dropColumns(SchemaVersion version, DBTable table, DBTableColumn... columns);
+    SchemaMutator dropColumns(SchemaVersion version, TableDef table, ColumnDef... columns);
 
-    SchemaMutator addIndex(SchemaVersion version, DBTable table, DBTableColumn... columns);
+    SchemaMutator addIndex(SchemaVersion version, TableDef table, ColumnDef... columns);
 
-    SchemaMutator addFK(SchemaVersion version, DBTableColumn src, DBTableColumn dest);
+    SchemaMutator addFK(SchemaVersion version, ColumnDef src, ColumnDef dest);
 }

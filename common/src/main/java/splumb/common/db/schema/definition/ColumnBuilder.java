@@ -1,16 +1,15 @@
-package splumb.common.db.schema;
+package splumb.common.db.schema.definition;
 
+import com.google.common.base.Optional;
 import org.apache.empire.data.DataMode;
-import org.apache.empire.data.DataType;
-import org.apache.empire.db.DBTableColumn;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 
 public class ColumnBuilder {
     private String name;
-    private int size;
-    private DataMode dataMode;
-    private DataType dataType;
+    private Optional<Integer> size = Optional.absent();
+    private DataMode dataMode; // TODO - WRAP datamode?
+    private ColType dataType;
     private Object defValue;
 
     public ColumnBuilder withName(String name) {
@@ -19,7 +18,7 @@ public class ColumnBuilder {
     }
 
     public ColumnBuilder ofText() {
-        dataType = DataType.TEXT;
+        dataType = ColType.VARCHAR;
         return this;
     }
 
@@ -29,22 +28,22 @@ public class ColumnBuilder {
     }
 
     public ColumnBuilder ofDateTime() {
-        this.dataType = DataType.DATETIME;
+        this.dataType = ColType.DATE_TIME;
         return this;
     }
 
     public ColumnBuilder ofInt() {
-        dataType = DataType.INTEGER;
+        dataType = ColType.INT;
         return this;
     }
 
     public ColumnBuilder ofAutoInc() {
-        dataType = DataType.AUTOINC;
+        dataType = ColType.AUTOINC;
         return this;
     }
 
     public ColumnBuilder withSize(int size) {
-        this.size = size;
+        this.size = Optional.of(size);
         return this;
     }
 
@@ -53,9 +52,12 @@ public class ColumnBuilder {
         return this;
     }
 
-    public DBTableColumn build() {
+    public ColumnDef build() {
         checkNotNull(dataType, "Column dataType is required");
         checkNotNull(name, "Column schemaName is required");
-        return new DBTableColumn(null, dataType, name, size, dataMode, defValue);
+
+        return new ColumnDefImpl(dataType, name, size);
+
+        //return new DBTableColumn(null, dataType, name, size, dataMode, defValue);
     }
 }

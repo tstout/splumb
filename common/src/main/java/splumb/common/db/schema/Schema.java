@@ -7,7 +7,11 @@ import splumb.common.func.Action;
 
 import java.sql.Connection;
 
+import static splumb.common.db.schema.DBDefImpl.*;
+
+
 public class Schema {
+    private static final String SCHEMA_NAME = "splumb";
     private final DBDriver driver;
 
     public Schema(DBDriver driver) {
@@ -16,7 +20,7 @@ public class Schema {
 
     public void createMgmtTables() {
         if (!tableExists("SCHEMA_CHANGES", "SPLUMB")) {
-            create("SPLUMB", new BootstrapSchemaModule());
+            create(new BootstrapSchemaModule());
         }
     }
 
@@ -29,13 +33,21 @@ public class Schema {
                 .size() != 0;
     }
 
-    public void create(final String schemaName, final SchemaModule... modules) {
+    public void create(final SchemaModule... modules) {
+
+        // TODO - database needs to be closed...
+
+//        final DBDatabase db = new DBDatabase(SCHEMA_NAME) {{
+//            open(Schema.this.driver.getDriver(), Schema.this.driver.getConnection());
+//        }};
+
+        final DBDefImpl dbImpl = new DBDefImpl(EMPTY_TABLE_LIST, EMPTY_FK_LIST, SCHEMA_NAME, driver);
+
 
         new WithConnection().exec(driver, new Action<Connection>() {
             @Override public void invoke(Connection input) {
-                for (DBSQLScript script : new InternalSchemaCommandBuilder()
+                for (DBSQLScript script : new InternalSchemaCommandBuilder(dbImpl)
                         .driver(driver)
-                        .schemaName(schemaName)
                         .modules(modules)
                         .build()) {
                     script.run(driver.getDriver(), input, false);

@@ -3,7 +3,8 @@ package splumb.common.db;
 import org.apache.empire.data.DataType;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
-import splumb.common.db.schema.ColumnBuilder;
+import splumb.common.db.schema.definition.ColumnBuilder;
+import splumb.common.db.schema.definition.ColumnDef;
 
 public final class Columns {
 
@@ -22,7 +23,7 @@ public final class Columns {
         return table.addColumn(name, DataType.TEXT, length, true);
     }
 
-    public static DBTableColumn varchar(String name, int length) {
+    public static ColumnDef varchar(String name, int length) {
         return col()
                 .ofText()
                 .withName(name)
@@ -50,7 +51,7 @@ public final class Columns {
         return table.addColumn(name, DataType.AUTOINC, 0, true);
     }
 
-    public static DBTableColumn autoInc(String name) {
+    public static ColumnDef autoInc(String name) {
         return col()
                 .ofAutoInc()
                 .withName(name)
@@ -61,7 +62,7 @@ public final class Columns {
         return table.addColumn(name, DataType.INTEGER, 0, true);
     }
 
-    public static DBTableColumn intCol(String name) {
+    public static ColumnDef intCol(String name) {
         return col()
                 .ofInt()
                 .withName(name)
@@ -72,7 +73,7 @@ public final class Columns {
         return table.addColumn(name, DataType.DATETIME, 0, true);
     }
 
-    public static DBTableColumn dateTime(String name) {
+    public static ColumnDef dateTime(String name) {
         return col()
                 .ofDateTime()
                 .withName(name)

@@ -1,30 +1,26 @@
 package splumb.common.db.schema;
 
-import com.google.common.base.Joiner;
 import org.apache.empire.db.DBCmdType;
 import org.apache.empire.db.DBColumn;
-import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBIndex;
 import org.apache.empire.db.DBSQLScript;
-import org.apache.empire.db.DBTable;
-import org.apache.empire.db.DBTableColumn;
 import splumb.common.db.DBDriver;
+import splumb.common.db.schema.definition.ColumnDef;
+import splumb.common.db.schema.definition.DBDef;
 
 import java.util.List;
 
-import static com.google.common.collect.Lists.*;
-
 class AddIndexCommand implements SchemaCommand {
-    final DBTable table;
-    final List<DBTableColumn> columns;
+    final TableDef table;
+    final List<ColumnDef> columns;
 
-    public AddIndexCommand(DBTable table, List<DBTableColumn> columns) {
+    public AddIndexCommand(TableDef table, List<ColumnDef> columns) {
         this.table = table;
         this.columns = columns;
     }
 
     @Override
-    public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+    public DBSQLScript createDDL(DBDriver driver, DBDef database, SchemaVersion version) {
         DBSQLScript script = new DBSQLScript();
 
         //columns.get(0).set
@@ -36,26 +32,25 @@ class AddIndexCommand implements SchemaCommand {
         return script;
     }
 
-    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     private String indexName() {
-        List<String> colNames = newArrayList();
-
-        for (DBTableColumn col : columns) {
-            colNames.add(col.getName());
-        }
-        return String.format("%s_%s", table.getName(), Joiner.on('_').join(colNames));
+//        List<String> colNames = newArrayList();
+//
+//        for (DBTableColumn col : columns) {
+//            colNames.add(col.getName());
+//        }
+//        return String.format("%s_%s", table.getName(), Joiner.on('_').join(colNames));
+        return null;
     }
 
-    private DBColumn[] toCol(List<DBTableColumn> cols) {
-        // YUCK...must be a better way...
-        List<DBColumn> columnList = newArrayList();
-        for (DBTableColumn col : cols) {
-            columnList.add(col);
-        }
-
-        return (DBColumn[])columnList.toArray();
+    private DBColumn[] toCol(List<ColumnDef> cols) {
+//        // YUCK...must be a better way...
+//        List<DBColumn> columnList = newArrayList();
+//        for (ColumnDef col : cols) {
+//            columnList.add(col);
+//        }
+//
+//        return (DBColumn[])columnList.toArray();
+        return new DBColumn[] {};
     }
 }

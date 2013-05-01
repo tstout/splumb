@@ -2,12 +2,14 @@ package splumb.common.db.schema.definition;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import org.apache.empire.db.DBColumn;
 
 class ColumnDefImpl implements ColumnDef {
 
     private final ColType type;
     private final String name;
     private final Optional<Integer> length;
+    //private DBColumn nativeCol;
 
     ColumnDefImpl(ColType type, String name, Optional<Integer> length) {
         this.type = type;
@@ -48,5 +50,14 @@ class ColumnDefImpl implements ColumnDef {
 
     @Override public Optional<Integer> length() {
         return length;
+    }
+
+    enum InternalColType {
+
+    }
+
+    DBColumn nativeColumn() {
+        //Columns.col().
+        return null;
     }
 }

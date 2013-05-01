@@ -1,29 +1,27 @@
 package splumb.common.db.schema;
 
-import org.apache.empire.db.DBCmdType;
-import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
-import org.apache.empire.db.DBTable;
-import org.apache.empire.db.DBTableColumn;
 import splumb.common.db.DBDriver;
+import splumb.common.db.schema.definition.ColumnDef;
+import splumb.common.db.schema.definition.DBDef;
 
 class DropColumnCommand implements SchemaCommand {
-    final DBTable table;
-    final DBTableColumn col;
+    final TableDef table;
+    final ColumnDef col;
 
-    DropColumnCommand(DBTable table, DBTableColumn col) {
+    DropColumnCommand(TableDef table, ColumnDef col) {
         this.table = table;
         this.col = col;
     }
 
     @Override
-    public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+    public DBSQLScript createDDL(DBDriver driver, DBDef database, SchemaVersion version) {
         DBSQLScript dropScript = new DBSQLScript();
-        driver.getDriver().getDDLScript(DBCmdType.DROP, col, dropScript);
-        return dropScript;
-    }
 
-    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // TODO - this is busted...
+        //DBColumn dbCol = Columns.col().withName(col.name()).build();
+
+        //driver.getDriver().getDDLScript(DBCmdType.DROP, col, dropScript);
+        return dropScript;
     }
 }

@@ -1,9 +1,9 @@
 package splumb.common.db.schema;
 
-import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
 import org.apache.empire.db.DBTableColumn;
 import splumb.common.db.DBDriver;
+import splumb.common.db.schema.definition.DBDef;
 
 class AddFKCommand implements SchemaCommand {
     final DBTableColumn src;
@@ -14,12 +14,7 @@ class AddFKCommand implements SchemaCommand {
         this.dest = dest;
     }
 
-    @Override
-    public DBSQLScript createDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
+    @Override public DBSQLScript createDDL(DBDriver driver, DBDef database, SchemaVersion version) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override public void runDDL(DBDriver driver, DBDatabase database, SchemaVersion version) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 }
