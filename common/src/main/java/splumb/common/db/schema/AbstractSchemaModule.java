@@ -24,11 +24,11 @@ public abstract class AbstractSchemaModule implements SchemaModule {
         mutator.addColumns(version(), tableName, columns);
     }
 
-    protected void dropColumns(TableDef table, ColumnDef... columns) {
+    protected void dropColumns(TableDef2 table, ColumnDef... columns) {
         mutator.dropColumns(version(), table, columns);
     }
 
-    protected void addIndex(TableDef table, ColumnDef... columns) {
+    protected void addIndex(TableDef2 table, ColumnDef... columns) {
         mutator.addIndex(version(), table, columns);
     }
 

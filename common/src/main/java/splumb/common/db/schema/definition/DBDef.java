@@ -5,4 +5,5 @@ import java.util.List;
 public interface DBDef {
     List<TableDef> tables();
     List<FKDef> foreignKeys();
+    <T> T unwrap(Class<T> clazz);
 }

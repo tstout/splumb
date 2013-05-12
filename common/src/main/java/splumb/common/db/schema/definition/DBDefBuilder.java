@@ -1,8 +1,6 @@
-package splumb.common.db.schema;
+package splumb.common.db.schema.definition;
 
 import splumb.common.db.DBDriver;
-import splumb.common.db.schema.definition.DBDef;
-import splumb.common.db.schema.definition.FKDef;
 
 import java.util.List;
 

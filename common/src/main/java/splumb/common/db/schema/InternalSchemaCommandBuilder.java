@@ -4,10 +4,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.apache.empire.db.DBSQLScript;
 import splumb.common.db.DBDriver;
+import splumb.common.db.schema.definition.DBDefImpl;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.*;
 
 /**
@@ -41,7 +43,8 @@ class InternalSchemaCommandBuilder {
         List<DBSQLScript> commands = newArrayList();
 
         for (Map.Entry<SchemaVersion, SchemaCommand> cmdEntry : buildCommands().entries()) {
-            commands.add(cmdEntry.getValue().createDDL(driver, db, cmdEntry.getKey()));
+
+            commands.add(checkNotNull(cmdEntry.getValue().createDDL(driver, db, cmdEntry.getKey())));
         }
 
         //return buildCommands();

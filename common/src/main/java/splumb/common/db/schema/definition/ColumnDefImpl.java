@@ -3,6 +3,7 @@ package splumb.common.db.schema.definition;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import org.apache.empire.db.DBColumn;
+import splumb.common.db.schema.ColType;
 
 class ColumnDefImpl implements ColumnDef {
 

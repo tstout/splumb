@@ -1,11 +1,13 @@
 package splumb.common.db.schema;
 
 import com.google.common.base.Predicate;
+import org.apache.empire.db.DBCmdType;
 import org.apache.empire.db.DBSQLScript;
 import org.apache.empire.db.DBTableColumn;
 import splumb.common.db.DBDriver;
 import splumb.common.db.schema.definition.ColumnDef;
 import splumb.common.db.schema.definition.DBDef;
+import splumb.common.db.schema.definition.TableDef;
 
 class AddColumnCommand implements SchemaCommand {
     private final String tableName;
@@ -22,9 +24,23 @@ class AddColumnCommand implements SchemaCommand {
     @Override
     public DBSQLScript createDDL(DBDriver driver, DBDef database, SchemaVersion version) {
 
-//        DBTable tbl = database.getTable(tableName);
+        TableDef tblDef = new TableDefBuilder()
+                .withName(tableName)
+                .withDb(database)
+                .build();
+
+        //DBTable tbl = database.unwrap(DBDatabase.class).getTable(tableName);
+        ddlScript = new DBSQLScript();
+
+        driver.getDriver()
+                .getDDLScript(DBCmdType.CREATE, col.type().convert(tblDef, col, DBTableColumn.class), ddlScript);
+
+        //Columns.col().
+
+
+        //driver.getDriver().getDDLScript(DBCmdType.CREATE, tbl.addColumn(col), ddlScript);
 //
-//        tbl = tbl == null ? new TableDef(tableName, database) : tbl;
+//        tbl = tbl == null ? new TableDef2(tableName, database) : tbl;
 //
 //        ddlScript = new DBSQLScript();
 //
@@ -33,7 +49,7 @@ class AddColumnCommand implements SchemaCommand {
 //                .firstMatch(Fn.colExists(col))
 //                .isPresent()) {
 //            driver.getDriver()
-//                    .getDDLScript(DBCmdType.CREATE, ((TableDef) tbl)
+//                    .getDDLScript(DBCmdType.CREATE, ((TableDef2) tbl)
 //                            .addCol(col), ddlScript);
 //        }
 

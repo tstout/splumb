@@ -4,5 +4,8 @@ import java.util.List;
 
 public interface TableDef {
     List<ColumnDef> columns();
+
     List<IndexDef> indices();
+
+    <T> T unwrap(Class<T> clazz);
 }

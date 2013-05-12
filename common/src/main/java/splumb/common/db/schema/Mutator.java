@@ -34,7 +34,7 @@ class Mutator implements SchemaMutator {
     }
 
     @Override
-    public SchemaMutator dropColumns(SchemaVersion version, TableDef table, ColumnDef... columns) {
+    public SchemaMutator dropColumns(SchemaVersion version, TableDef2 table, ColumnDef... columns) {
         for (ColumnDef col : columns) {
             commands.put(version, new DropColumnCommand(table, col));
         }
@@ -42,7 +42,7 @@ class Mutator implements SchemaMutator {
     }
 
     @Override
-    public SchemaMutator addIndex(SchemaVersion version, TableDef table, ColumnDef... columns) {
+    public SchemaMutator addIndex(SchemaVersion version, TableDef2 table, ColumnDef... columns) {
         commands.put(version, new AddIndexCommand(table, Arrays.asList(columns)));
         return this;
     }

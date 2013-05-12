@@ -1,6 +1,7 @@
 package splumb.common.db.schema.definition;
 
 import com.google.common.base.Optional;
+import splumb.common.db.schema.ColType;
 
 class ColumnDefBuilder {
     private ColType type;

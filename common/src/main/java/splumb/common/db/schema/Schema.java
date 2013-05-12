@@ -3,11 +3,11 @@ package splumb.common.db.schema;
 import org.apache.empire.db.DBSQLScript;
 import splumb.common.db.DBDriver;
 import splumb.common.db.WithConnection;
+import splumb.common.db.schema.definition.DBDefImpl;
 import splumb.common.func.Action;
 
 import java.sql.Connection;
 
-import static splumb.common.db.schema.DBDefImpl.*;
 
 
 public class Schema {
@@ -41,7 +41,7 @@ public class Schema {
 //            open(Schema.this.driver.getDriver(), Schema.this.driver.getConnection());
 //        }};
 
-        final DBDefImpl dbImpl = new DBDefImpl(EMPTY_TABLE_LIST, EMPTY_FK_LIST, SCHEMA_NAME, driver);
+        final DBDefImpl dbImpl = new DBDefImpl(SCHEMA_NAME, driver);
 
 
         new WithConnection().exec(driver, new Action<Connection>() {

@@ -4,9 +4,9 @@ import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBTable;
 import org.apache.empire.db.DBTableColumn;
 
-class TableDef extends DBTable {
+class TableDef2 extends DBTable {
 
-    public TableDef(String name, DBDatabase db) {
+    public TableDef2(String name, DBDatabase db) {
         super(name, db);
     }
 

@@ -1,30 +1,26 @@
-package splumb.common.db.schema;
+package splumb.common.db.schema.definition;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.empire.db.DBDatabase;
 import splumb.common.db.DBDriver;
-import splumb.common.db.schema.definition.DBDef;
-import splumb.common.db.schema.definition.FKDef;
-import splumb.common.db.schema.definition.TableDef;
 
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-class DBDefImpl implements DBDef {
+// TODO - refactor namespace(s) such that this is not public
 
-    static final List<TableDef> EMPTY_TABLE_LIST = newArrayList();
-    static final List<FKDef> EMPTY_FK_LIST = newArrayList();
+public class DBDefImpl implements DBDef {
+
+    public static final List<TableDef> EMPTY_TABLE_LIST = newArrayList();
+    public static final List<FKDef> EMPTY_FK_LIST = newArrayList();
 
     private final List<TableDef> tables;
     private final List<FKDef> foreignKeys;
     private final DBDatabase db;
     private final DBDriver driver;
 
-    DBDefImpl(List<TableDef> tables,
-              List<FKDef> foreignKeys,
-              String schemaName,
-              DBDriver driver) {
+    DBDefImpl(List<TableDef> tables, List<FKDef> foreignKeys, String schemaName, DBDriver driver) {
         this.tables = tables;
         this.foreignKeys = foreignKeys;
         this.driver = driver;
@@ -33,6 +29,10 @@ class DBDefImpl implements DBDef {
             open(DBDefImpl.this.driver.getDriver(),
                  DBDefImpl.this.driver.getConnection());
         }};
+    }
+
+    public DBDefImpl(String schemaName, DBDriver driver) {
+        this(EMPTY_TABLE_LIST, EMPTY_FK_LIST, schemaName, driver);
     }
 
     DBDatabase db() {
@@ -51,5 +51,9 @@ class DBDefImpl implements DBDef {
     @Override
     public List<FKDef> foreignKeys() {
         return ImmutableList.copyOf(foreignKeys);
+    }
+
+    @Override public <T> T unwrap(Class<T> clazz) {
+        return clazz.cast(db);
     }
 }

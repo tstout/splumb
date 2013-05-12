@@ -6,10 +6,10 @@ import splumb.common.db.schema.definition.ColumnDef;
 import splumb.common.db.schema.definition.DBDef;
 
 class DropColumnCommand implements SchemaCommand {
-    final TableDef table;
+    final TableDef2 table;
     final ColumnDef col;
 
-    DropColumnCommand(TableDef table, ColumnDef col) {
+    DropColumnCommand(TableDef2 table, ColumnDef col) {
         this.table = table;
         this.col = col;
     }

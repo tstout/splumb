@@ -11,10 +11,10 @@ import splumb.common.db.schema.definition.DBDef;
 import java.util.List;
 
 class AddIndexCommand implements SchemaCommand {
-    final TableDef table;
+    final TableDef2 table;
     final List<ColumnDef> columns;
 
-    public AddIndexCommand(TableDef table, List<ColumnDef> columns) {
+    public AddIndexCommand(TableDef2 table, List<ColumnDef> columns) {
         this.table = table;
         this.columns = columns;
     }

@@ -7,9 +7,9 @@ interface SchemaMutator {
 
     SchemaMutator addColumns(SchemaVersion version, String tableName, ColumnDef... columns);
 
-    SchemaMutator dropColumns(SchemaVersion version, TableDef table, ColumnDef... columns);
+    SchemaMutator dropColumns(SchemaVersion version, TableDef2 table, ColumnDef... columns);
 
-    SchemaMutator addIndex(SchemaVersion version, TableDef table, ColumnDef... columns);
+    SchemaMutator addIndex(SchemaVersion version, TableDef2 table, ColumnDef... columns);
 
     SchemaMutator addFK(SchemaVersion version, ColumnDef src, ColumnDef dest);
 }

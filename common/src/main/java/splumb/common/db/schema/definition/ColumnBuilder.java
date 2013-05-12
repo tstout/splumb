@@ -2,6 +2,7 @@ package splumb.common.db.schema.definition;
 
 import com.google.common.base.Optional;
 import org.apache.empire.data.DataMode;
+import splumb.common.db.schema.ColType;
 
 import static com.google.common.base.Preconditions.*;
 
