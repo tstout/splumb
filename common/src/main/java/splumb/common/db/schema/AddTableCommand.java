@@ -1,6 +1,9 @@
 package splumb.common.db.schema;
 
+import org.apache.empire.db.DBCmdType;
+import org.apache.empire.db.DBDatabase;
 import org.apache.empire.db.DBSQLScript;
+import org.apache.empire.db.DBTable;
 import splumb.common.db.DBDriver;
 import splumb.common.db.schema.definition.DBDef;
 
@@ -13,9 +16,12 @@ class AddTableCommand implements SchemaCommand {
 
     @Override
     public DBSQLScript createDDL(DBDriver driver, DBDef database, SchemaVersion version) {
-        //TableDef2 tbl = new TableDef2(tableName, database);
         DBSQLScript script = new DBSQLScript();
-        //driver.getDriver().getDDLScript(DBCmdType.CREATE, tbl, script);
+
+        driver.getDriver().getDDLScript(DBCmdType.CREATE,
+                new DBTable(tableName, database.unwrap(DBDatabase.class)),
+                script);
+
         return script;
     }
 }

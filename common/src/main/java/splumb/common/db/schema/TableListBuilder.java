@@ -53,7 +53,7 @@ public class TableListBuilder {
                     ResultSet rs = input
                             .getMetaData()
                             .getTables(catalog.orNull(),
-                                    schema.orNull(),
+                                    null, // scheam.orNull() TODO...schema filter is busted...
                                     table.orNull(),
                                     new String[]{"TABLE"});
 

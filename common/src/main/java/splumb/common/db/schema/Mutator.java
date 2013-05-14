@@ -28,7 +28,7 @@ class Mutator implements SchemaMutator {
     @Override
     public SchemaMutator addColumns(SchemaVersion version, String tableName, ColumnDef... columns) {
         for (ColumnDef col : columns) {
-            commands.put(version, new AddColumnCommand(tableName, col, smDB));
+            commands.put(version, new AddColumnCommand(tableName, col));
         }
         return this;
     }

@@ -28,7 +28,6 @@ public enum ColType {
     private Converter converter;
 
     public <T> T convert(TableDef tableDef, ColumnDef colDef, Class<T> clazz) {
-
         return clazz.cast(converter.convert(tableDef, colDef));
     }
 
@@ -50,21 +49,21 @@ public enum ColType {
     static class CharConverter implements Converter {
 
         @Override public DBTableColumn convert(TableDef tableDef, ColumnDef colDef) {
-            return null;
+            return varchar(tableDef.unwrap(DBTable.class), colDef.name(), colDef.length().or(0));
         }
     }
 
     static class AutoIncConverter implements Converter {
 
         @Override public DBTableColumn convert(TableDef tableDef, ColumnDef colDef) {
-            return null;
+            return autoInc(tableDef.unwrap(DBTable.class), colDef.name());
         }
     }
 
     static class DateTimeConverter implements Converter {
 
         @Override public DBTableColumn convert(TableDef tableDef, ColumnDef colDef) {
-            return null;
+            return dateTime(tableDef.unwrap(DBTable.class), colDef.name());
         }
     }
 }
