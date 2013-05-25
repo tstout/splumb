@@ -18,7 +18,6 @@ public class AsyncLogBus implements LogBus {
     public AsyncLogBus() {
     }
 
-
     @Override
     public void sub(Object listener) {
         bus.register(listener);

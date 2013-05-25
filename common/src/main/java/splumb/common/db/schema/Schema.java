@@ -31,6 +31,11 @@ public class Schema {
                 .size() != 0;
     }
 
+    public boolean columnExists(String tableName) {
+        throw new UnsupportedOperationException();
+    }
+
+
     public Schema create(final SchemaModule... modules) {
         // TODO - database needs to be closed...
 

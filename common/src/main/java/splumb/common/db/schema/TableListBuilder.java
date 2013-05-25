@@ -60,7 +60,6 @@ public class TableListBuilder {
                     while (rs.next()) {
                         tables.add(rs.getString("TABLE_NAME"));
                     }
-
                 } catch (SQLException e) {
                     throw propagate(e);
                 }

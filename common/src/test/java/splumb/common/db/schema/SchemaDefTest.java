@@ -34,6 +34,7 @@ public class SchemaDefTest {
     public void creatTable() {
         DBDriver driver = new H2InMemDriver();
 
+
         Schema schema = new Schema(driver).create(new DbDef());
 
         assertThat(schema.tableExists("BROKER", new DbDef().version().schemaName()), is(true));
