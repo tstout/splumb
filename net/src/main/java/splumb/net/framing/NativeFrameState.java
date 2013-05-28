@@ -87,6 +87,7 @@ enum NativeFrameState {
         }
     };
 
+    // TODO - is hold/transition a better name here instead of continue/wait?
     enum FrameStateStatus {
         CONTINUE,
         WAIT
@@ -97,7 +98,7 @@ enum NativeFrameState {
     abstract void entry(RxContext context);
 
     public static void parse(RxContext context) {
-        while (context.currentState.process(context) == CONTINUE) ;
+        while (context.currentState.process(context) == CONTINUE);
     }
 
 }
