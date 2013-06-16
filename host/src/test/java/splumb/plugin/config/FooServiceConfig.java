@@ -5,7 +5,7 @@ import splumb.common.plugin.PluginName;
 
 public class FooServiceConfig extends AbstractPluginConfig {
     @Override
-    protected void configure(Builder builder) {
+    protected void configure(PluginBuilder builder) {
         builder.withBaseScanPackage("sampleplugin");
 
         builder.withName(PluginName.builder()

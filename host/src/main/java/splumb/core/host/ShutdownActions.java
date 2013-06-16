@@ -7,6 +7,7 @@ import splumb.common.logging.LogPublisher;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Lists.*;
 
 public class ShutdownActions implements Runnable {
@@ -79,7 +80,7 @@ public class ShutdownActions implements Runnable {
         try {
             term.await();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw propagate(e);
         }
     }
 

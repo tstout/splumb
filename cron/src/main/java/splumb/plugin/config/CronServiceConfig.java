@@ -6,7 +6,7 @@ import splumb.common.plugin.PluginName;
 public class CronServiceConfig extends AbstractPluginConfig {
 
     @Override
-    protected void configure(Builder builder) {
+    protected void configure(PluginBuilder builder) {
         builder.withBaseScanPackage("splumb.cron")
                 .withName(PluginName.builder()
                         .withName("cron")

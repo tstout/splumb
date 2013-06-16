@@ -5,7 +5,7 @@ import splumb.common.plugin.PluginName;
 
 public class MessagingServiceConfig extends AbstractPluginConfig {
     @Override
-    protected void configure(Builder builder) {
+    protected void configure(PluginBuilder builder) {
         builder.withBaseScanPackage("splumb.messaging")
                 .withName(PluginName.builder()
                         .withName("messaging")

@@ -29,8 +29,7 @@ public final class PluginName {
 
         final PluginName other = (PluginName) obj;
 
-        return obj instanceof PluginName &&
-                equal(getOrganization(), other.getOrganization()) &&
+        return equal(getOrganization(), other.getOrganization()) &&
                 equal(getVersion(), other.getVersion()) &&
                 equal(getName(), other.getName());
     }

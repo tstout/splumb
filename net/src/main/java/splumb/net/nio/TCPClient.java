@@ -86,6 +86,8 @@ class TCPClient implements Client {
         }
     }
 
+    // TODO - replace connected with an AtomicBoolean...
+
     private void setConnected(boolean value) {
         synchronized (connected) {
             connected = value;

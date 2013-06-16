@@ -120,8 +120,7 @@ class NIOSelect implements Runnable {
                    //
                    // process the selection key according to its current state...
                     //
-                   KeyState.current(key)
-                           .process(env);
+                   KeyState.current(key).process(env);
                 }
             } catch (Exception e) {
                 throw propagate(e);

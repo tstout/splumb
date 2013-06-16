@@ -15,6 +15,7 @@ import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.Set;
 
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Maps.*;
 import static com.google.common.collect.Sets.*;
 import static java.lang.String.*;
@@ -36,7 +37,7 @@ public class PluginLoader {
     public PluginLoader loadConfigurations() {
         PluginDir dir = new PluginDir();
 
-        logger.info("Attempting to load configurations plugins from %s", dir.path());
+        logger.info("Attempting to load configuration plugins from %s", dir.path());
 
         for (File jarFile : dir.jarFiles()) {
 
@@ -49,7 +50,7 @@ public class PluginLoader {
                 try {
                     newPlugin.config = clazz.newInstance();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw propagate(e);
                 }
 
                 plugins.put(newPlugin.config.getServiceContext().name(), newPlugin);
@@ -82,7 +83,7 @@ public class PluginLoader {
                     shutdownActions.add(newService);
                     plugin.serviceInstances.add(newService);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw propagate(e);
                 }
             }
         }
@@ -110,7 +111,7 @@ public class PluginLoader {
         try {
             jarUrl = new URL("jar", "", format("file:%s/%s!/", dir.path(), jarFile));
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            throw propagate(e);
         }
 
         return new URLClassLoader(new URL[]{jarUrl}, getClass().getClassLoader());

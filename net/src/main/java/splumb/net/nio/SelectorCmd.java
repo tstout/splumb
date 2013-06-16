@@ -41,7 +41,7 @@ class SelectorCmd {
 
     }
 
-//    class Builder {
+//    class PluginBuilder {
 //        private SelectableChannel socket;
 //        private NetEndpoint channel;
 //        private SelectorOps type;
@@ -50,27 +50,27 @@ class SelectorCmd {
 //        private MsgHandler handler;
 //        private Framer framer;
 //
-//        Builder withChannel(SelectableChannel channel) {
+//        PluginBuilder withChannel(SelectableChannel channel) {
 //            this.socket = channel;
 //            return this;
 //        }
 //
-//        Builder withNetEndpoint(NetEndpoint netEndpoint) {
+//        PluginBuilder withNetEndpoint(NetEndpoint netEndpoint) {
 //            this.channel = netEndpoint;
 //            return this;
 //        }
 //
-//        Builder withSelectorOps(SelectorOps type) {
+//        PluginBuilder withSelectorOps(SelectorOps type) {
 //            this.type = type;
 //            return this;
 //        }
 //
-//        Builder withOps(int ops) {
+//        PluginBuilder withOps(int ops) {
 //            this.ops = ops;
 //            return this;
 //        }
 //
-//        Builder withHandler(MsgHandler handler)
+//        PluginBuilder withHandler(MsgHandler handler)
 //    }
 
 

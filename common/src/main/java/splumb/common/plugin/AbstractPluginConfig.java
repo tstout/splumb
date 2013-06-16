@@ -17,7 +17,7 @@ public abstract class AbstractPluginConfig implements PluginConfig {
     private PluginContext serviceContext;
 
     public AbstractPluginConfig() {
-        Builder builder = new Builder();
+        PluginBuilder builder = new PluginBuilder();
         configure(builder);
         serviceContext = builder.build();
     }
@@ -27,18 +27,27 @@ public abstract class AbstractPluginConfig implements PluginConfig {
         return serviceContext;
     }
 
-    protected abstract void configure(Builder builder);
+    protected abstract void configure(PluginBuilder builder);
 
-    public class Builder {
+    public class PluginBuilder {
         private List<String> baseScanPackages = newArrayList();
         private PluginName name;
 
-        public Builder withBaseScanPackage(String baseScanPackage) {
+        // TODO - replace with Package object instead of string....
+
+        /**
+         * Specify the base package containing plugins to be loaded.
+         * Plugins are identified as any class implementing
+         * com.google.common.util.concurrent.Service
+         * @param baseScanPackage
+         * @return
+         */
+        public PluginBuilder withBaseScanPackage(String baseScanPackage) {
             this.baseScanPackages.add(baseScanPackage);
             return this;
         }
 
-        public Builder withName(PluginName name) {
+        public PluginBuilder withName(PluginName name) {
             this.name = name;
             return this;
         }

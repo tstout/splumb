@@ -27,6 +27,11 @@ class ComponentLoader {
         return load(basePackage, Thread.currentThread().getContextClassLoader());
     }
 
+    /**
+     * Load all classes implementing PluginConfig from the package splumb.plugin.config
+     * @param classLoader
+     * @return
+     */
     public Set<Class<? extends PluginConfig>> loadServiceConfig(ClassLoader classLoader) {
 
         ComponentScanner scanner = new ComponentScanner();
@@ -45,6 +50,13 @@ class ComponentLoader {
         return ImmutableSet.copyOf(serviceConfig);
     }
 
+    /**
+     * Load all classes implementing com.google.common.util.concurrent.Service
+     * from the specified base package.
+     * @param basePackage
+     * @param classLoader
+     * @return
+     */
     public Set<Class<? extends Service>> load(final String basePackage, ClassLoader classLoader) {
         logger.info("Scanning for components to loadConfigurations from %s....", basePackage);
 
