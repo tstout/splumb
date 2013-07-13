@@ -1,3 +1,9 @@
+apply plugin: 'application'
+
+version = '1.0'
+
+mainClassName = 'splumb.core.host.Host'
+
 dependencies {
     compile (
             project(':common'),
@@ -33,11 +39,11 @@ dependencies {
 //
 // This creates an uberjar
 //
-jar {
-    baseName= 'splumb-host'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
-}
+//jar {
+//    baseName= 'splumb-host'
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    manifest { attributes 'Main-Class': 'splumb.core.host.Host' }
+//}
 
 task copyToLib(type: Copy) {
     into "$buildDir/libs"

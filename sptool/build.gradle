@@ -1,3 +1,9 @@
+apply plugin: 'application'
+
+version = '1.0'
+
+mainClassName = 'splumb.tool.Main'
+
 dependencies {
     compile(
             project(':common'),
@@ -14,9 +20,9 @@ dependencies {
     //
     // This creates an uberjar
     //
-    jar {
-        baseName = 'sptool'
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-        manifest { attributes 'Main-Class': 'splumb.tool.Main' }
-    }
+//    jar {
+//        baseName = 'sptool'
+//        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//        manifest { attributes 'Main-Class': 'splumb.tool.Main' }
+//    }
 }
