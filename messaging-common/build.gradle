@@ -13,11 +13,19 @@ dependencies {
     )
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir 'target/generated-sources'
+        }
+    }
+}
 
+task genMsgCommonProtobuf(type:Exec) {
+    ext.msgCommonSrcDir = new File('target/generated-sources')
+    ext.msgCommonSrcDir.mkdirs()
 
-task genProtobuf(type:Exec) {
-
-    args = ["--java_out=" + file('src/main/java'),
+    args = ["--java_out=" + msgCommonSrcDir,
             "--proto_path=" + file('src/main/protobuf/'),
             file('src/main/protobuf/broker.proto')]
 

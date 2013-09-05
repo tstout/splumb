@@ -13,6 +13,8 @@ dependencies {
 }
 
 task genProtobuf(type:Exec) {
+    ext.protoSrcDir = new File('target/generated-sources')
+    ext.protoSrcDir.mkdirs()
 
     args = ["--java_out=" + file('target/generated-sources'),
             "--proto_path=" + file('src/main/protobuf/'),
