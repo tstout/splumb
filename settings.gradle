@@ -1,1 +1,4 @@
-include "common", "host", "cron", "messaging-common", "messaging", "host-common", "net", "sptool", "spmon"
+
+
+include "common", "common-test", "host", "cron", "messaging-common", "messaging", "host-common", "net", "sptool", "spmon"
+

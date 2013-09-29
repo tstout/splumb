@@ -8,7 +8,7 @@ dependencies {
             'com.google.protobuf:protobuf-java:2.4.1'
     )
     testCompile(
-            'org.mockito:mockito-core:1.9.0'
+            libraries.test_core
     )
 }
 

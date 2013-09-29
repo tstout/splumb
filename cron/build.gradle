@@ -1,11 +1,9 @@
 dependencies {
     compile (
             project(':common'),
-            'com.google.guava:guava:14.0.1',
-            'com.google.inject:guice:3.0',
-            'org.apache.empire-db:empire-db:2.4.1',
+            libraries.runtime_core
     )
     testCompile(
-            'org.mockito:mockito-core:1.9.0'
+            libraries.test_core
     )
 }

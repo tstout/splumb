@@ -2,6 +2,7 @@ dependencies {
     compile(
             libraries.db_core,
             libraries.runtime_core,
+            'junit:junit:4.10'
     )
     testCompile(
             libraries.test_core
@@ -9,6 +10,6 @@ dependencies {
 
 
     jar {
-        baseName = 'splumb-common'
+        baseName = 'splumb-test'
     }
 }
