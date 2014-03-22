@@ -9,9 +9,9 @@ public enum Level {
     INFO,
     ERROR;
 
-    private static final BiMap<Integer, Level> values = of(0, DEBUG, 1, INFO, 2, ERROR);
+    private static final BiMap<String, Level> values = of("DEBUG", DEBUG, "INFO", INFO, "ERROR", ERROR);
 
-    public static Level fromInt(int val) {
+    public static Level fromStr(String val) {
         return values.get(val);
     }
 }

@@ -1,22 +1,29 @@
 package splumb.core.logging;
 
+import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.collect.Maps;
 import com.google.common.eventbus.Subscribe;
-import org.apache.empire.db.DBCommand;
-import org.apache.empire.db.DBReader;
+import db.io.operations.QueryBuilder;
 import splumb.common.logging.Level;
 import splumb.common.logging.LogConfig;
 import splumb.core.db.SplumbDB;
+import splumb.core.db.tables.LogConfigRecord;
 import splumb.core.events.HostDbTablesAvailableEvent;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.*;
+import static com.google.common.collect.Maps.newHashMap;
 
 class DBLogConfig implements LogConfig {
+    private final static LogConfigRecord DEF_LOG_RECORD = new LogConfigRecord() {
+        public String logger() { return null; }
+        public String level() { return Level.INFO.toString(); }
+    };
 
-    public Map<String, Level> settings = newHashMap();
+    public Map<String, LogConfigRecord> settings = newHashMap();
     private SplumbDB db;
 
     @Inject
@@ -26,26 +33,26 @@ class DBLogConfig implements LogConfig {
 
     @Subscribe
     public void init(HostDbTablesAvailableEvent evt) {
-        DBCommand cmd = db.createCommand();
-        cmd.select(db.LogConfig.LOGGER, db.LogConfig.LOG_LEVEL);
+        Collection<LogConfigRecord> config = new QueryBuilder()
+                .withCreds(db.credentials())
+                .withDb(db.database())
+                .build()
+                .execute(LogConfigRecord.class,
+                        "select logger, level from splumb.logconfig");
 
-        DBReader rdr = new DBReader();
-        rdr.open(cmd, db.getConnection());
-
-        try {
-            while (rdr.moveNext()) {
-                settings.put(rdr.getString(db.LogConfig.LOGGER),
-                        Level.fromInt(rdr.getInt(db.LogConfig.LOG_LEVEL)));
+        settings = Maps.uniqueIndex(config, new Function<LogConfigRecord, String>() {
+            public String apply(LogConfigRecord input) {
+                return input.logger();
             }
-        }
-        finally {
-            rdr.close();
-        }
+        });
     }
 
 
     @Override
     public Level getLevel(String logger) {
-        return Functions.forMap(settings, Level.INFO).apply(logger);
+        return Level.fromStr(Functions
+                .forMap(settings, DEF_LOG_RECORD)
+                .apply(logger)
+                .level());
     }
 }

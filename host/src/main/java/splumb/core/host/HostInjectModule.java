@@ -8,6 +8,10 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import db.io.Database;
+import db.io.config.DBCredentials;
+import db.io.h2.H2Credentials;
+import db.io.h2.H2Db;
 import splumb.core.db.SplumbDB;
 
 class HostInjectModule extends AbstractModule {
@@ -26,6 +30,8 @@ class HostInjectModule extends AbstractModule {
     @Override
     protected void configure() {
         //bind(OptionSet.class).toInstance(optionSet);
+        bind(Database.class).to(H2Db.class).in(Scopes.SINGLETON);
+        bind(DBCredentials.class).toInstance(H2Credentials.h2LocalServerCreds("splumb", "~/.splumb/db"));
         bind(EventBus.class).toInstance(eventBus);
         bind(SplumbDB.class).in(Scopes.SINGLETON);
         bind(ShutdownActions.class).in(Scopes.SINGLETON);

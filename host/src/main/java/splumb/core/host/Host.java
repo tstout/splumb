@@ -5,7 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import splumb.common.logging.LogPublisher;
 import splumb.core.cli.CliModule;
-import splumb.core.db.DBDevModule;
 import splumb.core.events.HostDbTablesAvailableEvent;
 import splumb.core.host.plugin.PluginLoader;
 import splumb.core.logging.DevLoggingModule;
@@ -28,7 +27,7 @@ public class Host {
     public static void main(String[] args) throws Exception {
         Injector injector = Guice.createInjector(
                 new DevLoggingModule(),
-                new DBDevModule(),
+         //       new DBDevModule(),
                 new HostInjectModule(),
                 new CliModule(args));
 

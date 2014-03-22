@@ -27,7 +27,6 @@ class Options {
     Options() {
         parser = new OptionParser();
         parser.acceptsAll(NO_DB.aliases, "Run without DB");
-        parser.acceptsAll(DROP_TABLES.aliases, "drop and recreate tables at startup");
         parser.acceptsAll(HELP.aliases, "Show help");
         parser.acceptsAll(VERBOSE.aliases, "Dump log to stdout");
 

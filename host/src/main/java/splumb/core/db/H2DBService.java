@@ -14,14 +14,14 @@ public class H2DBService extends AbstractIdleService {
 
     private Server h2Server;
     private LogPublisher logger;
-    private Impl implementation;
+    private NoOpImpl implementation;
     private EventBus eventBus;
 
     @Inject
     public H2DBService(LogPublisher logger, OptValues optionSet, EventBus eventBus) {
         this.logger = logger;
         this.eventBus = eventBus;
-        implementation = optionSet.noDB() ? new Impl() : new ActiveImpl();
+        implementation = optionSet.noDB() ? new NoOpImpl() : new ActiveImpl();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class H2DBService extends AbstractIdleService {
         implementation.start();
     }
 
-    class Impl {
+    class NoOpImpl {
         public void start() {
         }
 
@@ -42,7 +42,7 @@ public class H2DBService extends AbstractIdleService {
         }
     }
 
-    class ActiveImpl extends Impl {
+    class ActiveImpl extends NoOpImpl {
         public void start() {
 
             try {

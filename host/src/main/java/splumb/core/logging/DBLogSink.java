@@ -2,15 +2,18 @@ package splumb.core.logging;
 
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-import splumb.common.db.DataSet;
-import splumb.common.logging.*;
+import db.io.operations.UpdateBuilder;
+import splumb.common.logging.DebugLogEvent;
+import splumb.common.logging.ErrorLogEvent;
+import splumb.common.logging.InfoLogEvent;
+import splumb.common.logging.Level;
+import splumb.common.logging.LogEvent;
 import splumb.core.db.SplumbDB;
 import splumb.core.events.HostDbTablesAvailableEvent;
 
 import java.sql.Connection;
 import java.util.List;
 
-import static com.google.common.collect.ImmutableSet.*;
 import static com.google.common.collect.Lists.*;
 
 /**
@@ -21,11 +24,16 @@ import static com.google.common.collect.Lists.*;
     private SplumbDB db;
     private LogImpl logImpl = new QueueImpl();
     Connection conn;
+    UpdateBuilder updateBuilder;
 
     @Inject
     public DBLogSink(SplumbDB db) {
         this.db = db;
-        conn = db.getConnection();
+        this.conn = db.getConnection();
+
+        updateBuilder = new UpdateBuilder()
+                .withCreds(db.credentials())
+                .withDb(db.database());
     }
 
     @Subscribe
@@ -78,17 +86,19 @@ import static com.google.common.collect.Lists.*;
 
         logQueue.clear();
     }
+    // TODO - this will be externalized to a resource file...
+    private static final String INSERT_SQL =
+            "insert into splumb.Logs (level, when, logger, msg, thread) values (?, ?, ?, ?, ?)";
 
     private void writeRecord(Level level, LogEvent evt) {
-
-        new DataSet()
-                .withColumns(of(db.Log.LEVEL, db.Log.DATE_TIME, db.Log.LOGGER, db.Log.MSG, db.Log.THREAD))
-                .withValues(of(
-                        level.ordinal() + 1,
-                        evt.timeStamp.get(),
-                        evt.source.get(),
-                        String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(), evt.args.get()),
-                        evt.thread.get()))
-                .insertInto(db.Log, conn);
+        updateBuilder.addOp(INSERT_SQL,
+                level.ordinal() + 1,
+                evt.timeStamp.get(),
+                evt.source.get(),
+                String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(),
+                        evt.args.get()),
+                evt.thread.get())
+                .build()
+                .update();
     }
 }

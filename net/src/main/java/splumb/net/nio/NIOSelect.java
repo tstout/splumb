@@ -103,7 +103,6 @@ class NIOSelect implements Runnable {
 
                 selector.select();
 
-                // TODO - how about making this a for loop..I like the for loop style better...
                 Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
 
                 while (iter.hasNext()) {

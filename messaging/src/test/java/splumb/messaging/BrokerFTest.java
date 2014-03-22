@@ -1,5 +1,6 @@
 package splumb.messaging;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import splumb.common.test.GuiceJUnitRunner;
@@ -13,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
 
+// Note sure if I want to keep this around...Messaging will probably be
+// completely re-done and broken out into a separate library
+@Ignore
 @RunWith(GuiceJUnitRunner.class)
 @GuiceJUnitRunner.GuiceModules({BrokerTestModule.class})
 public class BrokerFTest {
