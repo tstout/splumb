@@ -4,7 +4,6 @@ dependencies {
             project(':net'),
             project(':host-common'),
             libraries.runtime_core,
-            'org.apache.empire-db:empire-db:2.4.1',
             'com.google.protobuf:protobuf-java:2.4.1'
     )
     testCompile(
