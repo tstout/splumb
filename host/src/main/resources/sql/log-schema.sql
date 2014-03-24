@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset splumb:create schema
+--changeset splumb:1
 create schema if not exists splumb;
 --rollback drop schema splumb;
 
@@ -8,7 +8,7 @@ create table splumb.logs (
   id      int identity(1,1) primary key not null
   ,when   datetime not null
   ,level  varchar(32) not null
-  ,msg    varchar(1024) not null
+  ,msg    varchar(4096) not null
   ,logger varchar(200) not null
   ,thread varchar(200) not null
 );

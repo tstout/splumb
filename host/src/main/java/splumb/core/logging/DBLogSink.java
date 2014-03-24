@@ -92,7 +92,7 @@ import static com.google.common.collect.Lists.*;
 
     private void writeRecord(Level level, LogEvent evt) {
         updateBuilder.addOp(INSERT_SQL,
-                level.ordinal() + 1,
+                level.name(),
                 evt.timeStamp.get(),
                 evt.source.get(),
                 String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(),

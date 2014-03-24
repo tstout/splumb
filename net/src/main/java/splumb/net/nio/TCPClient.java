@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.base.Throwables.*;
 import static com.google.common.collect.Lists.*;
 
+// TODO - cleanup synchronized warnings in this code...
+
 class TCPClient implements Client {
 
     private InetAddress hostAddress;
@@ -82,7 +84,7 @@ class TCPClient implements Client {
             // TODO - retry interval should be static const or configurable...
             scheduler.schedule(pendingConnect, 500, TimeUnit.MILLISECONDS);
         } catch (IOException e) {
-            propagate(e);
+            throw propagate(e);
         }
     }
 
