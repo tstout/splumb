@@ -11,25 +11,24 @@ import splumb.common.logging.LogEvent;
 import splumb.core.db.SplumbDB;
 import splumb.core.events.HostDbTablesAvailableEvent;
 
-import java.sql.Connection;
 import java.util.List;
 
 import static com.google.common.collect.Lists.*;
+import static java.lang.String.*;
 
 /**
  * A Log consumer that writes to a database.
  */
  class DBLogSink {
     private List<LogRecord> logQueue = newArrayList();
-    private SplumbDB db;
+    //private SplumbDB db;
     private LogImpl logImpl = new QueueImpl();
-    Connection conn;
     UpdateBuilder updateBuilder;
 
     @Inject
     public DBLogSink(SplumbDB db) {
-        this.db = db;
-        this.conn = db.getConnection();
+        //this.db = db;
+        //this.conn = db.getConnection();
 
         updateBuilder = new UpdateBuilder()
                 .withCreds(db.credentials())
@@ -38,22 +37,22 @@ import static com.google.common.collect.Lists.*;
 
     @Subscribe
     public void info(InfoLogEvent evt) {
-        writeRecord(Level.INFO, evt);
+        logImpl.writeRecord(Level.INFO, evt);
     }
 
     @Subscribe
     public void error(ErrorLogEvent evt) {
-       writeRecord(Level.ERROR, evt);
+       logImpl.writeRecord(Level.ERROR, evt);
     }
 
     @Subscribe
     public void debug(DebugLogEvent evt) {
-        writeRecord(Level.DEBUG, evt);
+        logImpl.writeRecord(Level.DEBUG, evt);
     }
 
     class LogImpl {
         void writeRecord(Level level, LogEvent evt) {
-            writeRecord(level, evt);
+            DBLogSink.this.writeRecord(level, evt);
         }
     }
 
@@ -68,34 +67,36 @@ import static com.google.common.collect.Lists.*;
         Level level;
         LogEvent evt;
 
-
         public LogRecord(Level level, LogEvent evt) {
             this.evt = evt;
             this.level = level;
         }
     }
 
+    private Object lock = new Object();
     @Subscribe
     public void dbAvailable(HostDbTablesAvailableEvent hostDbTablesAvailableEvent) {
-        // TODO - might need some syncronization here...
-        logImpl = new LogImpl();
+        synchronized (lock) {
+            logImpl = new LogImpl();
 
-        for (LogRecord log : logQueue) {
-          logImpl.writeRecord(log.level, log.evt);
+            for (LogRecord log : logQueue) {
+                logImpl.writeRecord(log.level, log.evt);
+            }
+
+            logQueue.clear();
         }
-
-        logQueue.clear();
     }
     // TODO - this will be externalized to a resource file...
     private static final String INSERT_SQL =
             "insert into splumb.Logs (level, when, logger, msg, thread) values (?, ?, ?, ?, ?)";
 
     private void writeRecord(Level level, LogEvent evt) {
+
         updateBuilder.addOp(INSERT_SQL,
                 level.name(),
                 evt.timeStamp.get(),
                 evt.source.get(),
-                String.format(evt.fmt.get() == null ? "%s" : evt.fmt.get(),
+                format(evt.fmt.get() == null ? "%s" : evt.fmt.get(),
                         evt.args.get()),
                 evt.thread.get())
                 .build()

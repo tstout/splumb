@@ -13,16 +13,17 @@ public class DBLogService extends AbstractIdleService {
     private DBLogSink sink;
 
     @Inject
-    public DBLogService(LogBus bus, SplumbDB db) {
+    public DBLogService(LogBus bus, SplumbDB db, DBLogSink sink) {
         this.bus = bus;
         this.db = db;
-        sink = new DBLogSink(db);
+        this.sink = sink;
     }
 
     @Override
     protected void startUp() throws Exception {
         bus.sub(sink);
         db.create();
+
     }
 
     @Override

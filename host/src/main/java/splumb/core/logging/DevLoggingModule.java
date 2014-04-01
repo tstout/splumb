@@ -15,5 +15,6 @@ public class DevLoggingModule extends AbstractModule {
         bind(LogBus.class).to(AsyncLogBus.class).in(Scopes.SINGLETON);
         bind(LogConfig.class).to(DBLogConfig.class).in(Scopes.SINGLETON);
         bind(LogPublisher.class).to(HostLogger.class);
+        bind(DBLogSink.class);
     }
 }
