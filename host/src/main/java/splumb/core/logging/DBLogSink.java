@@ -20,16 +20,13 @@ import static java.lang.String.*;
  * A Log consumer that writes to a database.
  */
  class DBLogSink {
+    private final Object lock = new Object();
     private List<LogRecord> logQueue = newArrayList();
-    //private SplumbDB db;
     private LogImpl logImpl = new QueueImpl();
-    UpdateBuilder updateBuilder;
+    private UpdateBuilder updateBuilder;
 
     @Inject
     public DBLogSink(SplumbDB db) {
-        //this.db = db;
-        //this.conn = db.getConnection();
-
         updateBuilder = new UpdateBuilder()
                 .withCreds(db.credentials())
                 .withDb(db.database());
@@ -73,7 +70,7 @@ import static java.lang.String.*;
         }
     }
 
-    private Object lock = new Object();
+
     @Subscribe
     public void dbAvailable(HostDbTablesAvailableEvent hostDbTablesAvailableEvent) {
         synchronized (lock) {
